@@ -4,6 +4,8 @@ import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import InterviewCard from "../components/InterviewCard";
+import { getInterviews } from "../services/interviewServices";
+import PostInterviewForm from "../components/PostInterviewForm";
 
 export default function Home() {
   const [interviews, setInterviews] = useState([]);
@@ -18,9 +20,10 @@ export default function Home() {
           title: "Frontend Developer",
           company: "Tech Innovations Inc.",
           location: "San Francisco, CA",
-          description: "Looking for React developers with 3+ years of experience. Immediate hiring process with competitive salary.",
+          description:
+            "Looking for React developers with 3+ years of experience. Immediate hiring process with competitive salary.",
           date: "Today, 10:00 AM",
-          salary: "$80K - $110K"
+          salary: "$80K - $110K",
         },
         // ... more interview objects
       ]);
@@ -28,13 +31,33 @@ export default function Home() {
     }, 1000);
   }, []);
 
-  const handleSearch = (filters) => {
-    setIsLoading(true);
-    // Simulate filtered API call
-    setTimeout(() => {
-      setInterviews(/* filtered data */);
-      setIsLoading(false);
-    }, 800);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    loadInterviews();
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) setUser(JSON.parse(savedUser));
+  }, []);
+
+  const loadInterviews = async () => {
+    try {
+      const data = await getInterviews();
+      setInterviews(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSearch = async (filters) => {
+    try {
+      const res = await fetch(
+        `/api/interviews?location=${filters.location}&keyword=${filters.keyword}`
+      );
+      const data = await res.json();
+      setInterviews(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -42,7 +65,16 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <SearchBar onSearch={handleSearch} />
-      
+
+      {user?.role === "recruiter" && (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 border border-red-500">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Post a New Interview
+          </h2>
+          <PostInterviewForm onPosted={loadInterviews} />
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
           Available Interviews
@@ -50,11 +82,14 @@ export default function Home() {
             ({interviews.length} results)
           </span>
         </h2>
-        
+
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-white rounded-xl p-5 shadow-sm animate-pulse">
+              <div
+                key={i}
+                className="bg-white rounded-xl p-5 shadow-sm animate-pulse"
+              >
                 <div className="h-5 bg-gray-200 rounded mb-4"></div>
                 <div className="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
                 <div className="space-y-3">
@@ -77,11 +112,13 @@ export default function Home() {
           </div>
         )}
       </div>
-      
+
       {!isLoading && interviews.length === 0 && (
         <div className="max-w-3xl mx-auto text-center py-16">
           <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-2xl font-bold text-gray-700 mb-2">No interviews found</h3>
+          <h3 className="text-2xl font-bold text-gray-700 mb-2">
+            No interviews found
+          </h3>
           <p className="text-gray-600">
             Try adjusting your search filters to find more opportunities
           </p>

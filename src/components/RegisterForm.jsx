@@ -1,9 +1,8 @@
 // src/components/RegisterForm.jsx
-import { useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useState } from "react";
+import { registerUser } from "../services/authService";
 
 export default function RegisterForm() {
-  const { register } = useContext(AuthContext);
   const [form, setForm] = useState({ name: "", email: "", password: "", phone: "", role: "candidate" });
 
   const handleChange = (e) => {
@@ -13,7 +12,8 @@ export default function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register(form);
+      const data = await registerUser(form);
+      console.log(data);
       alert("Registration successful");
     } catch (err) {
       alert(err.message);
