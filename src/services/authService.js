@@ -1,10 +1,10 @@
 // src/services/authService.js
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth"; // change to your backend URL
+const API_URL = "http://localhost:3000/api/user"; // change to your backend URL
 
 export const registerUser = async (userData) => {
-  const res = await axios.post(`${API_URL}/register`, userData);
+  const res = await axios.post(`${API_URL}/createUser`, userData);
   return res.data; // { user, token }
 };
 
@@ -13,9 +13,9 @@ export const loginUser = async (credentials) => {
   return res.data; // { user, token }
 };
 
-export const logout = () => {
+export const logout = async () => {
   // If you store token in localStorage
-  localStorage.removeItem("token");
+  const logout = await axios.post(`${API_URL}/logout`)
 };
 
 export const getProfile = async (token) => {

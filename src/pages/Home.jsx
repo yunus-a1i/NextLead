@@ -27,7 +27,7 @@ export default function Home() {
         },
         // ... more interview objects
       ]);
-      setIsLoading(false);
+      
     }, 1000);
   }, []);
 
@@ -43,6 +43,7 @@ export default function Home() {
     try {
       const data = await getInterviews();
       setInterviews(data);
+      setIsLoading(false);
     } catch (err) {
       console.error(err);
     }
