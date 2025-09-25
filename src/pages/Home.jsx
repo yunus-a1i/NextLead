@@ -68,7 +68,7 @@ export default function Home() {
       <SearchBar onSearch={handleSearch} />
 
       {user?.role === "recruiter" && (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 border border-red-500">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 ">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
             Post a New Interview
           </h2>
