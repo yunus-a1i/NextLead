@@ -77,7 +77,7 @@ export default function Home() {
       )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <h2 className="text-2xl border border-red-500 md:text-3xl font-bold text-gray-800 mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
           Available Interviews
           <span className="text-gray-500 text-lg font-normal ml-2">
             ({interviews.length} results)
