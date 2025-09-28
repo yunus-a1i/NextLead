@@ -52,7 +52,7 @@ export default function Navbar() {
           )}
           <Link
             className="bg-blue-100 text-blue-600 px-4 py-1 rounded-full cursor-pointer hover:bg-blue-200 transition-colors"
-            to={"/signup"}
+            to={"/register"}
           >
             Sign Up
           </Link>
@@ -106,7 +106,7 @@ export default function Navbar() {
             <Link to={"/login"}>Login</Link>
             <Link
               className="bg-blue-100 text-blue-600 px-4 py-2 rounded-full inline-block"
-              to={"/signup"}
+              to={"/register"}
             >
               Sign Up
             </Link>

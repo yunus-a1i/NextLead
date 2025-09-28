@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 export default function HeroSection() {
 
   return (
-    <section className="relative bg-gradient-to-r from-blue-500 to-indigo-600 py-20 md:py-28 text-center overflow-hidden">
+    <section className="relative bg-gradient-to-r from-blue-500/90 to-indigo-600/90 backdrop-blur-3xl py-20 md:py-28 text-center overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full opacity-10">
-        <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-white"></div>
+        <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-white/80 backdrop-blur-3xl drop-shadow-2xl shadow-2xl"></div>
         <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-white"></div>
       </div>
       

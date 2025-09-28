@@ -48,7 +48,7 @@ export default function Home() {
           </span>
         </h2>
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
               <div
@@ -69,16 +69,16 @@ export default function Home() {
               </div>
             ))}
           </div>
-        ) : (
+        ) : ( */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {interviews.map((intv) => (
               <InterviewCard key={intv.id} interview={intv} />
             ))}
           </div>
-        )}
+        {/* // )} */}
       </div>
 
-      {!isLoading && interviews.length === 0 && (
+      {/* {!isLoading && interviews.length === 0 && (
         <div className="max-w-3xl mx-auto text-center py-16">
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-2xl font-bold text-gray-700 mb-2">
@@ -88,7 +88,7 @@ export default function Home() {
             Try adjusting your search filters to find more opportunities
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

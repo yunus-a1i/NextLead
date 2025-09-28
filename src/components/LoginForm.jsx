@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {loading, error, user} = useSelector((state) => state.user);
+  const {loading, error} = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
@@ -20,6 +20,7 @@ export default function LoginForm() {
   };
 
   return (
+    <>
     <form
       onSubmit={handleSubmit}
       className="max-w-sm mx-auto bg-white p-6 rounded-lg shadow-md"
@@ -46,5 +47,14 @@ export default function LoginForm() {
         {loading ? "Logging in..." : "Login"}
       </button>
     </form>
+    <div className="max-w-sm mx-auto mt-4 text-center">
+        <p className="text-gray-600">
+          Don't have an account?{" "}
+          <a href="/register" className="text-blue-600 hover:underline">
+            Register here
+          </a>
+        </p>
+      </div>
+    </>
   );
 }
