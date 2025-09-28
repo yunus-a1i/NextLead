@@ -1,18 +1,18 @@
-// src/components/LoginForm.jsx
 import { useState } from "react";
-import { loginUser } from "../services/authService";
+import { loginUser } from "../redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {loading, error, user} = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await loginUser({ email, password });
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("token", data.token);
-
+      const data = { email, password };
+      dispatch(loginUser(data));
       alert("Login successful");
     } catch (err) {
       alert(err.message);
@@ -41,8 +41,9 @@ export default function LoginForm() {
         className="w-full p-2 border rounded mb-4"
         required
       />
+      {error && <p className="text-red-500 mb-4">{error}</p>}
       <button className="w-full bg-blue-600 text-white py-2 rounded">
-        Login
+        {loading ? "Logging in..." : "Login"}
       </button>
     </form>
   );

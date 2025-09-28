@@ -4,12 +4,9 @@ import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import SearchBar from "../components/SearchBar";
 import InterviewCard from "../components/InterviewCard";
-import { getInterviews } from "../services/interviewServices";
-import PostInterviewForm from "../components/PostInterviewForm";
 
 export default function Home() {
   const [interviews, setInterviews] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Simulate API call with delay
@@ -27,54 +24,21 @@ export default function Home() {
         },
         // ... more interview objects
       ]);
-      
     }, 1000);
   }, []);
-
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    loadInterviews();
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) setUser(JSON.parse(savedUser));
-  }, []);
-
-  const loadInterviews = async () => {
-    try {
-      const data = await getInterviews();
-      setInterviews(data);
-      setIsLoading(false);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleSearch = async (filters) => {
-    try {
-      const res = await fetch(
-        `/api/interviews?location=${filters.location}&keyword=${filters.keyword}`
-      );
-      const data = await res.json();
-      setInterviews(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <HeroSection />
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar />
 
-      {user?.role === "recruiter" && (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 ">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Post a New Interview
-          </h2>
-          <PostInterviewForm onPosted={loadInterviews} />
-        </div>
-      )}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 ">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          Post a New Interview
+        </h2>
+        {/* <PostInterviewForm onPosted={loadInterviews} /> */}
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">

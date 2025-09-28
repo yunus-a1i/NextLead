@@ -1,6 +1,5 @@
 // src/components/RegisterForm.jsx
 import { useState } from "react";
-import { registerUser } from "../services/authService";
 
 export default function RegisterForm() {
   const [form, setForm] = useState({ name: "", email: "", password: "", phone: "", role: "candidate" });
@@ -9,19 +8,19 @@ export default function RegisterForm() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const data = await registerUser(form);
-      console.log(data);
-      alert("Registration successful");
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const data = await registerUser(form);
+  //     console.log(data);
+  //     alert("Registration successful");
+  //   } catch (err) {
+  //     alert(err.message);
+  //   }
+  // };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto bg-white p-6 rounded-lg shadow-md">
+    <form className="max-w-sm mx-auto bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">Register</h2>
       <input name="name" placeholder="Name" value={form.name} onChange={handleChange} className="w-full p-2 border rounded mb-4" required />
       <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} className="w-full p-2 border rounded mb-4" required />
