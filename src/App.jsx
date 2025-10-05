@@ -13,6 +13,8 @@ import HelpCenter from "./pages/HelpCenter";
 import Blog from "./pages/BlogPage";
 import SomethingWentWrongPage from "./pages/SomethingWentWrongPage";
 import BlogDetailPage from "./pages/BlogDetailPage";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
 
 
 function App() {
@@ -20,8 +22,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route path="/login" element={<LoginForm />} />
         <Route path="/journey" element={<BeginJourney />} />
         <Route path="/interviews" element={<InterviewsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
