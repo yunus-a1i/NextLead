@@ -19,7 +19,6 @@ import RegisterForm from "./components/RegisterForm";
 
 function App() {
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<RegisterForm />} />
@@ -36,7 +35,6 @@ function App() {
         <Route path="*" element={<SomethingWentWrongPage />} />
         {/* Add more routes here */}
       </Routes>
-    </BrowserRouter>
   );
 }
 
