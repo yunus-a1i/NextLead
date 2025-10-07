@@ -158,7 +158,7 @@ export default function Navbar() {
                       to="/register"
                       className="border border-gray-800 text-gray-800 px-6 py-2.5 font-light tracking-wide text-sm hover:bg-gray-800 hover:text-white transition-all duration-500"
                     >
-                      Get Started
+                      Get Started Now
                     </Link>
                   </motion.div>
                 </>
