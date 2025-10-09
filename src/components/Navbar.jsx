@@ -47,7 +47,7 @@ export default function Navbar() {
     { name: "Home", path: "/", icon: Home },
     ...(user?.role === "recruiter"
       ? [{ name: "Post Interview", path: "/post-interview", icon: Briefcase }]
-      : []),
+      : [{ name: "View Jobs", path: "/interviews", icon: Briefcase }]),
   ];
 
   const mobileMenuVariants = {
