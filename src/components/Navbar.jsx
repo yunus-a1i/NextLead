@@ -9,6 +9,7 @@ import {
   Home,
   Briefcase,
   ChevronDown,
+  ChevronRight
 } from "lucide-react";
 import LogoutModal from "./LogoutModal";
 
@@ -47,7 +48,7 @@ export default function Navbar() {
     { name: "Home", path: "/", icon: Home },
     ...(user?.role === "recruiter"
       ? [{ name: "Post Interview", path: "/post-interview", icon: Briefcase }]
-      : [{ name: "View Jobs", path: "/interviews", icon: Briefcase }]),
+      : [{ name: "View Jobs", path: "/interviews", icon: ChevronRight }]),
   ];
 
   const mobileMenuVariants = {
