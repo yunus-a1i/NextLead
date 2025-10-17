@@ -169,7 +169,7 @@ export default function Navbar() {
                     className="flex items-center space-x-3 cursor-pointer"
                     whileHover={{ x: 2 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => navigate("/profile")}
+                    onClick={() => navigate("/candidate/profile")}
                   >
                     <div className="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center">
                       <User size={14} className="text-gray-600" />

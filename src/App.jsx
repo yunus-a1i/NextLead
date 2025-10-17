@@ -14,6 +14,8 @@ import BlogDetailPage from "./pages/BlogDetailPage";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import Layout from "./layouts/Layout";
+import RecruiterDashboard from "./pages/RecruiterDashboard";
+import CandidateDashboard from "./pages/CandidateDashboard";
 
 function App() {
   return (
@@ -25,15 +27,19 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/journey" element={<BeginJourney />} />
         <Route path="/interviews" element={<InterviewsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/candidate/profile" element={<ProfilePage />} />
         <Route path="/candidates" element={<ForCandidates />} />
         <Route path="/recruiters" element={<ForRecruiters />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/help" element={<HelpCenter />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/detail" element={<BlogDetailPage />} />
       </Route>
+      <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+      <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
       <Route path="*" element={<SomethingWentWrongPage />} />
+
+      {/* future */}
+      {/* <Route path="/blog/detail" element={<BlogDetailPage />} /> */}
+      {/* <Route path="/blog" element={<Blog />} /> */}
     </Routes>
   );
 }

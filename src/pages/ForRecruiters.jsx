@@ -168,7 +168,7 @@ export default function ForRecruiters() {
                 transition={{ duration: 0.3 }}
               >
                 <Link
-                  to="/register"
+                  to="/recruiter/dashboard"
                   className="group inline-flex items-center gap-4 px-12 py-4 bg-gray-800 text-white font-light tracking-wider hover:bg-gray-900 transition-all duration-500"
                 >
                   <span className="text-sm uppercase tracking-[0.2em]">Start Hiring</span>
