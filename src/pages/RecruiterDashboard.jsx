@@ -531,42 +531,28 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
 }
 
 // Post Job Modal Component
-function PostJobModal({ onClose, onSave }) {
+function PostJobModal({ onClose, onSave, hrId, domainId }) {
   const [formData, setFormData] = useState({
-    title: '',
-    company: '',
-    type: 'Full-time',
-    location: '',
-    salary: '',
-    experience: '',
-    description: '',
-    requirements: ['']
+    hrId: hrId || "",           // ObjectId of HR
+    domainId: domainId || "",   // ObjectId of domain
+    jobTitle: "",
+    description: "",
+    qualification: "",
+    experienceRequired: "",
+    hiringDriveStart: "",
+    hiringDriveEnd: "",
+    location: "",
+    address: "",
+    email: "",
+    phone: "",
+    salary: "",
+    openVacancies: 1,
+    driveStatus: true,
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(formData);
-  };
-
-  const addRequirement = () => {
-    setFormData(prev => ({
-      ...prev,
-      requirements: [...prev.requirements, '']
-    }));
-  };
-
-  const updateRequirement = (index, value) => {
-    setFormData(prev => ({
-      ...prev,
-      requirements: prev.requirements.map((req, i) => i === index ? value : req)
-    }));
-  };
-
-  const removeRequirement = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      requirements: prev.requirements.filter((_, i) => i !== index)
-    }));
   };
 
   return (
@@ -582,142 +568,204 @@ function PostJobModal({ onClose, onSave }) {
         exit={{ opacity: 0, scale: 0.9, y: -20 }}
         className="bg-white border border-gray-200 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
       >
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-light text-gray-800 tracking-wide">Post New Job</h2>
-            <button
-              onClick={onClose}
-              className="p-2 border border-gray-300 text-gray-600 hover:border-gray-800 hover:text-gray-800 transition-all duration-500"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+          <h2 className="text-2xl font-light text-gray-800 tracking-wide">
+            Post New Job
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-2 border border-gray-300 text-gray-600 hover:border-gray-800 hover:text-gray-800 transition-all duration-500"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">Job Title *</label>
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Job Title *
+              </label>
               <input
                 type="text"
                 required
-                value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                value={formData.jobTitle}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, jobTitle: e.target.value }))
+                }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                 placeholder="e.g. Senior Frontend Developer"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">Company *</label>
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Qualification *
+              </label>
               <input
                 type="text"
                 required
-                value={formData.company}
-                onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
+                value={formData.qualification}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, qualification: e.target.value }))
+                }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
-                placeholder="Your company name"
+                placeholder="e.g. B.Tech, MCA"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">Job Type *</label>
-              <select
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Experience Required *
+              </label>
+              <input
+                type="text"
                 required
-                value={formData.type}
-                onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
+                value={formData.experienceRequired}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, experienceRequired: e.target.value }))
+                }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
-              >
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Contract">Contract</option>
-                <option value="Internship">Internship</option>
-                <option value="Remote">Remote</option>
-              </select>
+                placeholder="e.g. 2-4 years"
+              />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">Location *</label>
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Hiring Drive Start *
+              </label>
+              <input
+                type="date"
+                required
+                value={formData.hiringDriveStart}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, hiringDriveStart: e.target.value }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Hiring Drive End *
+              </label>
+              <input
+                type="date"
+                required
+                value={formData.hiringDriveEnd}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, hiringDriveEnd: e.target.value }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Location *
+              </label>
               <input
                 type="text"
                 required
                 value={formData.location}
-                onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, location: e.target.value }))
+                }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
-                placeholder="e.g. San Francisco, CA or Remote"
+                placeholder="City, State"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">Salary Range</label>
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Address
+              </label>
+              <input
+                type="text"
+                value={formData.address}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, address: e.target.value }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                placeholder="Company address"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Email
+              </label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, email: e.target.value }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                placeholder="hr@company.com"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Phone
+              </label>
+              <input
+                type="text"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, phone: e.target.value }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                placeholder="e.g. +1 123-456-7890"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Salary
+              </label>
               <input
                 type="text"
                 value={formData.salary}
-                onChange={(e) => setFormData(prev => ({ ...prev, salary: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, salary: e.target.value }))
+                }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                 placeholder="e.g. $90,000 - $120,000"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">Experience Level *</label>
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Open Vacancies *
+              </label>
               <input
-                type="text"
+                type="number"
+                min={1}
                 required
-                value={formData.experience}
-                onChange={(e) => setFormData(prev => ({ ...prev, experience: e.target.value }))}
+                value={formData.openVacancies}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, openVacancies: +e.target.value }))
+                }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
-                placeholder="e.g. 3-5 years"
               />
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-xs font-light text-gray-600 tracking-wide uppercase">Job Description *</label>
-            <textarea
-              required
-              rows="4"
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500 resize-none"
-              placeholder="Describe the role, responsibilities, and what makes your company great..."
-            />
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">Requirements</label>
-              <button
-                type="button"
-                onClick={addRequirement}
-                className="flex items-center gap-1 text-gray-600 hover:text-gray-800 font-light tracking-wide text-sm transition-colors duration-300"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Add Requirement</span>
-              </button>
-            </div>
-            
-            <div className="space-y-2">
-              {formData.requirements.map((requirement, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={requirement}
-                    onChange={(e) => updateRequirement(index, e.target.value)}
-                    className="flex-1 px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
-                    placeholder="e.g. 3+ years of React experience"
-                  />
-                  {formData.requirements.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeRequirement(index)}
-                      className="p-3 border border-gray-300 text-gray-600 hover:border-red-600 hover:text-red-600 transition-all duration-500"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              ))}
+            <div className="space-y-2 col-span-2">
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Job Description *
+              </label>
+              <textarea
+                required
+                rows="4"
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, description: e.target.value }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500 resize-none"
+                placeholder="Describe the role, responsibilities, and what makes your company great..."
+              />
             </div>
           </div>
 
