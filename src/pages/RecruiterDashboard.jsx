@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
+import {
   Briefcase,
   Plus,
   Users,
@@ -19,11 +19,12 @@ import {
   MapPin,
   DollarSign,
   Building,
-  FileText
+  FileText,
+  User,
 } from "lucide-react";
 
 export default function RecruiterDashboard() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [showPostJobModal, setShowPostJobModal] = useState(false);
   const [jobs, setJobs] = useState([
     {
@@ -39,8 +40,13 @@ export default function RecruiterDashboard() {
       hired: 2,
       status: "active",
       postedDate: "2024-12-15",
-      description: "We are looking for an experienced Frontend Developer with React expertise to join our growing team.",
-      requirements: ["5+ years React experience", "TypeScript proficiency", "Team leadership experience"]
+      description:
+        "We are looking for an experienced Frontend Developer with React expertise to join our growing team.",
+      requirements: [
+        "5+ years React experience",
+        "TypeScript proficiency",
+        "Team leadership experience",
+      ],
     },
     {
       id: 2,
@@ -55,9 +61,14 @@ export default function RecruiterDashboard() {
       hired: 1,
       status: "active",
       postedDate: "2024-12-10",
-      description: "Join our product team to drive innovation and deliver exceptional user experiences.",
-      requirements: ["Product management experience", "Agile methodology", "User research skills"]
-    }
+      description:
+        "Join our product team to drive innovation and deliver exceptional user experiences.",
+      requirements: [
+        "Product management experience",
+        "Agile methodology",
+        "User research skills",
+      ],
+    },
   ]);
 
   const stats = {
@@ -66,7 +77,7 @@ export default function RecruiterDashboard() {
     totalApplications: 156,
     interviewsScheduled: 42,
     hiredCandidates: 15,
-    responseRate: "85%"
+    responseRate: "85%",
   };
 
   const recentActivity = [
@@ -75,22 +86,22 @@ export default function RecruiterDashboard() {
       candidate: "Sarah Johnson",
       job: "Senior Frontend Developer",
       action: "applied",
-      time: "2 hours ago"
+      time: "2 hours ago",
     },
     {
       id: 2,
       candidate: "Mike Chen",
       job: "Product Manager",
       action: "scheduled interview",
-      time: "5 hours ago"
+      time: "5 hours ago",
     },
     {
       id: 3,
       candidate: "Emily Davis",
       job: "Senior Frontend Developer",
       action: "hired",
-      time: "1 day ago"
-    }
+      time: "1 day ago",
+    },
   ];
 
   return (
@@ -101,7 +112,9 @@ export default function RecruiterDashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 border border-gray-300 flex items-center justify-center">
-                <span className="text-gray-800 font-light text-lg tracking-tight">N</span>
+                <span className="text-gray-800 font-light text-lg tracking-tight">
+                  N
+                </span>
               </div>
               <span className="text-2xl font-light text-gray-800 tracking-wide">
                 NextLead
@@ -128,14 +141,32 @@ export default function RecruiterDashboard() {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white border border-gray-200 p-6 space-y-6 sticky top-24">
+              {/* Profile Summary */}
+              <div className="text-center space-y-4">
+                <div className="w-20 h-20 border border-gray-300 rounded-full mx-auto flex items-center justify-center">
+                  <User className="w-8 h-8 text-gray-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-light text-gray-800 tracking-wide mb-1">
+                    John Doe
+                  </h3>
+                  <p className="text-gray-600 font-light tracking-wide text-sm">
+                    Technical Recruiter
+                  </p>
+                  <p className="text-gray-500 font-light tracking-wide text-xs mt-1">
+                    San Francisco, CA
+                  </p>
+                </div>
+                <div className="w-16 h-px bg-gray-300 mx-auto"></div>
+              </div>
               <nav className="space-y-2">
                 {[
-                  { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-                  { id: 'jobs', label: 'Job Posts', icon: Briefcase },
-                  { id: 'candidates', label: 'Candidates', icon: Users },
-                  { id: 'interviews', label: 'Interviews', icon: Calendar },
-                  { id: 'messages', label: 'Messages', icon: MessageCircle },
-                  { id: 'analytics', label: 'Analytics', icon: FileText }
+                  { id: "dashboard", label: "Dashboard", icon: BarChart3 },
+                  { id: "jobs", label: "Job Posts", icon: Briefcase },
+                  { id: "candidates", label: "Candidates", icon: Users },
+                  { id: "interviews", label: "Interviews", icon: Calendar },
+                  { id: "messages", label: "Messages", icon: MessageCircle },
+                  { id: "analytics", label: "Analytics", icon: FileText },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -144,8 +175,8 @@ export default function RecruiterDashboard() {
                       onClick={() => setActiveTab(item.id)}
                       className={`w-full flex items-center gap-3 px-3 py-3 text-left font-light tracking-wide transition-all duration-300 ${
                         activeTab === item.id
-                          ? 'bg-gray-800 text-white'
-                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                          ? "bg-gray-800 text-white"
+                          : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -160,8 +191,8 @@ export default function RecruiterDashboard() {
           {/* Main Content */}
           <div className="lg:col-span-3">
             <AnimatePresence mode="wait">
-              {activeTab === 'dashboard' && (
-                <DashboardTab 
+              {activeTab === "dashboard" && (
+                <DashboardTab
                   stats={stats}
                   recentActivity={recentActivity}
                   jobs={jobs}
@@ -169,22 +200,22 @@ export default function RecruiterDashboard() {
                 />
               )}
 
-              {activeTab === 'jobs' && (
-                <JobsTab 
+              {activeTab === "jobs" && (
+                <JobsTab
                   jobs={jobs}
-                  onEditJob={(job) => {/* Edit logic */}}
-                  onDeleteJob={(id) => {/* Delete logic */}}
+                  onEditJob={(job) => {
+                    /* Edit logic */
+                  }}
+                  onDeleteJob={(id) => {
+                    /* Delete logic */
+                  }}
                   onPostJob={() => setShowPostJobModal(true)}
                 />
               )}
 
-              {activeTab === 'candidates' && (
-                <CandidatesTab />
-              )}
+              {activeTab === "candidates" && <CandidatesTab />}
 
-              {activeTab === 'interviews' && (
-                <InterviewsTab />
-              )}
+              {activeTab === "interviews" && <InterviewsTab />}
             </AnimatePresence>
           </div>
         </div>
@@ -193,7 +224,7 @@ export default function RecruiterDashboard() {
       {/* Post Job Modal */}
       <AnimatePresence>
         {showPostJobModal && (
-          <PostJobModal 
+          <PostJobModal
             onClose={() => setShowPostJobModal(false)}
             onSave={(jobData) => {
               const newJob = {
@@ -203,7 +234,7 @@ export default function RecruiterDashboard() {
                 interviews: 0,
                 hired: 0,
                 status: "active",
-                postedDate: new Date().toISOString().split('T')[0]
+                postedDate: new Date().toISOString().split("T")[0],
               };
               setJobs([...jobs, newJob]);
               setShowPostJobModal(false);
@@ -227,12 +258,28 @@ function DashboardTab({ stats, recentActivity, jobs, onPostJob }) {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[
-          { label: 'Total Jobs', value: stats.totalJobs, icon: Briefcase },
-          { label: 'Active Jobs', value: stats.activeJobs, icon: Eye },
-          { label: 'Total Applications', value: stats.totalApplications, icon: Users },
-          { label: 'Interviews', value: stats.interviewsScheduled, icon: Calendar },
-          { label: 'Hired Candidates', value: stats.hiredCandidates, icon: CheckCircle },
-          { label: 'Response Rate', value: stats.responseRate, icon: BarChart3 }
+          { label: "Total Jobs", value: stats.totalJobs, icon: Briefcase },
+          { label: "Active Jobs", value: stats.activeJobs, icon: Eye },
+          {
+            label: "Total Applications",
+            value: stats.totalApplications,
+            icon: Users,
+          },
+          {
+            label: "Interviews",
+            value: stats.interviewsScheduled,
+            icon: Calendar,
+          },
+          {
+            label: "Hired Candidates",
+            value: stats.hiredCandidates,
+            icon: CheckCircle,
+          },
+          {
+            label: "Response Rate",
+            value: stats.responseRate,
+            icon: BarChart3,
+          },
         ].map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -246,8 +293,12 @@ function DashboardTab({ stats, recentActivity, jobs, onPostJob }) {
               <div className="w-12 h-12 border border-gray-300 mx-auto mb-4 flex items-center justify-center group-hover:border-gray-800 transition-colors duration-500">
                 <Icon className="w-5 h-5 text-gray-600 group-hover:text-gray-800 transition-colors duration-500" />
               </div>
-              <div className="text-2xl font-light text-gray-800 mb-1">{stat.value}</div>
-              <div className="text-gray-600 font-light tracking-wide text-sm">{stat.label}</div>
+              <div className="text-2xl font-light text-gray-800 mb-1">
+                {stat.value}
+              </div>
+              <div className="text-gray-600 font-light tracking-wide text-sm">
+                {stat.label}
+              </div>
             </motion.div>
           );
         })}
@@ -257,7 +308,9 @@ function DashboardTab({ stats, recentActivity, jobs, onPostJob }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Recent Activity */}
         <div className="bg-white border border-gray-200 p-6">
-          <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">Recent Activity</h3>
+          <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">
+            Recent Activity
+          </h3>
           <div className="space-y-4">
             {recentActivity.map((activity, index) => (
               <motion.div
@@ -288,13 +341,15 @@ function DashboardTab({ stats, recentActivity, jobs, onPostJob }) {
 
         {/* Quick Actions */}
         <div className="bg-white border border-gray-200 p-6">
-          <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">Quick Actions</h3>
+          <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">
+            Quick Actions
+          </h3>
           <div className="space-y-3">
             {[
-              { label: 'Post New Job', icon: Plus, action: onPostJob },
-              { label: 'Review Applications', icon: Users, action: () => {} },
-              { label: 'Schedule Interview', icon: Calendar, action: () => {} },
-              { label: 'View Analytics', icon: BarChart3, action: () => {} }
+              { label: "Post New Job", icon: Plus, action: onPostJob },
+              { label: "Review Applications", icon: Users, action: () => {} },
+              { label: "Schedule Interview", icon: Calendar, action: () => {} },
+              { label: "View Analytics", icon: BarChart3, action: () => {} },
             ].map((action, index) => {
               const Icon = action.icon;
               return (
@@ -316,7 +371,9 @@ function DashboardTab({ stats, recentActivity, jobs, onPostJob }) {
       {/* Recent Job Posts */}
       <div className="bg-white border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-light text-gray-800 tracking-wide">Recent Job Posts</h3>
+          <h3 className="text-lg font-light text-gray-800 tracking-wide">
+            Recent Job Posts
+          </h3>
           <button className="text-gray-600 hover:text-gray-800 font-light tracking-wide text-sm transition-colors duration-300">
             View All
           </button>
@@ -331,7 +388,9 @@ function DashboardTab({ stats, recentActivity, jobs, onPostJob }) {
               className="flex items-center justify-between p-4 border border-gray-100 hover:border-gray-200 transition-colors duration-300"
             >
               <div>
-                <h4 className="text-gray-800 font-light tracking-wide">{job.title}</h4>
+                <h4 className="text-gray-800 font-light tracking-wide">
+                  {job.title}
+                </h4>
                 <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
                   <span className="flex items-center gap-1">
                     <Building className="w-3 h-3" />
@@ -348,11 +407,13 @@ function DashboardTab({ stats, recentActivity, jobs, onPostJob }) {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`px-2 py-1 text-xs font-light tracking-wide ${
-                  job.status === 'active' 
-                    ? 'bg-green-100 text-green-800 border border-green-200'
-                    : 'bg-gray-100 text-gray-800 border border-gray-200'
-                }`}>
+                <span
+                  className={`px-2 py-1 text-xs font-light tracking-wide ${
+                    job.status === "active"
+                      ? "bg-green-100 text-green-800 border border-green-200"
+                      : "bg-gray-100 text-gray-800 border border-gray-200"
+                  }`}
+                >
                   {job.status}
                 </span>
               </div>
@@ -366,13 +427,14 @@ function DashboardTab({ stats, recentActivity, jobs, onPostJob }) {
 
 // Jobs Tab Component
 function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  const filteredJobs = jobs.filter(job => {
-    const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         job.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || job.status === statusFilter;
+  const filteredJobs = jobs.filter((job) => {
+    const matchesSearch =
+      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.company.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || job.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -386,7 +448,9 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">Job Posts</h2>
+          <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">
+            Job Posts
+          </h2>
           <p className="text-gray-600 font-light tracking-wide">
             Manage your job listings and track applications
           </p>
@@ -439,16 +503,20 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-xl font-light text-gray-800 tracking-wide">{job.title}</h3>
-                  <span className={`px-2 py-1 text-xs font-light tracking-wide ${
-                    job.status === 'active' 
-                      ? 'bg-green-100 text-green-800 border border-green-200'
-                      : 'bg-gray-100 text-gray-800 border border-gray-200'
-                  }`}>
+                  <h3 className="text-xl font-light text-gray-800 tracking-wide">
+                    {job.title}
+                  </h3>
+                  <span
+                    className={`px-2 py-1 text-xs font-light tracking-wide ${
+                      job.status === "active"
+                        ? "bg-green-100 text-green-800 border border-green-200"
+                        : "bg-gray-100 text-gray-800 border border-gray-200"
+                    }`}
+                  >
                     {job.status}
                   </span>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
                   <span className="flex items-center gap-1">
                     <Building className="w-4 h-4" />
@@ -533,8 +601,8 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
 // Post Job Modal Component
 function PostJobModal({ onClose, onSave, hrId, domainId }) {
   const [formData, setFormData] = useState({
-    hrId: hrId || "",           // ObjectId of HR
-    domainId: domainId || "",   // ObjectId of domain
+    hrId: hrId || "", // ObjectId of HR
+    domainId: domainId || "", // ObjectId of domain
     jobTitle: "",
     description: "",
     qualification: "",
@@ -607,7 +675,10 @@ function PostJobModal({ onClose, onSave, hrId, domainId }) {
                 required
                 value={formData.qualification}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, qualification: e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    qualification: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                 placeholder="e.g. B.Tech, MCA"
@@ -623,7 +694,10 @@ function PostJobModal({ onClose, onSave, hrId, domainId }) {
                 required
                 value={formData.experienceRequired}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, experienceRequired: e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    experienceRequired: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                 placeholder="e.g. 2-4 years"
@@ -639,7 +713,10 @@ function PostJobModal({ onClose, onSave, hrId, domainId }) {
                 required
                 value={formData.hiringDriveStart}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, hiringDriveStart: e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    hiringDriveStart: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
               />
@@ -654,7 +731,10 @@ function PostJobModal({ onClose, onSave, hrId, domainId }) {
                 required
                 value={formData.hiringDriveEnd}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, hiringDriveEnd: e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    hiringDriveEnd: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
               />
@@ -746,7 +826,10 @@ function PostJobModal({ onClose, onSave, hrId, domainId }) {
                 required
                 value={formData.openVacancies}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, openVacancies: +e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    openVacancies: +e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
               />
@@ -761,7 +844,10 @@ function PostJobModal({ onClose, onSave, hrId, domainId }) {
                 rows="4"
                 value={formData.description}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, description: e.target.value }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500 resize-none"
                 placeholder="Describe the role, responsibilities, and what makes your company great..."
@@ -801,7 +887,9 @@ function CandidatesTab() {
       className="text-center py-16"
     >
       <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <h3 className="text-xl font-light text-gray-800 tracking-wide mb-2">Candidates Management</h3>
+      <h3 className="text-xl font-light text-gray-800 tracking-wide mb-2">
+        Candidates Management
+      </h3>
       <p className="text-gray-600 font-light tracking-wide">
         View and manage candidate applications
       </p>
@@ -818,7 +906,9 @@ function InterviewsTab() {
       className="text-center py-16"
     >
       <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <h3 className="text-xl font-light text-gray-800 tracking-wide mb-2">Interview Scheduling</h3>
+      <h3 className="text-xl font-light text-gray-800 tracking-wide mb-2">
+        Interview Scheduling
+      </h3>
       <p className="text-gray-600 font-light tracking-wide">
         Schedule and manage candidate interviews
       </p>
