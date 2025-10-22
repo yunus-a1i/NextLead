@@ -1,6 +1,27 @@
 import axiosInstance from "../api/axiosInstance";
 
 const hrService = {
+
+  login: async (data) => {
+    try {
+      const res = await axiosInstance.post("/hr/login", data);
+      return res.data;
+    } catch (err) {
+      console.error("Login failed:", err.response?.data || err.message);
+      throw err.response?.data || new Error("Login failed");
+    }
+  },
+
+  logout: async () => {
+    try {
+      const res = await axiosInstance.post("/hr/logout");
+      return res.data;
+    } catch (err) {
+      console.error("Logout failed:", err.response?.data || err.message);
+      throw err.response?.data || new Error("Logout failed");
+    }
+  },
+  
   // Create HR
   createHr: async (hrData) => {
     const response = await axiosInstance.post(`/hr/createHr`, hrData);

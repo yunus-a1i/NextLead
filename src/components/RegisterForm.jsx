@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { createUser } from "../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Mail, Lock, Phone, ArrowRight } from "lucide-react";
+import { createHr } from "../redux/hrSlice";
 
 export default function RegisterForm() {
+  const [searchParams] = useSearchParams();
+  const role = searchParams.get("role");
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -23,9 +26,13 @@ export default function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(createUser(form)).unwrap();
+      if (role === "candidate") {
+        await dispatch(createUser(form)).unwrap();
+      } else {
+        await dispatch(createHr(form)).unwrap();
+      }
       alert("Registration successful");
-      navigate("/login");
+      navigate(`/login?role=${role}`);
     } catch (err) {
       alert(err.message || "Registration failed");
     }
@@ -232,7 +239,7 @@ export default function RegisterForm() {
             <p className="text-gray-500 text-sm font-light tracking-wide">
               Already have an account?{" "}
               <a
-                href="/login"
+                href={`/login?role=${role}`}
                 className="text-gray-800 hover:text-gray-600 font-normal transition-colors duration-500 inline-flex items-center space-x-1 group"
               >
                 <span>Sign In</span>

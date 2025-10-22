@@ -16,11 +16,13 @@ import RegisterForm from "./components/RegisterForm";
 import Layout from "./layouts/Layout";
 import RecruiterDashboard from "./pages/RecruiterDashboard";
 import CandidateDashboard from "./pages/CandidateDashboard";
+import LoginPortal from "./pages/LoginPortal";
 
 function App() {
   return (
     <Routes>
       {/* Layout Wrapper */}
+      <Route path="/login-portal" element={<LoginPortal />} />
       <Route path="/register" element={<RegisterForm />} />
       <Route path="/login" element={<LoginForm />} />
       <Route element={<Layout />}>

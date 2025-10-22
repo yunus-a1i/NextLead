@@ -9,8 +9,36 @@ const initialState = {
   message: '',
 };
 
-// Async Thunks
-export const createHrThunk = createAsyncThunk(
+// Async actions
+export const loginHr = createAsyncThunk("user/login", async (data, thunkAPI) => {
+  try {
+    const res = await hrService.login(data);
+
+    // Save token & user in localStorage
+    localStorage.setItem("token", res.accessToken);
+    localStorage.setItem("user", JSON.stringify(res.user));
+
+    return res;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response?.data || "Login failed");
+  }
+});
+
+export const logoutHr = createAsyncThunk("user/logout", async (_, thunkAPI) => {
+  try {
+    const res = await hrService.logout();
+
+    // Clear localStorage on logout
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    return res;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response?.data || "Logout failed");
+  }
+});
+
+export const createHr = createAsyncThunk(
   'hr/create',
   async (hrData, thunkAPI) => {
     try {
@@ -21,7 +49,7 @@ export const createHrThunk = createAsyncThunk(
   }
 );
 
-export const getHrThunk = createAsyncThunk(
+export const getHr = createAsyncThunk(
   'hr/get',
   async ({ id, token }, thunkAPI) => {
     try {
@@ -32,7 +60,7 @@ export const getHrThunk = createAsyncThunk(
   }
 );
 
-export const updateHrThunk = createAsyncThunk(
+export const updateHr = createAsyncThunk(
   'hr/update',
   async ({ id, hrData, token }, thunkAPI) => {
     try {
@@ -43,7 +71,7 @@ export const updateHrThunk = createAsyncThunk(
   }
 );
 
-export const deleteHrThunk = createAsyncThunk(
+export const deleteHr = createAsyncThunk(
   'hr/delete',
   async ({ id, token }, thunkAPI) => {
     try {
@@ -63,52 +91,52 @@ const hrSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Create HR
-      .addCase(createHrThunk.pending, (state) => { state.loading = true; })
-      .addCase(createHrThunk.fulfilled, (state, action) => {
+      .addCase(createHr.pending, (state) => { state.loading = true; })
+      .addCase(createHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.hr = action.payload;
       })
-      .addCase(createHrThunk.rejected, (state, action) => {
+      .addCase(createHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
         state.message = action.payload;
       })
 
       // Get HR
-      .addCase(getHrThunk.pending, (state) => { state.loading = true; })
-      .addCase(getHrThunk.fulfilled, (state, action) => {
+      .addCase(getHr.pending, (state) => { state.loading = true; })
+      .addCase(getHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.hr = action.payload;
       })
-      .addCase(getHrThunk.rejected, (state, action) => {
+      .addCase(getHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
         state.message = action.payload;
       })
 
       // Update HR
-      .addCase(updateHrThunk.pending, (state) => { state.loading = true; })
-      .addCase(updateHrThunk.fulfilled, (state, action) => {
+      .addCase(updateHr.pending, (state) => { state.loading = true; })
+      .addCase(updateHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.hr = action.payload;
       })
-      .addCase(updateHrThunk.rejected, (state, action) => {
+      .addCase(updateHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
         state.message = action.payload;
       })
 
       // Delete HR
-      .addCase(deleteHrThunk.pending, (state) => { state.loading = true; })
-      .addCase(deleteHrThunk.fulfilled, (state) => {
+      .addCase(deleteHr.pending, (state) => { state.loading = true; })
+      .addCase(deleteHr.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
         state.hr = null;
       })
-      .addCase(deleteHrThunk.rejected, (state, action) => {
+      .addCase(deleteHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
         state.message = action.payload;
