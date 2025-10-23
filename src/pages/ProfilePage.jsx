@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Briefcase, 
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Briefcase,
   GraduationCap,
   Calendar,
   Edit3,
@@ -16,59 +16,34 @@ import {
   Settings,
   FileText,
   Eye,
-  EyeOff
+  EyeOff,
 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../redux/userSlice";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState('profile');
+  const [activeTab, setActiveTab] = useState("profile");
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // Simulate fetching user data from localStorage or API
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      const userData = JSON.parse(savedUser);
-      // Add mock profile data based on role
-      const profileData = {
-        ...userData,
-        phone: "+1 (555) 123-4567",
-        location: "San Francisco, CA",
-        bio: userData.role === 'recruiter' 
-          ? "Senior Talent Acquisition Specialist with 8+ years of experience in tech recruitment."
-          : "Full-stack developer specializing in React and Node.js with 4 years of experience.",
-        skills: userData.role === 'recruiter' 
-          ? ["Talent Acquisition", "Technical Recruitment", "Interviewing", "Candidate Experience"]
-          : ["JavaScript", "React", "Node.js", "Python", "AWS"],
-        experience: userData.role === 'recruiter' 
-          ? [
-              {
-                company: "TechCorp Solutions",
-                position: "Senior Recruiter",
-                period: "2020 - Present",
-                description: "Leading technical recruitment for engineering teams"
-              }
-            ]
-          : [
-              {
-                company: "StartupXYZ",
-                position: "Frontend Developer",
-                period: "2021 - Present",
-                description: "Developing responsive web applications using React"
-              }
-            ],
-        education: [
-          {
-            institution: "University of California",
-            degree: "Bachelor of Science in Computer Science",
-            period: "2016 - 2020"
-          }
-        ]
-      };
-      setUser(profileData);
-    }
-  }, []);
+    const loadUser = async () => {
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+      if (!savedUser?._id) return;
+
+      try {
+        const user = await dispatch(fetchUser(savedUser._id)).unwrap();
+        console.log("Fetched user:", user.data);
+        setUser(user.data)
+        // setUser(data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    loadUser();
+  }, [dispatch]);
 
   const [formData, setFormData] = useState({});
 
@@ -91,9 +66,9 @@ export default function ProfilePage() {
   };
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -103,9 +78,9 @@ export default function ProfilePage() {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        duration: 0.8
-      }
-    }
+        duration: 0.8,
+      },
+    },
   };
 
   const itemVariants = {
@@ -115,9 +90,9 @@ export default function ProfilePage() {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }
-    }
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
   };
 
   if (!user) {
@@ -125,7 +100,9 @@ export default function ProfilePage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-px bg-gray-300 mx-auto mb-4"></div>
-          <p className="text-gray-600 font-light tracking-wide">Loading profile...</p>
+          <p className="text-gray-600 font-light tracking-wide">
+            Loading profile...
+          </p>
         </div>
       </div>
     );
@@ -174,21 +151,31 @@ export default function ProfilePage() {
                 {/* Navigation */}
                 <nav className="space-y-2">
                   {[
-                    { id: 'profile', label: 'Profile', icon: User },
-                    { id: 'experience', label: 'Experience', icon: Briefcase },
-                    { id: 'education', label: 'Education', icon: GraduationCap },
-                    { id: 'settings', label: 'Settings', icon: Settings },
-                    ...(user.role === 'recruiter' 
-                      ? [{ id: 'posted', label: 'Posted Interviews', icon: FileText }]
-                      : [])
-                  ].map(item => (
+                    { id: "profile", label: "Profile", icon: User },
+                    { id: "experience", label: "Experience", icon: Briefcase },
+                    {
+                      id: "education",
+                      label: "Education",
+                      icon: GraduationCap,
+                    },
+                    { id: "settings", label: "Settings", icon: Settings },
+                    ...(user.role === "recruiter"
+                      ? [
+                          {
+                            id: "posted",
+                            label: "Posted Interviews",
+                            icon: FileText,
+                          },
+                        ]
+                      : []),
+                  ].map((item) => (
                     <button
                       key={item.id}
                       onClick={() => setActiveTab(item.id)}
                       className={`w-full flex items-center gap-3 px-3 py-3 text-left font-light tracking-wide transition-all duration-300 ${
                         activeTab === item.id
-                          ? 'bg-gray-800 text-white'
-                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                          ? "bg-gray-800 text-white"
+                          : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                       }`}
                     >
                       <item.icon className="w-4 h-4" />
@@ -207,11 +194,13 @@ export default function ProfilePage() {
                   <h2 className="text-2xl font-light text-gray-800 tracking-wide capitalize">
                     {activeTab}
                   </h2>
-                  {activeTab === 'profile' && (
+                  {activeTab === "profile" && (
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+                      onClick={() =>
+                        isEditing ? handleSave() : setIsEditing(true)
+                      }
                       className="inline-flex items-center gap-2 px-4 py-2 border border-gray-800 text-gray-800 font-light tracking-wide text-sm hover:bg-gray-800 hover:text-white transition-all duration-500"
                     >
                       {isEditing ? (
@@ -231,7 +220,7 @@ export default function ProfilePage() {
 
                 <AnimatePresence mode="wait">
                   {/* Profile Tab */}
-                  {activeTab === 'profile' && (
+                  {activeTab === "profile" && (
                     <motion.div
                       key="profile"
                       initial={{ opacity: 0, y: 20 }}
@@ -248,8 +237,10 @@ export default function ProfilePage() {
                           {isEditing ? (
                             <input
                               type="text"
-                              value={formData.name || ''}
-                              onChange={(e) => handleChange('name', e.target.value)}
+                              value={formData.name || ""}
+                              onChange={(e) =>
+                                handleChange("name", e.target.value)
+                              }
                               className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                             />
                           ) : (
@@ -266,8 +257,10 @@ export default function ProfilePage() {
                           {isEditing ? (
                             <input
                               type="email"
-                              value={formData.email || ''}
-                              onChange={(e) => handleChange('email', e.target.value)}
+                              value={formData.email || ""}
+                              onChange={(e) =>
+                                handleChange("email", e.target.value)
+                              }
                               className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                             />
                           ) : (
@@ -284,13 +277,15 @@ export default function ProfilePage() {
                           {isEditing ? (
                             <input
                               type="tel"
-                              value={formData.phone || ''}
-                              onChange={(e) => handleChange('phone', e.target.value)}
+                              value={formData.contact || ""}
+                              onChange={(e) =>
+                                handleChange("contact", e.target.value)
+                              }
                               className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                             />
                           ) : (
                             <p className="px-4 py-3 text-gray-800 font-light tracking-wide border border-transparent">
-                              {user.phone}
+                              {user.contact}
                             </p>
                           )}
                         </div>
@@ -302,8 +297,10 @@ export default function ProfilePage() {
                           {isEditing ? (
                             <input
                               type="text"
-                              value={formData.location || ''}
-                              onChange={(e) => handleChange('location', e.target.value)}
+                              value={formData.location || ""}
+                              onChange={(e) =>
+                                handleChange("location", e.target.value)
+                              }
                               className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                             />
                           ) : (
@@ -321,8 +318,10 @@ export default function ProfilePage() {
                         </label>
                         {isEditing ? (
                           <textarea
-                            value={formData.bio || ''}
-                            onChange={(e) => handleChange('bio', e.target.value)}
+                            value={formData.bio || ""}
+                            onChange={(e) =>
+                              handleChange("bio", e.target.value)
+                            }
                             rows="4"
                             className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500 resize-none"
                           />
@@ -342,8 +341,13 @@ export default function ProfilePage() {
                           <input
                             type="text"
                             placeholder="Add skills separated by commas"
-                            value={formData.skills?.join(', ') || ''}
-                            onChange={(e) => handleChange('skills', e.target.value.split(',').map(s => s.trim()))}
+                            value={formData.skills?.join(", ") || ""}
+                            onChange={(e) =>
+                              handleChange(
+                                "skills",
+                                e.target.value.split(",").map((s) => s.trim())
+                              )
+                            }
                             className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                           />
                         ) : (
@@ -380,7 +384,7 @@ export default function ProfilePage() {
                   )}
 
                   {/* Experience Tab */}
-                  {activeTab === 'experience' && (
+                  {activeTab === "experience" && (
                     <motion.div
                       key="experience"
                       initial={{ opacity: 0, y: 20 }}
@@ -389,7 +393,10 @@ export default function ProfilePage() {
                       className="space-y-6"
                     >
                       {user.experience?.map((exp, index) => (
-                        <div key={index} className="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0">
+                        <div
+                          key={index}
+                          className="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0"
+                        >
                           <div className="flex justify-between items-start mb-2">
                             <h3 className="text-lg font-light text-gray-800 tracking-wide">
                               {exp.position}
@@ -410,7 +417,7 @@ export default function ProfilePage() {
                   )}
 
                   {/* Education Tab */}
-                  {activeTab === 'education' && (
+                  {activeTab === "education" && (
                     <motion.div
                       key="education"
                       initial={{ opacity: 0, y: 20 }}
@@ -419,7 +426,10 @@ export default function ProfilePage() {
                       className="space-y-6"
                     >
                       {user.education?.map((edu, index) => (
-                        <div key={index} className="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0">
+                        <div
+                          key={index}
+                          className="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0"
+                        >
                           <div className="flex justify-between items-start mb-2">
                             <h3 className="text-lg font-light text-gray-800 tracking-wide">
                               {edu.degree}
@@ -437,7 +447,7 @@ export default function ProfilePage() {
                   )}
 
                   {/* Posted Interviews (Recruiter Only) */}
-                  {activeTab === 'posted' && user.role === 'recruiter' && (
+                  {activeTab === "posted" && user.role === "recruiter" && (
                     <motion.div
                       key="posted"
                       initial={{ opacity: 0, y: 20 }}
@@ -446,14 +456,15 @@ export default function ProfilePage() {
                       className="space-y-6"
                     >
                       <p className="text-gray-600 font-light tracking-wide text-center py-8">
-                        Manage your posted interviews and view applicant statistics
+                        Manage your posted interviews and view applicant
+                        statistics
                       </p>
                       {/* Would include recruiter-specific content here */}
                     </motion.div>
                   )}
 
                   {/* Settings Tab */}
-                  {activeTab === 'settings' && (
+                  {activeTab === "settings" && (
                     <motion.div
                       key="settings"
                       initial={{ opacity: 0, y: 20 }}
@@ -465,7 +476,7 @@ export default function ProfilePage() {
                         <h3 className="text-lg font-light text-gray-800 tracking-wide">
                           Account Settings
                         </h3>
-                        
+
                         <div className="space-y-2">
                           <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
                             Current Password
@@ -480,7 +491,11 @@ export default function ProfilePage() {
                               onClick={() => setShowPassword(!showPassword)}
                               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                             >
-                              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                              {showPassword ? (
+                                <EyeOff className="w-4 h-4" />
+                              ) : (
+                                <Eye className="w-4 h-4" />
+                              )}
                             </button>
                           </div>
                         </div>

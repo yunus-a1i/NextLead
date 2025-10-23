@@ -47,3 +47,68 @@ function App() {
 }
 
 export default App;
+
+
+// app.use(
+//   cors({
+//     origin: 'http://localhost:5173',
+//     credentials: true,
+//   })
+// );
+
+// export async function updateUser(req: Request, res: Response, next: NextFunction) {
+//   try {
+//     const { id, name, contact, resumeLink, projects, domain, skills, experience, education, bio, profilePhotoLink } = req.body;
+
+//     // 1️⃣ Check for required id
+//     if (!id) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'Id is required.',
+//       });
+//     }
+
+//     // 2️⃣ Check if user exists
+//     const existingUser = await User.findById(id);
+//     if (!existingUser) {
+//       return res.status(404).json({
+//         success: false,
+//         message: 'User not found.',
+//       });
+//     }
+
+//     // 3️⃣ Build dynamic update object (only non-empty values)
+//     const updates: any = {};
+//     if (name) updates.name = name;
+//     if (contact) updates.contact = contact;
+//     if (resumeLink) updates.resumeLink = resumeLink;
+//     if (projects) updates.projects = projects;
+//     if (domain) updates.domain = domain;
+//     if (skills) updates.skills = skills;
+//     if (experience) updates.experience = experience;
+//     if (education) updates.education = education;
+//     if (bio) updates.bio = bio;
+//     if (profilePhotoLink) updates.profilePhotoLink = profilePhotoLink;
+
+//     // 4️⃣ Validate that there's at least one field to update
+//     if (Object.keys(updates).length === 0) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'No fields provided to update.',
+//       });
+//     }
+
+//     // 5️⃣ Perform update
+//     const updatedUser = await User.findByIdAndUpdate(id, { $set: updates }, { new: true }).select('-password');
+
+//     // 6️⃣ Respond
+//     return res.status(200).json({
+//       success: true,
+//       message: 'User updated successfully.',
+//       data: updatedUser,
+//     });
+//   } catch (error) {
+//     console.error('UpdateUser Error:', error);
+//     next(error);
+//   }
+// }
