@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
+import {
   Briefcase,
   FileText,
   MessageCircle,
@@ -25,11 +25,12 @@ import {
   Mail,
   Phone,
   Building,
-  DollarSign
+  DollarSign,
 } from "lucide-react";
 
 export default function CandidateDashboard() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [user, setUser] = useState(null);
   const [applications, setApplications] = useState([
     {
       id: 1,
@@ -41,7 +42,7 @@ export default function CandidateDashboard() {
       status: "interview",
       interviewDate: "2024-12-20",
       recruiter: "Sarah Chen",
-      lastUpdate: "2 hours ago"
+      lastUpdate: "2 hours ago",
     },
     {
       id: 2,
@@ -53,7 +54,7 @@ export default function CandidateDashboard() {
       status: "applied",
       interviewDate: null,
       recruiter: "Mike Rodriguez",
-      lastUpdate: "1 day ago"
+      lastUpdate: "1 day ago",
     },
     {
       id: 3,
@@ -65,7 +66,7 @@ export default function CandidateDashboard() {
       status: "rejected",
       interviewDate: null,
       recruiter: "Emily Watson",
-      lastUpdate: "3 days ago"
+      lastUpdate: "3 days ago",
     },
     {
       id: 4,
@@ -77,8 +78,8 @@ export default function CandidateDashboard() {
       status: "offer",
       interviewDate: "2024-12-18",
       recruiter: "James Thompson",
-      lastUpdate: "5 hours ago"
-    }
+      lastUpdate: "5 hours ago",
+    },
   ]);
 
   const [savedJobs, setSavedJobs] = useState([
@@ -89,7 +90,7 @@ export default function CandidateDashboard() {
       location: "Remote",
       salary: "$110,000 - $140,000",
       postedDate: "2024-12-14",
-      matchScore: 95
+      matchScore: 95,
     },
     {
       id: 2,
@@ -98,8 +99,8 @@ export default function CandidateDashboard() {
       location: "Chicago, IL",
       salary: "$105,000 - $135,000",
       postedDate: "2024-12-13",
-      matchScore: 87
-    }
+      matchScore: 87,
+    },
   ]);
 
   const [messages, setMessages] = useState([
@@ -108,9 +109,10 @@ export default function CandidateDashboard() {
       recruiter: "Sarah Chen",
       company: "TechCorp Solutions",
       subject: "Interview Invitation - Senior Frontend Role",
-      preview: "Thank you for your application. We'd like to schedule an interview...",
+      preview:
+        "Thank you for your application. We'd like to schedule an interview...",
       timestamp: "2 hours ago",
-      unread: true
+      unread: true,
     },
     {
       id: 2,
@@ -119,8 +121,8 @@ export default function CandidateDashboard() {
       subject: "Application Received",
       preview: "We've received your application and will review it shortly...",
       timestamp: "1 day ago",
-      unread: false
-    }
+      unread: false,
+    },
   ]);
 
   const stats = {
@@ -128,10 +130,22 @@ export default function CandidateDashboard() {
     interviews: 8,
     offers: 2,
     profileViews: 47,
-    responseRate: "75%"
+    responseRate: "75%",
   };
 
-  const upcomingInterviews = applications.filter(app => app.status === 'interview' && app.interviewDate);
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    console.log(savedUser);
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  console.log(user);
+
+  const upcomingInterviews = applications.filter(
+    (app) => app.status === "interview" && app.interviewDate
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -141,7 +155,9 @@ export default function CandidateDashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 border border-gray-300 flex items-center justify-center">
-                <span className="text-gray-800 font-light text-lg tracking-tight">N</span>
+                <span className="text-gray-800 font-light text-lg tracking-tight">
+                  N
+                </span>
               </div>
               <span className="text-2xl font-light text-gray-800 tracking-wide">
                 NextLead
@@ -174,13 +190,13 @@ export default function CandidateDashboard() {
                 </div>
                 <div>
                   <h3 className="text-lg font-light text-gray-800 tracking-wide mb-1">
-                    John Doe
+                    {user?.name || "loading..."}
                   </h3>
                   <p className="text-gray-600 font-light tracking-wide text-sm">
-                    Senior Frontend Developer
+                    {user?.domain || "loading..."}
                   </p>
                   <p className="text-gray-500 font-light tracking-wide text-xs mt-1">
-                    San Francisco, CA
+                    {user?.email || "loading..."}
                   </p>
                 </div>
                 <div className="w-16 h-px bg-gray-300 mx-auto"></div>
@@ -188,13 +204,17 @@ export default function CandidateDashboard() {
 
               <nav className="space-y-2">
                 {[
-                  { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
-                  { id: 'applications', label: 'Applications', icon: Briefcase },
-                  { id: 'resume', label: 'Resume Builder', icon: FileText },
-                  { id: 'saved', label: 'Saved Jobs', icon: Bookmark },
-                  { id: 'messages', label: 'Messages', icon: MessageCircle },
-                  { id: 'profile', label: 'Profile Builder', icon: User },
-                  { id: 'settings', label: 'Settings', icon: Settings }
+                  { id: "dashboard", label: "Dashboard", icon: BarChart3 },
+                  {
+                    id: "applications",
+                    label: "Applications",
+                    icon: Briefcase,
+                  },
+                  { id: "resume", label: "Resume Builder", icon: FileText },
+                  { id: "saved", label: "Saved Jobs", icon: Bookmark },
+                  { id: "messages", label: "Messages", icon: MessageCircle },
+                  { id: "profile", label: "Profile Builder", icon: User },
+                  { id: "settings", label: "Settings", icon: Settings },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -203,8 +223,8 @@ export default function CandidateDashboard() {
                       onClick={() => setActiveTab(item.id)}
                       className={`w-full flex items-center gap-3 px-3 py-3 text-left font-light tracking-wide transition-all duration-300 ${
                         activeTab === item.id
-                          ? 'bg-gray-800 text-white'
-                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                          ? "bg-gray-800 text-white"
+                          : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -219,8 +239,8 @@ export default function CandidateDashboard() {
           {/* Main Content */}
           <div className="lg:col-span-3">
             <AnimatePresence mode="wait">
-              {activeTab === 'dashboard' && (
-                <DashboardTab 
+              {activeTab === "dashboard" && (
+                <DashboardTab
                   stats={stats}
                   applications={applications}
                   upcomingInterviews={upcomingInterviews}
@@ -228,44 +248,44 @@ export default function CandidateDashboard() {
                 />
               )}
 
-              {activeTab === 'applications' && (
-                <ApplicationsTab 
+              {activeTab === "applications" && (
+                <ApplicationsTab
                   applications={applications}
                   onUpdateApplication={(id, updates) => {
-                    setApplications(prev => prev.map(app => 
-                      app.id === id ? { ...app, ...updates } : app
-                    ));
+                    setApplications((prev) =>
+                      prev.map((app) =>
+                        app.id === id ? { ...app, ...updates } : app
+                      )
+                    );
                   }}
                 />
               )}
 
-              {activeTab === 'saved' && (
-                <SavedJobsTab 
+              {activeTab === "saved" && (
+                <SavedJobsTab
                   savedJobs={savedJobs}
                   onRemoveSavedJob={(id) => {
-                    setSavedJobs(prev => prev.filter(job => job.id !== id));
+                    setSavedJobs((prev) => prev.filter((job) => job.id !== id));
                   }}
                 />
               )}
 
-              {activeTab === 'messages' && (
-                <MessagesTab 
+              {activeTab === "messages" && (
+                <MessagesTab
                   messages={messages}
                   onMarkAsRead={(id) => {
-                    setMessages(prev => prev.map(msg => 
-                      msg.id === id ? { ...msg, unread: false } : msg
-                    ));
+                    setMessages((prev) =>
+                      prev.map((msg) =>
+                        msg.id === id ? { ...msg, unread: false } : msg
+                      )
+                    );
                   }}
                 />
               )}
 
-              {activeTab === 'profile' && (
-                <ProfileBuilderTab />
-              )}
+              {activeTab === "profile" && <ProfileBuilderTab user={user} />}
 
-              {activeTab === 'resume' && (
-                <ResumeBuilderTab />
-              )}
+              {activeTab === "resume" && <ResumeBuilderTab user={user} />}
             </AnimatePresence>
           </div>
         </div>
@@ -277,10 +297,10 @@ export default function CandidateDashboard() {
 // Dashboard Tab Component
 function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
   const statusCounts = {
-    applied: applications.filter(app => app.status === 'applied').length,
-    interview: applications.filter(app => app.status === 'interview').length,
-    offer: applications.filter(app => app.status === 'offer').length,
-    rejected: applications.filter(app => app.status === 'rejected').length
+    applied: applications.filter((app) => app.status === "applied").length,
+    interview: applications.filter((app) => app.status === "interview").length,
+    offer: applications.filter((app) => app.status === "offer").length,
+    rejected: applications.filter((app) => app.status === "rejected").length,
   };
 
   return (
@@ -293,11 +313,19 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {[
-          { label: 'Total Applications', value: stats.totalApplications, icon: Briefcase },
-          { label: 'Interviews', value: stats.interviews, icon: Calendar },
-          { label: 'Offers', value: stats.offers, icon: CheckCircle },
-          { label: 'Profile Views', value: stats.profileViews, icon: Eye },
-          { label: 'Response Rate', value: stats.responseRate, icon: BarChart3 }
+          {
+            label: "Total Applications",
+            value: stats.totalApplications,
+            icon: Briefcase,
+          },
+          { label: "Interviews", value: stats.interviews, icon: Calendar },
+          { label: "Offers", value: stats.offers, icon: CheckCircle },
+          { label: "Profile Views", value: stats.profileViews, icon: Eye },
+          {
+            label: "Response Rate",
+            value: stats.responseRate,
+            icon: BarChart3,
+          },
         ].map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -311,8 +339,12 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
               <div className="w-12 h-12 border border-gray-300 mx-auto mb-4 flex items-center justify-center group-hover:border-gray-800 transition-colors duration-500">
                 <Icon className="w-5 h-5 text-gray-600 group-hover:text-gray-800 transition-colors duration-500" />
               </div>
-              <div className="text-2xl font-light text-gray-800 mb-1">{stat.value}</div>
-              <div className="text-gray-600 font-light tracking-wide text-sm">{stat.label}</div>
+              <div className="text-2xl font-light text-gray-800 mb-1">
+                {stat.value}
+              </div>
+              <div className="text-gray-600 font-light tracking-wide text-sm">
+                {stat.label}
+              </div>
             </motion.div>
           );
         })}
@@ -321,13 +353,35 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Application Status */}
         <div className="bg-white border border-gray-200 p-6">
-          <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">Application Status</h3>
+          <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">
+            Application Status
+          </h3>
           <div className="space-y-4">
             {[
-              { status: 'applied', label: 'Applied', color: 'bg-blue-100 border-blue-200 text-blue-800', count: statusCounts.applied },
-              { status: 'interview', label: 'Interview', color: 'bg-amber-100 border-amber-200 text-amber-800', count: statusCounts.interview },
-              { status: 'offer', label: 'Offer', color: 'bg-green-100 border-green-200 text-green-800', count: statusCounts.offer },
-              { status: 'rejected', label: 'Rejected', color: 'bg-red-100 border-red-200 text-red-800', count: statusCounts.rejected }
+              {
+                status: "applied",
+                label: "Applied",
+                color: "bg-blue-100 border-blue-200 text-blue-800",
+                count: statusCounts.applied,
+              },
+              {
+                status: "interview",
+                label: "Interview",
+                color: "bg-amber-100 border-amber-200 text-amber-800",
+                count: statusCounts.interview,
+              },
+              {
+                status: "offer",
+                label: "Offer",
+                color: "bg-green-100 border-green-200 text-green-800",
+                count: statusCounts.offer,
+              },
+              {
+                status: "rejected",
+                label: "Rejected",
+                color: "bg-red-100 border-red-200 text-red-800",
+                count: statusCounts.rejected,
+              },
             ].map((status, index) => (
               <motion.div
                 key={status.status}
@@ -337,10 +391,18 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
                 className="flex items-center justify-between p-3 border border-gray-100 hover:border-gray-200 transition-colors duration-300"
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${status.color.split(' ')[0]}`}></div>
-                  <span className="text-gray-800 font-light tracking-wide">{status.label}</span>
+                  <div
+                    className={`w-3 h-3 rounded-full ${
+                      status.color.split(" ")[0]
+                    }`}
+                  ></div>
+                  <span className="text-gray-800 font-light tracking-wide">
+                    {status.label}
+                  </span>
                 </div>
-                <span className="text-gray-600 font-light tracking-wide">{status.count}</span>
+                <span className="text-gray-600 font-light tracking-wide">
+                  {status.count}
+                </span>
               </motion.div>
             ))}
           </div>
@@ -349,7 +411,9 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
         {/* Upcoming Interviews */}
         <div className="bg-white border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-light text-gray-800 tracking-wide">Upcoming Interviews</h3>
+            <h3 className="text-lg font-light text-gray-800 tracking-wide">
+              Upcoming Interviews
+            </h3>
             <span className="text-gray-600 font-light tracking-wide text-sm">
               {upcomingInterviews.length} scheduled
             </span>
@@ -364,7 +428,9 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
                 className="p-4 border border-gray-100 hover:border-gray-200 transition-colors duration-300"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-gray-800 font-light tracking-wide">{interview.jobTitle}</h4>
+                  <h4 className="text-gray-800 font-light tracking-wide">
+                    {interview.jobTitle}
+                  </h4>
                   <span className="text-amber-600 font-light tracking-wide text-sm">
                     {new Date(interview.interviewDate).toLocaleDateString()}
                   </span>
@@ -388,7 +454,9 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
       {/* Recent Applications */}
       <div className="bg-white border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-light text-gray-800 tracking-wide">Recent Applications</h3>
+          <h3 className="text-lg font-light text-gray-800 tracking-wide">
+            Recent Applications
+          </h3>
           <button className="text-gray-600 hover:text-gray-800 font-light tracking-wide text-sm transition-colors duration-300">
             View All
           </button>
@@ -404,7 +472,9 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
             >
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h4 className="text-gray-800 font-light tracking-wide">{application.jobTitle}</h4>
+                  <h4 className="text-gray-800 font-light tracking-wide">
+                    {application.jobTitle}
+                  </h4>
                   <StatusBadge status={application.status} />
                 </div>
                 <div className="flex items-center gap-4 text-sm text-gray-600">
@@ -418,7 +488,8 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
                   </span>
                   <span className="flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
-                    Applied {new Date(application.appliedDate).toLocaleDateString()}
+                    Applied{" "}
+                    {new Date(application.appliedDate).toLocaleDateString()}
                   </span>
                 </div>
               </div>
@@ -437,23 +508,29 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
 
 // Applications Tab Component
 function ApplicationsTab({ applications, onUpdateApplication }) {
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredApplications = applications.filter(app => {
-    const matchesSearch = app.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         app.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || app.status === statusFilter;
+  const filteredApplications = applications.filter((app) => {
+    const matchesSearch =
+      app.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.company.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || app.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'applied': return Clock4;
-      case 'interview': return Calendar;
-      case 'offer': return CheckCircle;
-      case 'rejected': return XCircle;
-      default: return Briefcase;
+      case "applied":
+        return Clock4;
+      case "interview":
+        return Calendar;
+      case "offer":
+        return CheckCircle;
+      case "rejected":
+        return XCircle;
+      default:
+        return Briefcase;
     }
   };
 
@@ -466,7 +543,9 @@ function ApplicationsTab({ applications, onUpdateApplication }) {
     >
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">Job Applications</h2>
+        <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">
+          Job Applications
+        </h2>
         <p className="text-gray-600 font-light tracking-wide">
           Track and manage your job applications
         </p>
@@ -517,7 +596,7 @@ function ApplicationsTab({ applications, onUpdateApplication }) {
                     </h3>
                     <StatusBadge status={application.status} />
                   </div>
-                  
+
                   <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
                     <span className="flex items-center gap-1">
                       <Building className="w-4 h-4" />
@@ -533,7 +612,8 @@ function ApplicationsTab({ applications, onUpdateApplication }) {
                     </span>
                     <span className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      Applied {new Date(application.appliedDate).toLocaleDateString()}
+                      Applied{" "}
+                      {new Date(application.appliedDate).toLocaleDateString()}
                     </span>
                   </div>
 
@@ -545,7 +625,10 @@ function ApplicationsTab({ applications, onUpdateApplication }) {
                     {application.interviewDate && (
                       <span className="flex items-center gap-1">
                         <Clock className="w-4 h-4" />
-                        Interview: {new Date(application.interviewDate).toLocaleDateString()}
+                        Interview:{" "}
+                        {new Date(
+                          application.interviewDate
+                        ).toLocaleDateString()}
                       </span>
                     )}
                   </div>
@@ -587,7 +670,9 @@ function SavedJobsTab({ savedJobs, onRemoveSavedJob }) {
     >
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">Saved Jobs</h2>
+        <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">
+          Saved Jobs
+        </h2>
         <p className="text-gray-600 font-light tracking-wide">
           Your bookmarked job opportunities
         </p>
@@ -637,7 +722,9 @@ function SavedJobsTab({ savedJobs, onRemoveSavedJob }) {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <Calendar className="w-4 h-4" />
-                  <span>Posted {new Date(job.postedDate).toLocaleDateString()}</span>
+                  <span>
+                    Posted {new Date(job.postedDate).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
 
@@ -672,7 +759,9 @@ function MessagesTab({ messages, onMarkAsRead }) {
     >
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">Messages</h2>
+        <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">
+          Messages
+        </h2>
         <p className="text-gray-600 font-light tracking-wide">
           Communicate with recruiters and employers
         </p>
@@ -687,14 +776,14 @@ function MessagesTab({ messages, onMarkAsRead }) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
             className={`p-6 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-300 ${
-              message.unread ? 'bg-blue-50' : ''
+              message.unread ? "bg-blue-50" : ""
             }`}
           >
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 border border-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
                 <User className="w-5 h-5 text-gray-600" />
               </div>
-              
+
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-3">
@@ -714,15 +803,15 @@ function MessagesTab({ messages, onMarkAsRead }) {
                     {message.timestamp}
                   </span>
                 </div>
-                
+
                 <h4 className="text-gray-800 font-light tracking-wide mb-1">
                   {message.subject}
                 </h4>
-                
+
                 <p className="text-gray-600 font-light tracking-wide text-sm mb-3">
                   {message.preview}
                 </p>
-                
+
                 <div className="flex items-center gap-3">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
@@ -750,33 +839,33 @@ function MessagesTab({ messages, onMarkAsRead }) {
 }
 
 // Profile Builder Tab Component
-function ProfileBuilderTab() {
-  const [profile, setProfile] = useState({
-    fullName: "John Doe",
-    title: "Senior Frontend Developer",
-    email: "john.doe@email.com",
-    phone: "+1 (555) 123-4567",
-    location: "San Francisco, CA",
-    bio: "Experienced frontend developer with 5+ years in React and modern JavaScript frameworks. Passionate about creating responsive and accessible web applications.",
-    skills: ["React", "TypeScript", "JavaScript", "HTML/CSS", "Node.js"],
-    experience: [
-      {
-        id: 1,
-        company: "TechCorp Solutions",
-        position: "Senior Frontend Developer",
-        period: "2020 - Present",
-        description: "Lead frontend development for multiple client projects"
-      }
-    ],
-    education: [
-      {
-        id: 1,
-        institution: "University of California",
-        degree: "Bachelor of Science in Computer Science",
-        period: "2016 - 2020"
-      }
-    ]
-  });
+function ProfileBuilderTab({ user }) {
+  // const [profile, setProfile] = useState({
+  //   fullName: user.name,
+  //   title: user.domain,
+  //   email: "john.doe@email.com",
+  //   phone: "+1 (555) 123-4567",
+  //   location: "San Francisco, CA",
+  //   bio: "Experienced frontend developer with 5+ years in React and modern JavaScript frameworks. Passionate about creating responsive and accessible web applications.",
+  //   skills: ["React", "TypeScript", "JavaScript", "HTML/CSS", "Node.js"],
+  //   experience: [
+  //     {
+  //       id: 1,
+  //       company: "TechCorp Solutions",
+  //       position: "Senior Frontend Developer",
+  //       period: "2020 - Present",
+  //       description: "Lead frontend development for multiple client projects",
+  //     },
+  //   ],
+  //   education: [
+  //     {
+  //       id: 1,
+  //       institution: "University of California",
+  //       degree: "Bachelor of Science in Computer Science",
+  //       period: "2016 - 2020",
+  //     },
+  //   ],
+  // });
 
   return (
     <motion.div
@@ -788,7 +877,9 @@ function ProfileBuilderTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">Profile Builder</h2>
+          <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">
+            Profile Builder
+          </h2>
           <p className="text-gray-600 font-light tracking-wide">
             Build and optimize your professional profile
           </p>
@@ -811,23 +902,23 @@ function ProfileBuilderTab() {
           </div>
           <div className="flex-1">
             <h3 className="text-2xl font-light text-gray-800 tracking-wide mb-2">
-              {profile.fullName}
+              {user.name}
             </h3>
             <p className="text-xl text-gray-600 font-light tracking-wide mb-4">
-              {profile.title}
+              {user.domain}
             </p>
             <div className="flex flex-wrap gap-4 text-sm text-gray-600">
               <span className="flex items-center gap-1">
                 <Mail className="w-4 h-4" />
-                {profile.email}
+                {user.email}
               </span>
               <span className="flex items-center gap-1">
                 <Phone className="w-4 h-4" />
-                {profile.phone}
+                {user.contact}
               </span>
               <span className="flex items-center gap-1">
                 <MapPin className="w-4 h-4" />
-                {profile.location}
+                {user?.location}
               </span>
             </div>
           </div>
@@ -835,17 +926,21 @@ function ProfileBuilderTab() {
 
         {/* Bio */}
         <div className="mb-8">
-          <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">About</h4>
+          <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">
+            About
+          </h4>
           <p className="text-gray-600 font-light tracking-wide leading-relaxed">
-            {profile.bio}
+            {user.bio}
           </p>
         </div>
 
         {/* Skills */}
         <div className="mb-8">
-          <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">Skills</h4>
+          <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">
+            Skills
+          </h4>
           <div className="flex flex-wrap gap-2">
-            {profile.skills.map((skill, index) => (
+            {user.skills.map((skill, index) => (
               <span
                 key={index}
                 className="px-3 py-1 border border-gray-300 text-gray-700 font-light tracking-wide text-sm"
@@ -858,14 +953,24 @@ function ProfileBuilderTab() {
 
         {/* Experience */}
         <div className="mb-8">
-          <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">Experience</h4>
+          <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">
+            Experience
+          </h4>
           <div className="space-y-4">
-            {profile.experience.map((exp) => (
+            {user.experience.map((exp) => (
               <div key={exp.id} className="border-l-2 border-gray-300 pl-4">
-                <h5 className="text-gray-800 font-light tracking-wide">{exp.position}</h5>
-                <p className="text-gray-600 font-light tracking-wide text-sm">{exp.company}</p>
-                <p className="text-gray-500 font-light tracking-wide text-sm">{exp.period}</p>
-                <p className="text-gray-600 font-light tracking-wide text-sm mt-1">{exp.description}</p>
+                <h5 className="text-gray-800 font-light tracking-wide">
+                  {exp.position}
+                </h5>
+                <p className="text-gray-600 font-light tracking-wide text-sm">
+                  {exp.company}
+                </p>
+                <p className="text-gray-500 font-light tracking-wide text-sm">
+                  {exp.period}
+                </p>
+                <p className="text-gray-600 font-light tracking-wide text-sm mt-1">
+                  {exp.description}
+                </p>
               </div>
             ))}
           </div>
@@ -873,13 +978,21 @@ function ProfileBuilderTab() {
 
         {/* Education */}
         <div>
-          <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">Education</h4>
+          <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">
+            Education
+          </h4>
           <div className="space-y-4">
-            {profile.education.map((edu) => (
+            {user.education.map((edu) => (
               <div key={edu.id} className="border-l-2 border-gray-300 pl-4">
-                <h5 className="text-gray-800 font-light tracking-wide">{edu.degree}</h5>
-                <p className="text-gray-600 font-light tracking-wide text-sm">{edu.institution}</p>
-                <p className="text-gray-500 font-light tracking-wide text-sm">{edu.period}</p>
+                <h5 className="text-gray-800 font-light tracking-wide">
+                  {edu.degree}
+                </h5>
+                <p className="text-gray-600 font-light tracking-wide text-sm">
+                  {edu.institution}
+                </p>
+                <p className="text-gray-500 font-light tracking-wide text-sm">
+                  {edu.period}
+                </p>
               </div>
             ))}
           </div>
@@ -890,12 +1003,12 @@ function ProfileBuilderTab() {
 }
 
 // Resume Builder Tab Component
-function ResumeBuilderTab() {
+function ResumeBuilderTab({ user }) {
   const [resumeTemplates] = useState([
     { id: 1, name: "Modern Professional", category: "Professional" },
     { id: 2, name: "Creative Designer", category: "Creative" },
     { id: 3, name: "Minimalist", category: "Clean" },
-    { id: 4, name: "Executive", category: "Corporate" }
+    { id: 4, name: "Executive", category: "Corporate" },
   ]);
 
   return (
@@ -908,7 +1021,9 @@ function ResumeBuilderTab() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">Resume Builder</h2>
+          <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-2">
+            Resume Builder
+          </h2>
           <p className="text-gray-600 font-light tracking-wide">
             Create and download professional resumes
           </p>
@@ -925,7 +1040,9 @@ function ResumeBuilderTab() {
 
       {/* Resume Templates */}
       <div>
-        <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">Choose a Template</h3>
+        <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">
+          Choose a Template
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {resumeTemplates.map((template, index) => (
             <motion.div
@@ -940,8 +1057,12 @@ function ResumeBuilderTab() {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-gray-800 font-light tracking-wide mb-1">{template.name}</h4>
-                  <p className="text-gray-600 font-light tracking-wide text-sm">{template.category}</p>
+                  <h4 className="text-gray-800 font-light tracking-wide mb-1">
+                    {template.name}
+                  </h4>
+                  <p className="text-gray-600 font-light tracking-wide text-sm">
+                    {template.category}
+                  </p>
                 </div>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -959,49 +1080,135 @@ function ResumeBuilderTab() {
       {/* Resume Preview */}
       <div className="bg-white border border-gray-200 p-8">
         <div className="text-center mb-8">
-          <h3 className="text-2xl font-light text-gray-800 tracking-wide mb-2">John Doe</h3>
-          <p className="text-gray-600 font-light tracking-wide">Senior Frontend Developer</p>
+          <h3 className="text-2xl font-light text-gray-800 tracking-wide mb-2">
+            {user?.name}
+          </h3>
+          <p className="text-gray-600 font-light tracking-wide">
+            {user?.domain}
+          </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-6">
             <div>
-              <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3 border-b border-gray-200 pb-2">Professional Summary</h4>
+              <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3 border-b border-gray-200 pb-2">
+                Professional Summary
+              </h4>
               <p className="text-gray-600 font-light tracking-wide leading-relaxed">
-                Experienced frontend developer with 5+ years specializing in React and modern JavaScript frameworks. 
-                Passionate about creating responsive, accessible, and performant web applications.
+                {user?.bio}
               </p>
             </div>
-            
+
             <div>
-              <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3 border-b border-gray-200 pb-2">Experience</h4>
-              <div className="space-y-4">
-                <div>
-                  <h5 className="text-gray-800 font-light tracking-wide">Senior Frontend Developer</h5>
-                  <p className="text-gray-600 font-light tracking-wide text-sm">TechCorp Solutions • 2020 - Present</p>
-                  <p className="text-gray-600 font-light tracking-wide text-sm mt-1">
-                    Lead frontend development for multiple enterprise client projects using React and TypeScript.
-                  </p>
+              <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3 border-b border-gray-200 pb-2">
+                Experience
+              </h4>
+              {user?.experience.map((exp) => (
+                <div className="space-y-4 mt-4">
+                  <div>
+                    <h5 className="text-gray-800 font-light tracking-wide">
+                      {exp?.position}
+                    </h5>
+                    <p className="text-gray-600 font-light tracking-wide text-sm">
+                      {exp?.company}
+                    </p>
+                    <p className="text-gray-600 font-light tracking-wide text-sm mt-1">
+                      {exp?.description}
+                    </p>
+                  </div>
                 </div>
+              ))}
+            </div>
+
+            <div className="mt-6">
+              <h4 className="text-lg font-light tracking-[0.08em] text-gray-800 mb-4 border-b border-gray-300 pb-2">
+                Projects
+              </h4>
+
+              <div className="space-y-5">
+                {user?.projects?.map((project, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-2xl group bg-white/50 backdrop-blur-sm"
+                  >
+                    {/* Project Title & Link */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                      <h5 className="text-base font-light text-gray-900 tracking-wide group-hover:text-gray-700 transition-colors">
+                        {project?.name}
+                      </h5>
+
+                      {project?.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-gray-500 hover:text-gray-700 hover:underline transition-all mt-1 sm:mt-0"
+                        >
+                          Link
+                        </a>
+                      )}
+                    </div>
+
+                    {/* Company (optional) */}
+                    {project?.company && (
+                      <p className="text-sm text-gray-600 mt-1 font-light tracking-wide">
+                        {project.company}
+                      </p>
+                    )}
+
+                    {/* Description */}
+                    <p className="text-sm text-gray-700 mt-1 leading-relaxed font-light tracking-wide">
+                      {project?.description}
+                    </p>
+
+                    {/* Tech Stack */}
+                    {project?.techStack && (
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {project?.techStack?.map((tech, index) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1 border border-gray-300 text-gray-800 font-light tracking-wide text-xs"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-          
+
           <div className="space-y-6">
             <div>
-              <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3 border-b border-gray-200 pb-2">Contact</h4>
+              <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3 border-b border-gray-200 pb-2">
+                Contact
+              </h4>
               <div className="space-y-2 text-sm text-gray-600">
                 <p>john.doe@email.com</p>
                 <p>+1 (555) 123-4567</p>
                 <p>San Francisco, CA</p>
               </div>
             </div>
-            
+
             <div>
-              <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3 border-b border-gray-200 pb-2">Skills</h4>
+              <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3 border-b border-gray-200 pb-2">
+                Skills
+              </h4>
               <div className="space-y-2">
-                {["React", "TypeScript", "JavaScript", "HTML/CSS", "Node.js", "Git"].map((skill) => (
-                  <div key={skill} className="text-gray-600 font-light tracking-wide text-sm">
+                {[
+                  "React",
+                  "TypeScript",
+                  "JavaScript",
+                  "HTML/CSS",
+                  "Node.js",
+                  "Git",
+                ].map((skill) => (
+                  <div
+                    key={skill}
+                    className="text-gray-600 font-light tracking-wide text-sm"
+                  >
                     {skill}
                   </div>
                 ))}
@@ -1017,16 +1224,30 @@ function ResumeBuilderTab() {
 // Status Badge Component
 function StatusBadge({ status }) {
   const statusConfig = {
-    applied: { label: 'Applied', color: 'bg-blue-100 text-blue-800 border-blue-200' },
-    interview: { label: 'Interview', color: 'bg-amber-100 text-amber-800 border-amber-200' },
-    offer: { label: 'Offer', color: 'bg-green-100 text-green-800 border-green-200' },
-    rejected: { label: 'Rejected', color: 'bg-red-100 text-red-800 border-red-200' }
+    applied: {
+      label: "Applied",
+      color: "bg-blue-100 text-blue-800 border-blue-200",
+    },
+    interview: {
+      label: "Interview",
+      color: "bg-amber-100 text-amber-800 border-amber-200",
+    },
+    offer: {
+      label: "Offer",
+      color: "bg-green-100 text-green-800 border-green-200",
+    },
+    rejected: {
+      label: "Rejected",
+      color: "bg-red-100 text-red-800 border-red-200",
+    },
   };
 
   const config = statusConfig[status] || statusConfig.applied;
 
   return (
-    <span className={`px-2 py-1 text-xs font-light tracking-wide border ${config.color}`}>
+    <span
+      className={`px-2 py-1 text-xs font-light tracking-wide border ${config.color}`}
+    >
       {config.label}
     </span>
   );
