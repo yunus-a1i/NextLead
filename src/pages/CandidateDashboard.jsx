@@ -1186,8 +1186,8 @@ function ResumeBuilderTab({ user }) {
                 Contact
               </h4>
               <div className="space-y-2 text-sm text-gray-600">
-                <p>john.doe@email.com</p>
-                <p>+1 (555) 123-4567</p>
+                <p>{user?.email}</p>
+                <p>{user?.contact}</p>
                 <p>San Francisco, CA</p>
               </div>
             </div>
