@@ -1197,14 +1197,7 @@ function ResumeBuilderTab({ user }) {
                 Skills
               </h4>
               <div className="space-y-2">
-                {[
-                  "React",
-                  "TypeScript",
-                  "JavaScript",
-                  "HTML/CSS",
-                  "Node.js",
-                  "Git",
-                ].map((skill) => (
+                {user.skills.map((skill) => (
                   <div
                     key={skill}
                     className="text-gray-600 font-light tracking-wide text-sm"
