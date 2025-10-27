@@ -19,7 +19,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { fetchUser } from "../redux/userSlice";
+import { fetchUser, updateUser } from "../redux/userSlice";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -36,7 +36,8 @@ export default function ProfilePage() {
       try {
         const user = await dispatch(fetchUser(savedUser._id)).unwrap();
         console.log("Fetched user:", user.data);
-        setUser(user.data)
+        setUser(user.data);
+        localStorage.setItem("user", JSON.stringify(user.data));
         // setUser(data);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -53,11 +54,26 @@ export default function ProfilePage() {
     }
   }, [user]);
 
-  const handleSave = () => {
-    // Save profile logic here
-    setUser(formData);
-    setIsEditing(false);
-    // In real app, would make API call to update user profile
+  const handleSave = async () => {
+    try {
+      const savedUser = JSON.parse(localStorage.getItem("user"));
+      if (!savedUser?._id) return;
+
+      // Update local UI
+      setUser(formData);
+      setIsEditing(false);
+
+      // Send update request to backend (assuming Redux thunk `updateUser`)
+      const updatedUser = await dispatch(
+        updateUser({ id: savedUser._id, data: formData })
+      );
+
+      console.log("✅ Updated user:", updatedUser.payload.data);
+      setUser(updatedUser.payload.data);
+      localStorage.setItem("user", JSON.stringify(updatedUser.payload.data));
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
   };
 
   const handleCancel = () => {
@@ -65,11 +81,38 @@ export default function ProfilePage() {
     setIsEditing(false);
   };
 
+  const handleAddItem = (section) => {
+    setFormData((prev) => ({
+      ...prev,
+      [section]: [
+        ...prev[section],
+        section === "experience"
+          ? { position: "", period: "", company: "", description: "" }
+          : { degree: "", period: "", institution: "" },
+      ],
+    }));
+  };
+
+  const handleRemoveItem = (section, index) => {
+    setFormData((prev) => {
+      const updatedArray = prev[section].filter((_, i) => i !== index);
+      return { ...prev, [section]: updatedArray };
+    });
+  };
+
   const handleChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleArrayChange = (section, index, field, value) => {
+    setFormData((prev) => {
+      const updatedArray = [...prev[section]];
+      updatedArray[index] = { ...updatedArray[index], [field]: value };
+      return { ...prev, [section]: updatedArray };
+    });
   };
 
   const containerVariants = {
@@ -384,7 +427,7 @@ export default function ProfilePage() {
                   )}
 
                   {/* Experience Tab */}
-                  {activeTab === "experience" && (
+                  {/* {activeTab === "experience" && (
                     <motion.div
                       key="experience"
                       initial={{ opacity: 0, y: 20 }}
@@ -414,10 +457,125 @@ export default function ProfilePage() {
                         </div>
                       ))}
                     </motion.div>
+                  )} */}
+                  {activeTab === "experience" && (
+                    <motion.div
+                      key="experience"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="space-y-6"
+                    >
+                      {formData.experience?.map((exp, index) => (
+                        <div
+                          key={index}
+                          className="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0"
+                        >
+                          {isEditing ? (
+                            <>
+                              <input
+                                type="text"
+                                value={exp.position}
+                                onChange={(e) =>
+                                  handleArrayChange(
+                                    "experience",
+                                    index,
+                                    "position",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                                placeholder="Position"
+                              />
+                              <input
+                                type="text"
+                                value={exp.period}
+                                onChange={(e) =>
+                                  handleArrayChange(
+                                    "experience",
+                                    index,
+                                    "period",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                                placeholder="Period"
+                              />
+                              <input
+                                type="text"
+                                value={exp.company}
+                                onChange={(e) =>
+                                  handleArrayChange(
+                                    "experience",
+                                    index,
+                                    "company",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                                placeholder="Company"
+                              />
+                              <textarea
+                                value={exp.description}
+                                onChange={(e) =>
+                                  handleArrayChange(
+                                    "experience",
+                                    index,
+                                    "description",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                                placeholder="Description"
+                              />
+
+                              {/* Remove Button */}
+                              <button
+                                onClick={() =>
+                                  handleRemoveItem("experience", index)
+                                }
+                                className="text-sm text-red-600 hover:text-red-800 transition"
+                              >
+                                Remove
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <div className="flex justify-between items-start mb-2">
+                                <h3 className="text-lg font-light text-gray-800 tracking-wide">
+                                  {exp.position}
+                                </h3>
+                                <span className="text-gray-600 font-light tracking-wide text-sm">
+                                  {exp.period}
+                                </span>
+                              </div>
+                              <p className="text-gray-600 font-light tracking-wide mb-2">
+                                {exp.company}
+                              </p>
+                              <p className="text-gray-600 font-light tracking-wide leading-relaxed">
+                                {exp.description}
+                              </p>
+                            </>
+                          )}
+                        </div>
+                      ))}
+
+                      {/* Add New Button */}
+                      {isEditing && (
+                        <div className="pt-4">
+                          <button
+                            onClick={() => handleAddItem("experience")}
+                            className="px-4 py-2 text-sm border border-gray-800 text-gray-800 font-light tracking-wide hover:bg-gray-800 hover:text-white transition-all duration-500"
+                          >
+                            + Add New Experience
+                          </button>
+                        </div>
+                      )}
+                    </motion.div>
                   )}
 
                   {/* Education Tab */}
-                  {activeTab === "education" && (
+                  {/* {activeTab === "education" && (
                     <motion.div
                       key="education"
                       initial={{ opacity: 0, y: 20 }}
@@ -443,6 +601,101 @@ export default function ProfilePage() {
                           </p>
                         </div>
                       ))}
+                    </motion.div>
+                  )} */}
+                  {activeTab === "education" && (
+                    <motion.div
+                      key="education"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="space-y-6"
+                    >
+                      {formData.education?.map((edu, index) => (
+                        <div
+                          key={index}
+                          className="border-b border-gray-100 pb-6 last:border-b-0 last:pb-0"
+                        >
+                          {isEditing ? (
+                            <>
+                              <input
+                                type="text"
+                                value={edu.degree}
+                                onChange={(e) =>
+                                  handleArrayChange(
+                                    "education",
+                                    index,
+                                    "degree",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                                placeholder="Degree"
+                              />
+                              <input
+                                type="text"
+                                value={edu.period}
+                                onChange={(e) =>
+                                  handleArrayChange(
+                                    "education",
+                                    index,
+                                    "period",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                                placeholder="Period"
+                              />
+                              <input
+                                type="text"
+                                value={edu.institution}
+                                onChange={(e) =>
+                                  handleArrayChange(
+                                    "education",
+                                    index,
+                                    "institution",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                                placeholder="Institution"
+                              />
+                              <button
+                                onClick={() =>
+                                  handleRemoveItem("education", index)
+                                }
+                                className="text-sm text-red-600 hover:text-red-800 transition"
+                              >
+                                Remove
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <div className="flex justify-between items-start mb-2">
+                                <h3 className="text-lg font-light text-gray-800 tracking-wide">
+                                  {edu.degree}
+                                </h3>
+                                <span className="text-gray-600 font-light tracking-wide text-sm">
+                                  {edu.period}
+                                </span>
+                              </div>
+                              <p className="text-gray-600 font-light tracking-wide">
+                                {edu.institution}
+                              </p>
+                            </>
+                          )}
+                        </div>
+                      ))}
+                      {isEditing && (
+                        <div className="pt-4">
+                          <button
+                            onClick={() => handleAddItem("education")}
+                            className="px-4 py-2 text-sm border border-gray-800 text-gray-800 font-light tracking-wide hover:bg-gray-800 hover:text-white transition-all duration-500"
+                          >
+                            + Add New Education
+                          </button>
+                        </div>
+                      )}
                     </motion.div>
                   )}
 

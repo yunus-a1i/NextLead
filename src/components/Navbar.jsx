@@ -41,7 +41,7 @@ export default function Navbar() {
     localStorage.removeItem("user");
     setUser(null);
     setIsOpen(false);
-    navigate("/login");
+    navigate("/login-portal");
   };
 
   const navItems = [
@@ -145,7 +145,7 @@ export default function Navbar() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Link
-                      to="/login"
+                      to="/login-portal"
                       className="text-gray-700 font-light tracking-wide text-sm hover:text-gray-900 transition-colors duration-500"
                     >
                       Sign In
@@ -156,7 +156,7 @@ export default function Navbar() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <Link
-                      to="/register"
+                      to="/login-portal"
                       className="border border-gray-800 text-gray-800 px-6 py-2.5 font-light tracking-wide text-sm hover:bg-gray-800 hover:text-white transition-all duration-500"
                     >
                       Get Started
