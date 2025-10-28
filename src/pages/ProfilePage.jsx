@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { fetchUser, updateUser } from "../redux/userSlice";
+import { fetchHr } from "../redux/hrSlice";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -34,10 +35,16 @@ export default function ProfilePage() {
       if (!savedUser?._id) return;
 
       try {
-        const user = await dispatch(fetchUser(savedUser._id)).unwrap();
-        console.log("Fetched user:", user.data);
-        setUser(user.data);
-        localStorage.setItem("user", JSON.stringify(user.data));
+        let person = null;
+        if (savedUser.role === "candidate") {
+          person = await dispatch(fetchUser(savedUser._id)).unwrap();
+        } else {
+        person = await dispatch(fetchHr({id: savedUser._id, token: savedUser.accessToken})).unwrap();
+        }
+
+        console.log("Fetched user:", person.data);
+        setUser(person.data);
+        localStorage.setItem("user", JSON.stringify(person.data));
         // setUser(data);
       } catch (error) {
         console.error("Error fetching user:", error);

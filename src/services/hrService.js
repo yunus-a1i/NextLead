@@ -29,7 +29,7 @@ const hrService = {
   },
 
   // Get HR by ID
-  getHr: async (id, token) => {
+  fetchHr: async (id, token) => {
     const response = await axiosInstance.get(`/hr/getHr/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });

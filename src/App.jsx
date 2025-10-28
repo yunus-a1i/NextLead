@@ -17,6 +17,7 @@ import Layout from "./layouts/Layout";
 import RecruiterDashboard from "./pages/RecruiterDashboard";
 import CandidateDashboard from "./pages/CandidateDashboard";
 import LoginPortal from "./pages/LoginPortal";
+import JobDetailPage from "./pages/JobDetailPage";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/journey" element={<BeginJourney />} />
         <Route path="/interviews" element={<InterviewsPage />} />
+        <Route path="/job-detail" element={<JobDetailPage />} />
         <Route path="/user/profile" element={<ProfilePage />} />
         <Route path="/candidates" element={<ForCandidates />} />
         <Route path="/recruiters" element={<ForRecruiters />} />

@@ -49,11 +49,11 @@ export const createHr = createAsyncThunk(
   }
 );
 
-export const getHr = createAsyncThunk(
+export const fetchHr = createAsyncThunk(
   'hr/get',
   async ({ id, token }, thunkAPI) => {
     try {
-      return await hrService.getHr(id, token);
+      return await hrService.fetchHr(id, token);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
     }
@@ -104,13 +104,13 @@ const hrSlice = createSlice({
       })
 
       // Get HR
-      .addCase(getHr.pending, (state) => { state.loading = true; })
-      .addCase(getHr.fulfilled, (state, action) => {
+      .addCase(fetchHr.pending, (state) => { state.loading = true; })
+      .addCase(fetchHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.hr = action.payload;
       })
-      .addCase(getHr.rejected, (state, action) => {
+      .addCase(fetchHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
         state.message = action.payload;
