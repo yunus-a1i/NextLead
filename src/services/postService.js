@@ -3,7 +3,7 @@ import axiosInstance from "../api/axiosInstance";
 const postService = {
   // Create a post
   createPost: async (postData, token) => {
-    const response = await axiosInstance.post(`/post/createPost`, postData, {
+    const response = await axiosInstance.post(`/post/createpost`, postData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;

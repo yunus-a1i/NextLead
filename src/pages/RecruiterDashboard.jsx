@@ -22,6 +22,8 @@ import {
   FileText,
   User,
 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { createPostThunk } from "../redux/postSlice"; // adjust path
 
 export default function RecruiterDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -70,6 +72,10 @@ export default function RecruiterDashboard() {
       ],
     },
   ]);
+  const dispatch = useDispatch();
+  const token = localStorage.getItem("token"); // if you're storing token in auth slice
+  const hr = JSON.parse(localStorage.getItem("user")); // if you're storing token in auth slice
+  console.log(hr);
 
   const stats = {
     totalJobs: 12,
@@ -103,6 +109,16 @@ export default function RecruiterDashboard() {
       time: "1 day ago",
     },
   ];
+
+  const handleSaveJob = async (formData) => {
+    try {
+      await dispatch(createPostThunk({ postData: formData, token })).unwrap();
+      alert("Job posted successfully!");
+      setShowPostJobModal(false);
+    } catch (error) {
+      alert(error || "Failed to post job");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -224,21 +240,27 @@ export default function RecruiterDashboard() {
       {/* Post Job Modal */}
       <AnimatePresence>
         {showPostJobModal && (
+          // <PostJobModal
+          //   onClose={() => setShowPostJobModal(false)}
+          //   onSave={(jobData) => {
+          //     const newJob = {
+          //       id: jobs.length + 1,
+          //       ...jobData,
+          //       applications: 0,
+          //       interviews: 0,
+          //       hired: 0,
+          //       status: "active",
+          //       postedDate: new Date().toISOString().split("T")[0],
+          //     };
+          //     setJobs([...jobs, newJob]);
+          //     setShowPostJobModal(false);
+          //   }}
+          // />
           <PostJobModal
             onClose={() => setShowPostJobModal(false)}
-            onSave={(jobData) => {
-              const newJob = {
-                id: jobs.length + 1,
-                ...jobData,
-                applications: 0,
-                interviews: 0,
-                hired: 0,
-                status: "active",
-                postedDate: new Date().toISOString().split("T")[0],
-              };
-              setJobs([...jobs, newJob]);
-              setShowPostJobModal(false);
-            }}
+            onSave={(formData) => handleSaveJob(formData)}
+            hrId={hr?._id}
+            domainId={"777"}
           />
         )}
       </AnimatePresence>
@@ -602,8 +624,9 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
 function PostJobModal({ onClose, onSave, hrId, domainId }) {
   const [formData, setFormData] = useState({
     hrId: hrId || "", // ObjectId of HR
-    domainId: domainId || "", // ObjectId of domain
+    // domainId: domainId || "", // ObjectId of domain
     jobTitle: "",
+    company: "",
     description: "",
     qualification: "",
     experienceRequired: "",
@@ -737,6 +760,22 @@ function PostJobModal({ onClose, onSave, hrId, domainId }) {
                   }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                Company Name *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.company}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, company: e.target.value }))
+                }
+                className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
+                placeholder="Google, Facebook"
               />
             </div>
 
