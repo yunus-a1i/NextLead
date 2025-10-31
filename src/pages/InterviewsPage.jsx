@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, 
-  MapPin, 
-  Calendar, 
-  Building, 
+import {
+  Search,
+  MapPin,
+  Calendar,
+  Building,
   Filter,
   ArrowRight,
   ChevronDown,
@@ -13,76 +13,115 @@ import {
   Clock,
   Users,
   Briefcase,
-  X
+  X,
 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { getAllPostsThunk, getPostsThunk } from "../redux/postSlice";
 
 export default function InterviewsPage() {
   const [selectedFilters, setSelectedFilters] = useState({
     location: "",
     date: "",
     company: "",
-    experience: ""
+    experienceRequired: "",
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [interviews, setInterviews] = useState([]);
 
-  const interviews = [
-    {
-      id: 1,
-      company: "TechCorp Solutions",
-      position: "Frontend Developer",
-      location: "San Francisco, CA",
-      date: "2024-01-15",
-      time: "10:00 AM - 12:00 PM",
-      experience: "2-4 years",
-      salary: "$90,000 - $120,000",
-      description: "Looking for skilled frontend developers with React experience.",
-      featured: true,
-      applicants: 24
-    },
-    {
-      id: 2,
-      company: "DataSystems Inc",
-      position: "Data Analyst",
-      location: "New York, NY",
-      date: "2024-01-16",
-      time: "2:00 PM - 4:00 PM",
-      experience: "1-3 years",
-      salary: "$75,000 - $95,000",
-      description: "Join our data team to work on exciting analytics projects.",
-      featured: false,
-      applicants: 18
-    },
-    {
-      id: 3,
-      company: "CloudTech Ltd",
-      position: "DevOps Engineer",
-      location: "Austin, TX",
-      date: "2024-01-17",
-      time: "9:00 AM - 11:00 AM",
-      experience: "3-5 years",
-      salary: "$110,000 - $140,000",
-      description: "DevOps engineer with AWS and Kubernetes experience.",
-      featured: true,
-      applicants: 12
-    },
-    {
-      id: 4,
-      company: "FinServe Partners",
-      position: "Backend Developer",
-      location: "Chicago, IL",
-      date: "2024-01-18",
-      time: "1:00 PM - 3:00 PM",
-      experience: "2-4 years",
-      salary: "$85,000 - $115,000",
-      description: "Node.js and Python backend development role.",
-      featured: false,
-      applicants: 21
-    }
+  // const interviews = [
+  //   {
+  //     id: 1,
+  //     company: "TechCorp Solutions",
+  //     jobTitle: "Frontend Developer",
+  //     location: "San Francisco, CA",
+  //     date: "2024-01-15",
+  //     time: "10:00 AM - 12:00 PM",
+  //     experienceRequired: "2-4 years", // experience
+  //     salary: "$90,000 - $120,000",
+  //     description: "Looking for skilled frontend developers with React experienceRequired.",
+  //     featured: true,
+  //     openVacancies: 24 //applicants
+  //   },
+  //   {
+  //     id: 2,
+  //     company: "DataSystems Inc",
+  //     jobTitle: "Data Analyst",
+  //     location: "New York, NY",
+  //     date: "2024-01-16",
+  //     time: "2:00 PM - 4:00 PM",
+  //     experienceRequired: "1-3 years",
+  //     salary: "$75,000 - $95,000",
+  //     description: "Join our data team to work on exciting analytics projects.",
+  //     featured: false,
+  //     openVacancies: 18
+  //   },
+  //   {
+  //     id: 3,
+  //     company: "CloudTech Ltd",
+  //     jobTitle: "DevOps Engineer",
+  //     location: "Austin, TX",
+  //     date: "2024-01-17",
+  //     time: "9:00 AM - 11:00 AM",
+  //     experienceRequired: "3-5 years",
+  //     salary: "$110,000 - $140,000",
+  //     description: "DevOps engineer with AWS and Kubernetes experienceRequired.",
+  //     featured: true,
+  //     openVacancies: 12
+  //   },
+  //   {
+  //     id: 4,
+  //     company: "FinServe Partners",
+  //     jobTitle: "Backend Developer",
+  //     location: "Chicago, IL",
+  //     date: "2024-01-18",
+  //     time: "1:00 PM - 3:00 PM",
+  //     experienceRequired: "2-4 years",
+  //     salary: "$85,000 - $115,000",
+  //     description: "Node.js and Python backend development role.",
+  //     featured: false,
+  //     openVacancies: 21
+  //   }
+  // ];
+
+  const locations = [
+    "San Francisco, CA",
+    "New York, NY",
+    "Austin, TX",
+    "Chicago, IL",
+    "Remote",
   ];
+  const companies = [
+    "TechCorp Solutions",
+    "DataSystems Inc",
+    "CloudTech Ltd",
+    "FinServe Partners",
+  ];
+  const experienceLevels = [
+    "0-1 years",
+    "1-3 years",
+    "2-4 years",
+    "3-5 years",
+    "5+ years",
+  ];
+  const dispatch = useDispatch();
 
-  const locations = ["San Francisco, CA", "New York, NY", "Austin, TX", "Chicago, IL", "Remote"];
-  const companies = ["TechCorp Solutions", "DataSystems Inc", "CloudTech Ltd", "FinServe Partners"];
-  const experienceLevels = ["0-1 years", "1-3 years", "2-4 years", "3-5 years", "5+ years"];
+  useEffect(() => {
+    let isMounted = true;
+    const loadPosts = async () => {
+      try {
+        const result = await dispatch(getAllPostsThunk());
+        if (isMounted) setInterviews(result.payload.data);
+
+        console.log(result.payload.data)
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    loadPosts();
+    return () => {
+      isMounted = false;
+    };
+  }, [dispatch]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -90,9 +129,9 @@ export default function InterviewsPage() {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        duration: 0.8
-      }
-    }
+        duration: 0.8,
+      },
+    },
   };
 
   const itemVariants = {
@@ -102,15 +141,15 @@ export default function InterviewsPage() {
       opacity: 1,
       transition: {
         duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }
-    }
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
   };
 
   const handleFilterChange = (filterType, value) => {
-    setSelectedFilters(prev => ({
+    setSelectedFilters((prev) => ({
       ...prev,
-      [filterType]: value
+      [filterType]: value,
     }));
   };
 
@@ -119,11 +158,12 @@ export default function InterviewsPage() {
       location: "",
       date: "",
       company: "",
-      experience: ""
+      experienceRequired: "",
     });
   };
 
-  const activeFiltersCount = Object.values(selectedFilters).filter(Boolean).length;
+  const activeFiltersCount =
+    Object.values(selectedFilters).filter(Boolean).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -172,7 +212,11 @@ export default function InterviewsPage() {
                     {activeFiltersCount}
                   </span>
                 )}
-                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${showFilters ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-300 ${
+                    showFilters ? "rotate-180" : ""
+                  }`}
+                />
               </button>
             </motion.div>
           </motion.div>
@@ -199,12 +243,16 @@ export default function InterviewsPage() {
                     <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <select
                       value={selectedFilters.location}
-                      onChange={(e) => handleFilterChange("location", e.target.value)}
+                      onChange={(e) =>
+                        handleFilterChange("location", e.target.value)
+                      }
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none appearance-none bg-white transition-colors duration-500"
                     >
                       <option value="">All Locations</option>
-                      {locations.map(location => (
-                        <option key={location} value={location}>{location}</option>
+                      {locations.map((location) => (
+                        <option key={location} value={location}>
+                          {location}
+                        </option>
                       ))}
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
@@ -221,7 +269,9 @@ export default function InterviewsPage() {
                     <input
                       type="date"
                       value={selectedFilters.date}
-                      onChange={(e) => handleFilterChange("date", e.target.value)}
+                      onChange={(e) =>
+                        handleFilterChange("date", e.target.value)
+                      }
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                     />
                   </div>
@@ -236,12 +286,16 @@ export default function InterviewsPage() {
                     <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <select
                       value={selectedFilters.company}
-                      onChange={(e) => handleFilterChange("company", e.target.value)}
+                      onChange={(e) =>
+                        handleFilterChange("company", e.target.value)
+                      }
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none appearance-none bg-white transition-colors duration-500"
                     >
                       <option value="">All Companies</option>
-                      {companies.map(company => (
-                        <option key={company} value={company}>{company}</option>
+                      {companies.map((company) => (
+                        <option key={company} value={company}>
+                          {company}
+                        </option>
                       ))}
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
@@ -256,13 +310,17 @@ export default function InterviewsPage() {
                   <div className="relative">
                     <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <select
-                      value={selectedFilters.experience}
-                      onChange={(e) => handleFilterChange("experience", e.target.value)}
+                      value={selectedFilters.experienceRequired}
+                      onChange={(e) =>
+                        handleFilterChange("experienceRequired", e.target.value)
+                      }
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none appearance-none bg-white transition-colors duration-500"
                     >
                       <option value="">All Levels</option>
-                      {experienceLevels.map(level => (
-                        <option key={level} value={level}>{level}</option>
+                      {experienceLevels.map((level) => (
+                        <option key={level} value={level}>
+                          {level}
+                        </option>
                       ))}
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
@@ -299,9 +357,9 @@ export default function InterviewsPage() {
           initial="hidden"
           animate="visible"
         >
-          {interviews.map((interview, index) => (
+          {interviews?.map((interview) => (
             <motion.div
-              key={interview.id}
+              key={interview._id}
               variants={itemVariants}
               className="bg-white border border-gray-200 p-8 group hover:border-gray-300 transition-all duration-500"
               whileHover={{ y: -2 }}
@@ -314,17 +372,19 @@ export default function InterviewsPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-light text-gray-800 tracking-wide mb-1">
-                      {interview.position}
+                      {interview?.jobTitle}
                     </h3>
                     <p className="text-gray-600 font-light tracking-wide">
-                      {interview.company}
+                      {interview?.company}
                     </p>
                   </div>
                 </div>
-                {interview.featured && (
+                {interview?.featured && (
                   <div className="flex items-center gap-1 text-amber-600">
                     <Star className="w-4 h-4 fill-current" />
-                    <span className="text-xs font-light tracking-wide">Featured</span>
+                    <span className="text-xs font-light tracking-wide">
+                      Featured
+                    </span>
                   </div>
                 )}
               </div>
@@ -334,40 +394,44 @@ export default function InterviewsPage() {
                 <div className="flex items-center gap-4 text-sm text-gray-600">
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
-                    <span className="font-light">{interview.location}</span>
+                    <span className="font-light">{interview?.location}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
-                    <span className="font-light">{interview.date}</span>
+                    <span className="font-light">{interview?.date}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
-                    <span className="font-light">{interview.time}</span>
+                    <span className="font-light">{interview?.time}</span>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4 text-sm text-gray-600">
                   <div className="flex items-center gap-2">
                     <Briefcase className="w-4 h-4" />
-                    <span className="font-light">{interview.experience}</span>
+                    <span className="font-light">
+                      {interview?.experienceRequired}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    <span className="font-light">{interview.applicants} applicants</span>
+                    <span className="font-light">
+                      {interview?.openVacancies} vacancies
+                    </span>
                   </div>
                 </div>
               </div>
 
               {/* Description */}
               <p className="text-gray-600 font-light leading-relaxed mb-6 tracking-wide">
-                {interview.description}
+                {interview?.description}
               </p>
 
               {/* Salary and CTA */}
               <div className="flex items-center justify-between pt-6 border-t border-gray-100">
                 <div>
                   <p className="text-gray-800 font-light tracking-wide">
-                    {interview.salary}
+                    {interview?.salary}
                   </p>
                 </div>
                 <motion.button
