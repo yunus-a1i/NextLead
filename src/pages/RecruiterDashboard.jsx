@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Briefcase,
@@ -621,7 +621,7 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
 }
 
 // Post Job Modal Component
-function PostJobModal({ onClose, onSave, hrId, domainId }) {
+function PostJobModal({ onClose, onSave, hrId }) {
   const [formData, setFormData] = useState({
     hrId: hrId || "", // ObjectId of HR
     // domainId: domainId || "", // ObjectId of domain
