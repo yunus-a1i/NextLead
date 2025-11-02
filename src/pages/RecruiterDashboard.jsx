@@ -23,7 +23,7 @@ import {
   User,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { createPostThunk } from "../redux/postSlice"; // adjust path
+import { createPostThunk, getAllPostsThunk } from "../redux/postSlice"; // adjust path
 
 export default function RecruiterDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
