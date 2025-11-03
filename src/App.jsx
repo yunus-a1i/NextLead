@@ -19,6 +19,7 @@ import CandidateDashboard from "./pages/CandidateDashboard";
 import LoginPortal from "./pages/LoginPortal";
 import JobDetailPage from "./pages/JobDetailPage";
 
+
 function App() {
   return (
     <Routes>

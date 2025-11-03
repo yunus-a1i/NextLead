@@ -8,10 +8,10 @@ import {
   LogOut,
   Home,
   Briefcase,
-  ChevronDown,
-  ChevronRight
+  ChevronRight,
 } from "lucide-react";
 import LogoutModal from "./LogoutModal";
+import { useToasts } from "./Toast";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +20,7 @@ export default function Navbar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { success } = useToasts();
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -42,6 +43,7 @@ export default function Navbar() {
     setUser(null);
     setIsOpen(false);
     navigate("/login-portal");
+    success("Logout Successfully!");
   };
 
   const navItems = [

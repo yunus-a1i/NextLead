@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Lock, ArrowRight, UserPlus } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { loginHr } from "../redux/hrSlice";
+import { useToasts } from "./Toast";
 
 export default function LoginForm() {
   const [searchParams] = useSearchParams();
@@ -13,9 +14,10 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const { user, hr } = useSelector((state) => state);
   const loading = role === "candidate" ? user.loading : hr.loading;
-  const error = role === "candidate" ? user.error : hr.error;
+  const isError = role === "candidate" ? user.error : hr.error;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { success, error } = useToasts();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,12 +29,12 @@ export default function LoginForm() {
       } else {
         await dispatch(loginHr(data)).unwrap();
       }
-      alert("Login successful");
+      success("Login Successfully!");
       navigate(
         role === "candidate" ? "/candidate/dashboard" : "/recruiter/dashboard"
       );
     } catch (err) {
-      alert(err?.message || "Login failed");
+      error(err?.message || "Login failed");
     }
   };
 
@@ -162,7 +164,7 @@ export default function LoginForm() {
 
             {/* Error Message */}
             <AnimatePresence>
-              {error && (
+              {isError && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
@@ -170,7 +172,7 @@ export default function LoginForm() {
                   className="overflow-hidden"
                 >
                   <div className="p-3 border border-red-200 bg-red-50/50">
-                    <p className="text-red-700 text-sm font-light">{error}</p>
+                    <p className="text-red-700 text-sm font-light">{isError}</p>
                   </div>
                 </motion.div>
               )}
