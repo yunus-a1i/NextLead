@@ -98,11 +98,9 @@ export default function BeginJourney() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
-        {/* Background Elements */}
+      {/* <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent"></div>
         
-        {/* Floating Elements */}
         <motion.div
           className="absolute top-1/4 left-1/4 w-96 h-96 border border-white/5 rounded-full"
           variants={floatingVariants}
@@ -123,7 +121,6 @@ export default function BeginJourney() {
             initial="hidden"
             animate="visible"
           >
-            {/* Header */}
             <motion.div variants={itemVariants} className="space-y-8">
               <div className="space-y-4">
                 <div className="w-16 h-px bg-gray-300 mx-auto"></div>
@@ -145,7 +142,6 @@ export default function BeginJourney() {
               </p>
             </motion.div>
 
-            {/* CTA Buttons */}
             <motion.div 
               className="flex flex-col sm:flex-row gap-6 justify-center items-center"
               variants={itemVariants}
@@ -156,7 +152,7 @@ export default function BeginJourney() {
                 transition={{ duration: 0.3 }}
               >
                 <Link
-                  to="/register"
+                  to="/login-portal"
                   className="group inline-flex items-center gap-4 px-12 py-4 bg-gray-800 text-white font-light tracking-wider hover:bg-gray-900 transition-all duration-500"
                 >
                   <span className="text-sm uppercase tracking-[0.2em]">Create Account</span>
@@ -181,7 +177,6 @@ export default function BeginJourney() {
               </motion.div>
             </motion.div>
 
-            {/* Scroll Indicator */}
             <motion.div
               className="pt-12"
               variants={itemVariants}
@@ -196,7 +191,7 @@ export default function BeginJourney() {
             </motion.div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* How It Works Section */}
       <section className="py-20 border-t border-gray-200">
@@ -309,7 +304,7 @@ export default function BeginJourney() {
               whileTap={{ scale: 0.98 }}
             >
               <Link
-                to="/register"
+                to="/login-portal"
                 className="group inline-flex items-center gap-4 px-12 py-4 bg-gray-800 text-white font-light tracking-wider hover:bg-gray-900 transition-all duration-500"
               >
                 <span className="text-sm uppercase tracking-[0.2em]">Start Now</span>

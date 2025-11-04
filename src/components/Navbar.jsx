@@ -9,6 +9,9 @@ import {
   Home,
   Briefcase,
   ChevronRight,
+  Phone,
+  Users,
+  LayoutDashboard,
 } from "lucide-react";
 import LogoutModal from "./LogoutModal";
 import { useToasts } from "./Toast";
@@ -47,10 +50,18 @@ export default function Navbar() {
   };
 
   const navItems = [
+    // { name: "Home", path: "/", icon: Home },
+    // ...(user?.role === "recruiter"
+    //   ? [{ name: "Post Interview", path: "/post-interview", icon: Briefcase }]
+    //   : [{ name: "View Jobs", path: "/interviews", icon: ChevronRight }]),
+    //   { name: "Home", path: "/", icon: Phone },
     { name: "Home", path: "/", icon: Home },
     ...(user?.role === "recruiter"
-      ? [{ name: "Post Interview", path: "/post-interview", icon: Briefcase }]
-      : [{ name: "View Jobs", path: "/interviews", icon: ChevronRight }]),
+      ? [{ name: "Dashboard", path: "/recruiter/dashboard", icon: LayoutDashboard }]
+      : user?.role === "candidate" ? [{ name: "Dashboard", path: "/candidates", icon: LayoutDashboard }] : [{ name: "Candidates", path: "/candidates", icon: Users },{ name: "Recruiters", path: "/recruiters", icon: Users },]),
+    { name: "Jobs", path: "/interviews", icon: Briefcase },
+    
+    { name: "Contact", path: "/contact", icon: Phone },
   ];
 
   const mobileMenuVariants = {
@@ -287,7 +298,7 @@ export default function Navbar() {
                           Sign In
                         </Link>
                         <Link
-                          to="/register"
+                          to="/login-portal"
                           onClick={() => setIsOpen(false)}
                           className="flex items-center justify-center w-full px-4 py-3 bg-gray-800 text-white font-light tracking-wide hover:bg-gray-900 transition-all duration-500"
                         >

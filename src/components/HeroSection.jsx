@@ -118,7 +118,7 @@ export default function HeroSection() {
                 transition={{ duration: 0.3 }}
               >
                 <Link
-                  to="/register"
+                  to="/login-portal"
                   className="group inline-flex items-center gap-4 px-12 py-4 border border-white/30 text-white font-light tracking-wider rounded-none hover:bg-white/5 transition-all duration-500 backdrop-blur-sm"
                 >
                   <span className="text-sm uppercase tracking-[0.2em]">Begin Journey</span>
@@ -145,7 +145,7 @@ export default function HeroSection() {
       </div>
 
       {/* Scroll Indicator */}
-      <motion.div
+      {/* <motion.div
         className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -158,7 +158,7 @@ export default function HeroSection() {
         >
           <ChevronDown className="w-5 h-5" />
         </motion.div>
-      </motion.div>
+      </motion.div> */}
 
       {/* Luxury Accent Elements */}
       <div className="absolute top-12 left-12 w-px h-24 bg-gradient-to-b from-white/20 to-transparent"></div>
