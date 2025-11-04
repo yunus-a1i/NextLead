@@ -18,7 +18,7 @@ import RecruiterDashboard from "./pages/RecruiterDashboard";
 import CandidateDashboard from "./pages/CandidateDashboard";
 import LoginPortal from "./pages/LoginPortal";
 import JobDetailPage from "./pages/JobDetailPage";
-
+import AboutPage from "./pages/AboutPage";
 
 function App() {
   return (
@@ -45,12 +45,12 @@ function App() {
       {/* future */}
       {/* <Route path="/blog/detail" element={<BlogDetailPage />} /> */}
       {/* <Route path="/blog" element={<Blog />} /> */}
+      {/* <Route path="/about" element={<AboutPage />} /> */}
     </Routes>
   );
 }
 
 export default App;
-
 
 // app.use(
 //   cors({
