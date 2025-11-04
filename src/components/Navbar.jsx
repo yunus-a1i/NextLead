@@ -120,7 +120,7 @@ export default function Navbar() {
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center space-x-8">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
@@ -150,10 +150,10 @@ export default function Navbar() {
             </div>
 
             {/* Desktop Auth Buttons */}
-            <div className="hidden md:flex items-center space-x-6">
+            <div className="hidden lg:flex items-center space-x-6">
               {!user ? (
                 <>
-                  <motion.div
+                  {/* <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -163,7 +163,7 @@ export default function Navbar() {
                     >
                       Sign In
                     </Link>
-                  </motion.div>
+                  </motion.div> */}
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -210,7 +210,7 @@ export default function Navbar() {
 
             {/* Mobile Menu Button */}
             <motion.button
-              className="md:hidden p-2 border border-gray-300 hover:border-gray-400 transition-colors duration-500"
+              className="lg:hidden p-2 border border-gray-300 hover:border-gray-400 transition-colors duration-500"
               onClick={() => setIsOpen(!isOpen)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -245,7 +245,7 @@ export default function Navbar() {
           <AnimatePresence>
             {isOpen && (
               <motion.div
-                className="md:hidden absolute left-0 px-4 bg-white w-full overflow-hidden border-t border-gray-100/50"
+                className="lg:hidden absolute left-0 px-4 bg-white w-full overflow-hidden border-t border-gray-100/50"
                 variants={mobileMenuVariants}
                 initial="closed"
                 animate="open"
@@ -290,13 +290,13 @@ export default function Navbar() {
                   >
                     {!user ? (
                       <>
-                        <Link
+                        {/* <Link
                           to="/login"
                           onClick={() => setIsOpen(false)}
                           className="flex items-center justify-center w-full px-4 py-3 text-gray-700 font-light tracking-wide border border-gray-300 hover:border-gray-400 transition-all duration-500"
                         >
                           Sign In
-                        </Link>
+                        </Link> */}
                         <Link
                           to="/login-portal"
                           onClick={() => setIsOpen(false)}
