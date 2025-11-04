@@ -145,7 +145,7 @@ export default function ForCandidates() {
                 transition={{ duration: 0.3 }}
               >
                 <Link
-                  to="/candidate/dashboard"
+                  to="/register?role=candidate"
                   className="group inline-flex items-center gap-4 px-12 py-4 bg-gray-800 text-white font-light tracking-wider hover:bg-gray-900 transition-all duration-500"
                 >
                   <span className="text-sm uppercase tracking-[0.2em]">Start Your Journey</span>
@@ -362,7 +362,7 @@ export default function ForCandidates() {
               whileTap={{ scale: 0.98 }}
             >
               <Link
-                to="/login?role=candidate"
+                to="/register?role=candidate"
                 className="group inline-flex items-center gap-4 px-12 py-4 bg-gray-800 text-white font-light tracking-wider hover:bg-gray-900 transition-all duration-500"
               >
                 <span className="text-sm uppercase tracking-[0.2em]">Get Started Today</span>
