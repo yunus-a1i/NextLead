@@ -49,36 +49,36 @@ export default function Footer() {
         { name: "Browse Opportunities", href: "/interviews" },
         { name: "For Candidates", href: "/candidates" },
         { name: "For Recruiters", href: "/recruiters" },
-        { name: "Success Stories", href: "/success-stories" }
+        // { name: "Success Stories", href: "/success-stories" }
       ]
     },
     {
       title: "Company",
       links: [
         { name: "About Us", href: "/about" },
-        { name: "Careers", href: "/careers" },
-        { name: "Press Kit", href: "/press" },
+        // { name: "Careers", href: "/careers" },
+        // { name: "Press Kit", href: "/press" },
         { name: "Contact", href: "/contact" }
       ]
     },
-    {
-      title: "Resources",
-      links: [
-        { name: "Help Center", href: "/help" },
-        { name: "Blog", href: "/blog" },
-        { name: "Documentation", href: "/docs" },
-        { name: "Community", href: "/community" }
-      ]
-    },
-    {
-      title: "Legal",
-      links: [
-        { name: "Privacy Policy", href: "/privacy" },
-        { name: "Terms of Service", href: "/terms" },
-        { name: "Cookie Policy", href: "/cookies" },
-        { name: "Security", href: "/security" }
-      ]
-    }
+    // {
+    //   title: "Resources",
+    //   links: [
+    //     { name: "Help Center", href: "/help" },
+    //     { name: "Blog", href: "/blog" },
+    //     { name: "Documentation", href: "/docs" },
+    //     { name: "Community", href: "/community" }
+    //   ]
+    // },
+    // {
+    //   title: "Legal",
+    //   links: [
+    //     { name: "Privacy Policy", href: "/privacy" },
+    //     { name: "Terms of Service", href: "/terms" },
+    //     { name: "Cookie Policy", href: "/cookies" },
+    //     { name: "Security", href: "/security" }
+    //   ]
+    // }
   ];
 
   return (
@@ -86,7 +86,7 @@ export default function Footer() {
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-6 py-16">
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-12"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -117,24 +117,24 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-gray-600">
                 <MapPin className="w-4 h-4" />
-                <span className="font-light tracking-wide text-sm">San Francisco, CA</span>
+                <span className="font-light tracking-wide text-sm">Noida, Uttar Pradesh</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-600">
                 <Phone className="w-4 h-4" />
-                <span className="font-light tracking-wide text-sm">+1 (555) 123-4567</span>
+                <span className="font-light tracking-wide text-sm">+91 7309940974</span>
               </div>
               <div className="flex items-center space-x-3 text-gray-600">
                 <Mail className="w-4 h-4" />
-                <span className="font-light tracking-wide text-sm">hello@nextlead.com</span>
+                <span className="font-light tracking-wide text-sm">yunusalisiddiqui90@gmail.com</span>
               </div>
             </div>
 
             {/* Social Links */}
             <div className="flex space-x-4">
               {[
-                { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-                { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-                { icon: Github, href: "https://github.com", label: "GitHub" }
+                { icon: Twitter, href: "https://x.com/YunusAliSiddiq", label: "Twitter" },
+                { icon: Linkedin, href: "https://www.linkedin.com/in/yunus-ali-siddiqui/", label: "LinkedIn" },
+                { icon: Github, href: "https://github.com/yunus-a1i", label: "GitHub" }
               ].map((social) => (
                 <motion.a
                   key={social.label}
@@ -151,7 +151,7 @@ export default function Footer() {
           </motion.div>
 
           {/* Links Columns */}
-          {footerSections.map((section, index) => (
+          {footerSections?.map((section, index) => (
             <motion.div
               key={section.title}
               className="space-y-4"
@@ -162,7 +162,7 @@ export default function Footer() {
                 {section.title}
               </h3>
               <ul className="space-y-3">
-                {section.links.map((link) => (
+                {section?.links?.map((link) => (
                   <li key={link.name}>
                     <Link
                       to={link.href}
@@ -196,12 +196,12 @@ export default function Footer() {
 
             {/* Additional Links */}
             <div className="flex items-center space-x-6 text-gray-600 font-light tracking-wide text-sm">
-              <Link to="/accessibility" className="hover:text-gray-800 transition-colors duration-500">
+              {/* <Link to="/accessibility" className="hover:text-gray-800 transition-colors duration-500">
                 Accessibility
               </Link>
               <Link to="/sitemap" className="hover:text-gray-800 transition-colors duration-500">
                 Sitemap
-              </Link>
+              </Link> */}
               <button
                 onClick={scrollToTop}
                 className="flex items-center space-x-2 hover:text-gray-800 transition-colors duration-500 group"
