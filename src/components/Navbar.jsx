@@ -12,6 +12,7 @@ import {
   Phone,
   Users,
   LayoutDashboard,
+  Building,
 } from "lucide-react";
 import LogoutModal from "./LogoutModal";
 import { useToasts } from "./Toast";
@@ -58,7 +59,7 @@ export default function Navbar() {
     { name: "Home", path: "/", icon: Home },
     ...(user?.role === "recruiter"
       ? [{ name: "Dashboard", path: "/recruiter/dashboard", icon: LayoutDashboard }]
-      : user?.role === "candidate" ? [{ name: "Dashboard", path: "/candidates", icon: LayoutDashboard }] : [{ name: "Candidates", path: "/candidates", icon: Users },{ name: "Recruiters", path: "/recruiters", icon: Users },]),
+      : user?.role === "candidate" ? [{ name: "Dashboard", path: "/candidates", icon: LayoutDashboard }] : [{ name: "Candidates", path: "/candidates", icon: Users },{ name: "Recruiters", path: "/recruiters", icon: Building },]),
     { name: "Jobs", path: "/interviews", icon: Briefcase },
     
     { name: "Contact", path: "/contact", icon: Phone },

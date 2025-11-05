@@ -17,6 +17,7 @@ import {
   FileText,
   Eye,
   EyeOff,
+  Trash,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { fetchUser, updateUser } from "../redux/userSlice";
@@ -39,7 +40,9 @@ export default function ProfilePage() {
         if (savedUser.role === "candidate") {
           person = await dispatch(fetchUser(savedUser._id)).unwrap();
         } else {
-        person = await dispatch(fetchHr({id: savedUser._id, token: savedUser.accessToken})).unwrap();
+          person = await dispatch(
+            fetchHr({ id: savedUser._id, token: savedUser.accessToken })
+          ).unwrap();
         }
 
         console.log("Fetched user:", person.data);
@@ -480,6 +483,9 @@ export default function ProfilePage() {
                         >
                           {isEditing ? (
                             <>
+                              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                                Position
+                              </label>
                               <input
                                 type="text"
                                 value={exp.position}
@@ -494,6 +500,9 @@ export default function ProfilePage() {
                                 className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                                 placeholder="Position"
                               />
+                              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                                Period
+                              </label>
                               <input
                                 type="text"
                                 value={exp.period}
@@ -508,6 +517,9 @@ export default function ProfilePage() {
                                 className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                                 placeholder="Period"
                               />
+                              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                                Company
+                              </label>
                               <input
                                 type="text"
                                 value={exp.company}
@@ -522,6 +534,9 @@ export default function ProfilePage() {
                                 className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                                 placeholder="Company"
                               />
+                              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                                Description
+                              </label>
                               <textarea
                                 value={exp.description}
                                 onChange={(e) =>
@@ -541,8 +556,9 @@ export default function ProfilePage() {
                                 onClick={() =>
                                   handleRemoveItem("experience", index)
                                 }
-                                className="text-sm text-red-600 hover:text-red-800 transition"
+                                className="inline-flex items-center gap-2 px-6 py-3 border border-red-300 text-red-600 font-light tracking-wide hover:border-red-400 transition-all duration-500"
                               >
+                                <Trash className="w-4 h-4" />
                                 Remove
                               </button>
                             </>
@@ -625,6 +641,9 @@ export default function ProfilePage() {
                         >
                           {isEditing ? (
                             <>
+                              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                                Degree
+                              </label>
                               <input
                                 type="text"
                                 value={edu.degree}
@@ -639,6 +658,9 @@ export default function ProfilePage() {
                                 className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                                 placeholder="Degree"
                               />
+                              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                                Period
+                              </label>
                               <input
                                 type="text"
                                 value={edu.period}
@@ -653,6 +675,9 @@ export default function ProfilePage() {
                                 className="w-full px-4 mb-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                                 placeholder="Period"
                               />
+                              <label className="text-xs font-light text-gray-600 tracking-wide uppercase">
+                                Institution
+                              </label>
                               <input
                                 type="text"
                                 value={edu.institution}
@@ -671,8 +696,9 @@ export default function ProfilePage() {
                                 onClick={() =>
                                   handleRemoveItem("education", index)
                                 }
-                                className="text-sm text-red-600 hover:text-red-800 transition"
+                                className="inline-flex items-center gap-2 px-6 py-3 border border-red-300 text-red-600 font-light tracking-wide hover:border-red-400 transition-all duration-500"
                               >
+                                <Trash className="w-4 h-4" />
                                 Remove
                               </button>
                             </>
