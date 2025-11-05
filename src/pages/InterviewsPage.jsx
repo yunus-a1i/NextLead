@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -104,32 +104,51 @@ export default function InterviewsPage() {
     "5+ years",
   ];
   const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const limit = 4;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageFormUrl = parseInt(searchParams.get("page") || "1");
+  const [page, setPage] = useState(pageFormUrl);
 
-  const loadPosts = async (pageNum = 1) => {
+  // ✅ Fetch one page (append or replace)
+  const loadPosts = async (pageNum = 1, append = false) => {
     try {
       const result = await dispatch(getAllPostsThunk({ page: pageNum, limit }));
       const { data, pagination } = result.payload;
 
-      if (pageNum === 1) setInterviews(data);
-      else setInterviews((prev) => [...prev, ...data]);
+      if (append) {
+        setInterviews((prev) => {
+          const existingIds = new Set(prev.map((p) => p._id));
+          const newData = data.filter((d) => !existingIds.has(d._id)); // avoid duplicates
+          return [...prev, ...newData];
+        });
+      } else {
+        setInterviews(data);
+      }
 
-      setHasMore(pagination?.hasMore ?? false);
+      if (pagination) setHasMore(pagination.hasMore ?? false);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
   };
 
+  // ✅ On mount → load all pages up to current page (1..page)
   useEffect(() => {
-    loadPosts(1);
-  }, [dispatch]);
+    (async () => {
+      setInterviews([]); // reset first
+      for (let p = 1; p <= page; p++) {
+        await loadPosts(p, p > 1); // append for p>1
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
-  const handleLoadMore = () => {
+  // ✅ Load More button handler
+  const handleLoadMore = async () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    loadPosts(nextPage);
+    setSearchParams({ page: nextPage.toString() });
+    await loadPosts(nextPage, true);
   };
 
   const containerVariants = {
