@@ -426,12 +426,30 @@ export default function InterviewsPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
-                    <span className="font-light">{interview?.date}</span>
+                    <span className="font-light">
+                      {new Date(interview?.hiringDriveStart).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        }
+                      )}{" "}
+                      -{" "}
+                      {new Date(interview?.hiringDriveEnd).toLocaleDateString(
+                        "en-US",
+                        {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        }
+                      )}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     <span className="font-light">{interview?.time}</span>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="flex items-center gap-4 text-sm text-gray-600">
