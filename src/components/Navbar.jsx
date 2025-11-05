@@ -59,7 +59,7 @@ export default function Navbar() {
     { name: "Home", path: "/", icon: Home },
     ...(user?.role === "recruiter"
       ? [{ name: "Dashboard", path: "/recruiter/dashboard", icon: LayoutDashboard }]
-      : user?.role === "candidate" ? [{ name: "Dashboard", path: "/candidates", icon: LayoutDashboard }] : [{ name: "Candidates", path: "/candidates", icon: Users },{ name: "Recruiters", path: "/recruiters", icon: Building },]),
+      : user?.role === "candidate" ? [{ name: "Dashboard", path: "/candidate/dashboard", icon: LayoutDashboard }] : [{ name: "Candidates", path: "/candidates", icon: Users },{ name: "Recruiters", path: "/recruiters", icon: Building },]),
     { name: "Jobs", path: "/interviews", icon: Briefcase },
     
     { name: "Contact", path: "/contact", icon: Phone },

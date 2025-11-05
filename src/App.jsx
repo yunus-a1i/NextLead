@@ -37,9 +37,9 @@ function App() {
         <Route path="/recruiters" element={<ForRecruiters />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/help" element={<HelpCenter />} />
+        <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
+        <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
       </Route>
-      <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
-      <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
       <Route path="*" element={<SomethingWentWrongPage />} />
 
       {/* future */}
