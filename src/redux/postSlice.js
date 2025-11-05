@@ -64,9 +64,9 @@ export const deletePostThunk = createAsyncThunk(
 
 export const getAllPostsThunk = createAsyncThunk(
   "posts/getAll",
-  async (_, thunkAPI) => {
+  async ({ page = 1, limit = 4 }, thunkAPI) => {
     try {
-      return await postService.getAllPosts();
+      return await postService.getAllPosts(page, limit);
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message

@@ -16,7 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { getAllPostsThunk, getPostsThunk } from "../redux/postSlice";
+import { getAllPostsThunk } from "../redux/postSlice";
 
 export default function InterviewsPage() {
   const [selectedFilters, setSelectedFilters] = useState({
@@ -104,24 +104,33 @@ export default function InterviewsPage() {
     "5+ years",
   ];
   const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 4;
+
+  const loadPosts = async (pageNum = 1) => {
+    try {
+      const result = await dispatch(getAllPostsThunk({ page: pageNum, limit }));
+      const { data, pagination } = result.payload;
+
+      if (pageNum === 1) setInterviews(data);
+      else setInterviews((prev) => [...prev, ...data]);
+
+      setHasMore(pagination?.hasMore ?? false);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-    const loadPosts = async () => {
-      try {
-        const result = await dispatch(getAllPostsThunk());
-        if (isMounted) setInterviews(result.payload.data);
-
-        console.log(result.payload.data)
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-      }
-    };
-    loadPosts();
-    return () => {
-      isMounted = false;
-    };
+    loadPosts(1);
   }, [dispatch]);
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    loadPosts(nextPage);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -448,17 +457,22 @@ export default function InterviewsPage() {
         </motion.div>
 
         {/* Load More */}
-        <motion.div
-          className="text-center mt-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <button className="inline-flex items-center gap-2 px-8 py-3 border border-gray-300 text-gray-700 font-light tracking-wide hover:border-gray-500 transition-all duration-500 group">
-            <span>Load More Opportunities</span>
-            <ChevronDown className="w-4 h-4 group-hover:translate-y-1 transition-transform duration-300" />
-          </button>
-        </motion.div>
+        {hasMore && (
+          <motion.div
+            className="text-center mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <button
+              onClick={handleLoadMore}
+              className="inline-flex items-center gap-2 px-8 py-3 border border-gray-300 text-gray-700 font-light tracking-wide hover:border-gray-500 transition-all duration-500 group"
+            >
+              <span>Load More Opportunities</span>
+              <ChevronDown className="w-4 h-4 group-hover:translate-y-1 transition-transform duration-300" />
+            </button>
+          </motion.div>
+        )}
       </section>
 
       {/* Fixed Corner Elements */}

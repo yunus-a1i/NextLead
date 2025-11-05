@@ -35,8 +35,10 @@ const postService = {
   },
 
   // Get all posts (public)
-  getAllPosts: async () => {
-    const response = await axiosInstance.get(`/post/getAllPosts`);
+  getAllPosts: async (page = 1, limit = 4) => {
+    const response = await axiosInstance.get(`/post/getAllPosts`, {
+      params: { page, limit },
+    });
     return response.data;
   },
 };
