@@ -34,7 +34,7 @@ export default function LoginForm() {
         role === "candidate" ? "/candidate/dashboard" : "/recruiter/dashboard"
       );
     } catch (err) {
-      error(err?.message || "Login failed");
+      error(err?.message || err);
     }
   };
 

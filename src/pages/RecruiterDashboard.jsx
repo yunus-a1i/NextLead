@@ -22,60 +22,62 @@ import {
   FileText,
   User,
 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { createPostThunk, getAllPostsThunk } from "../redux/postSlice"; // adjust path
+import { useDispatch } from "react-redux";
+import { createPostThunk } from "../redux/postSlice";
+import { getAllPostsByHr } from "../redux/hrSlice";
 
 export default function RecruiterDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showPostJobModal, setShowPostJobModal] = useState(false);
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      title: "Senior Frontend Developer",
-      company: "TechCorp Solutions",
-      type: "Full-time",
-      location: "San Francisco, CA",
-      salary: "$120,000 - $150,000",
-      experience: "5+ years",
-      applications: 24,
-      interviews: 8,
-      hired: 2,
-      status: "active",
-      postedDate: "2024-12-15",
-      description:
-        "We are looking for an experienced Frontend Developer with React expertise to join our growing team.",
-      requirements: [
-        "5+ years React experience",
-        "TypeScript proficiency",
-        "Team leadership experience",
-      ],
-    },
-    {
-      id: 2,
-      title: "Product Manager",
-      company: "InnovateLabs",
-      type: "Full-time",
-      location: "Remote",
-      salary: "$100,000 - $130,000",
-      experience: "3+ years",
-      applications: 18,
-      interviews: 6,
-      hired: 1,
-      status: "active",
-      postedDate: "2024-12-10",
-      description:
-        "Join our product team to drive innovation and deliver exceptional user experiences.",
-      requirements: [
-        "Product management experience",
-        "Agile methodology",
-        "User research skills",
-      ],
-    },
-  ]);
+  const [jobs, setJobs] = useState([]);
+  // ([
+  //   {
+  //     id: 1,
+  //     title: "Senior Frontend Developer",
+  //     company: "TechCorp Solutions",
+  //     type: "Full-time",
+  //     location: "San Francisco, CA",
+  //     salary: "$120,000 - $150,000",
+  //     experience: "5+ years",
+  //     applications: 24,
+  //     interviews: 8,
+  //     hired: 2,
+  //     status: "active",
+  //     postedDate: "2024-12-15",
+  //     description:
+  //       "We are looking for an experienced Frontend Developer with React expertise to join our growing team.",
+  //     requirements: [
+  //       "5+ years React experience",
+  //       "TypeScript proficiency",
+  //       "Team leadership experience",
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Product Manager",
+  //     company: "InnovateLabs",
+  //     type: "Full-time",
+  //     location: "Remote",
+  //     salary: "$100,000 - $130,000",
+  //     experience: "3+ years",
+  //     applications: 18,
+  //     interviews: 6,
+  //     hired: 1,
+  //     status: "active",
+  //     postedDate: "2024-12-10",
+  //     description:
+  //       "Join our product team to drive innovation and deliver exceptional user experiences.",
+  //     requirements: [
+  //       "Product management experience",
+  //       "Agile methodology",
+  //       "User research skills",
+  //     ],
+  //   },
+  // ]);
   const dispatch = useDispatch();
   const token = localStorage.getItem("token"); // if you're storing token in auth slice
   const hr = JSON.parse(localStorage.getItem("user")); // if you're storing token in auth slice
-  console.log(hr);
+  // console.log(hr);
 
   const stats = {
     totalJobs: 12,
@@ -119,6 +121,25 @@ export default function RecruiterDashboard() {
       alert(error || "Failed to post job");
     }
   };
+
+  useEffect(() => {
+    const loadJobPostByHr = async () => {
+      try {
+        console.log(hr._id);
+        const id = hr._id;
+        const res = await dispatch(getAllPostsByHr(id));
+        console.log(res);
+        setJobs(res.payload.data);
+      } catch (err) {
+        console.log(err || err.message);
+      }
+    };
+    loadJobPostByHr();
+
+    return () => {
+      clearInterval(loadJobPostByHr);
+    };
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -454,9 +475,10 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
 
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch =
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || job.status === statusFilter;
+      job?.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job?.company.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || job?.driveStatus === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -516,7 +538,7 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
       <div className="grid grid-cols-1 gap-6">
         {filteredJobs.map((job, index) => (
           <motion.div
-            key={job.id}
+            key={job?._id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
@@ -526,44 +548,45 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <h3 className="text-xl font-light text-gray-800 tracking-wide">
-                    {job.title}
+                    {/* {job?.title} */}
+                     {job?.jobTitle}
                   </h3>
                   <span
                     className={`px-2 py-1 text-xs font-light tracking-wide ${
-                      job.status === "active"
+                      job?.status === "active"
                         ? "bg-green-100 text-green-800 border border-green-200"
                         : "bg-gray-100 text-gray-800 border border-gray-200"
                     }`}
                   >
-                    {job.status}
+                    {job?.driveStatus}
                   </span>
                 </div>
 
                 <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
                   <span className="flex items-center gap-1">
                     <Building className="w-4 h-4" />
-                    {job.company}
+                    {job?.company}
                   </span>
                   <span className="flex items-center gap-1">
                     <MapPin className="w-4 h-4" />
-                    {job.location}
+                    {job?.location}
                   </span>
                   <span className="flex items-center gap-1">
                     <DollarSign className="w-4 h-4" />
-                    {job.salary}
+                    {job?.salary}
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
-                    {job.experience}
+                    {job?.experienceRequired}
                   </span>
                 </div>
 
                 <p className="text-gray-600 font-light tracking-wide leading-relaxed mb-4">
-                  {job.description}
+                  {job?.description}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {job.requirements.slice(0, 3).map((req, idx) => (
+                {/* <div className="flex flex-wrap gap-2 mb-4">
+                  {job?.requirements.slice(0, 3).map((req, idx) => (
                     <span
                       key={idx}
                       className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-light tracking-wide border border-gray-200"
@@ -571,25 +594,25 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
                       {req}
                     </span>
                   ))}
-                  {job.requirements.length > 3 && (
+                  {job?.requirements.length > 3 && (
                     <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs font-light tracking-wide border border-gray-200">
-                      +{job.requirements.length - 3} more
+                      +{job?.requirements.length - 3} more
                     </span>
                   )}
-                </div>
+                </div> */}
 
                 <div className="flex items-center gap-6 text-sm text-gray-600">
                   <span className="flex items-center gap-1">
                     <Users className="w-4 h-4" />
-                    {job.applications} applications
+                    {job?.openVacancies} applications
                   </span>
                   <span className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
-                    {job.interviews} interviews
+                    {job?.interviews} interviews
                   </span>
                   <span className="flex items-center gap-1">
                     <CheckCircle className="w-4 h-4" />
-                    {job.hired} hired
+                    {job?.hired} hired
                   </span>
                 </div>
               </div>

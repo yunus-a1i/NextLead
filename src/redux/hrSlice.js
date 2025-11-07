@@ -1,28 +1,31 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import hrService from '../services/hrService';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import hrService from "../services/hrService";
 
 const initialState = {
   hr: null,
   loading: false,
   error: false,
   success: false,
-  message: '',
+  message: "",
 };
 
 // Async actions
-export const loginHr = createAsyncThunk("user/login", async (data, thunkAPI) => {
-  try {
-    const res = await hrService.login(data);
+export const loginHr = createAsyncThunk(
+  "user/login",
+  async (data, thunkAPI) => {
+    try {
+      const res = await hrService.login(data);
 
-    // Save token & user in localStorage
-    localStorage.setItem("token", res.accessToken);
-    localStorage.setItem("user", JSON.stringify(res.user));
+      // Save token & user in localStorage
+      localStorage.setItem("token", res.accessToken);
+      localStorage.setItem("user", JSON.stringify(res.user));
 
-    return res;
-  } catch (err) {
-    return thunkAPI.rejectWithValue(err.response?.data || "Login failed");
+      return res;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response?.data || "Login failed");
+    }
   }
-});
+);
 
 export const logoutHr = createAsyncThunk("user/logout", async (_, thunkAPI) => {
   try {
@@ -39,51 +42,72 @@ export const logoutHr = createAsyncThunk("user/logout", async (_, thunkAPI) => {
 });
 
 export const createHr = createAsyncThunk(
-  'hr/create',
+  "hr/create",
   async (hrData, thunkAPI) => {
     try {
       return await hrService.createHr(hrData);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
     }
   }
 );
 
 export const fetchHr = createAsyncThunk(
-  'hr/get',
+  "hr/get",
   async ({ id, token }, thunkAPI) => {
     try {
       return await hrService.fetchHr(id, token);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
     }
   }
 );
 
 export const updateHr = createAsyncThunk(
-  'hr/update',
+  "hr/update",
   async ({ id, hrData, token }, thunkAPI) => {
     try {
       return await hrService.updateHr(id, hrData, token);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
     }
   }
 );
 
 export const deleteHr = createAsyncThunk(
-  'hr/delete',
+  "hr/delete",
   async ({ id, token }, thunkAPI) => {
     try {
       return await hrService.deleteHr(id, token);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
+    }
+  }
+);
+
+export const getAllPostsByHr = createAsyncThunk(
+  "hr/getAllPostsByHr",
+  async (id, thunkAPI) => {
+    try {
+      return await hrService.getAllPostsByHr(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
     }
   }
 );
 
 const hrSlice = createSlice({
-  name: 'hr',
+  name: "hr",
   initialState,
   reducers: {
     resetHrState: () => initialState,
@@ -91,7 +115,9 @@ const hrSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // Create HR
-      .addCase(createHr.pending, (state) => { state.loading = true; })
+      .addCase(createHr.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(createHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
@@ -104,7 +130,9 @@ const hrSlice = createSlice({
       })
 
       // Get HR
-      .addCase(fetchHr.pending, (state) => { state.loading = true; })
+      .addCase(fetchHr.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(fetchHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
@@ -117,7 +145,9 @@ const hrSlice = createSlice({
       })
 
       // Update HR
-      .addCase(updateHr.pending, (state) => { state.loading = true; })
+      .addCase(updateHr.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(updateHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
@@ -130,13 +160,30 @@ const hrSlice = createSlice({
       })
 
       // Delete HR
-      .addCase(deleteHr.pending, (state) => { state.loading = true; })
+      .addCase(deleteHr.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(deleteHr.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
         state.hr = null;
       })
       .addCase(deleteHr.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+        state.message = action.payload;
+      })
+
+      // Get All Post by HR
+      .addCase(getAllPostsByHr.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllPostsByHr.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+        state.hr = null;
+      })
+      .addCase(getAllPostsByHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
         state.message = action.payload;

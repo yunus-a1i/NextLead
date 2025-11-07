@@ -1,7 +1,6 @@
 import axiosInstance from "../api/axiosInstance";
 
 const hrService = {
-
   login: async (data) => {
     try {
       const res = await axiosInstance.post("/hr/login", data);
@@ -21,7 +20,7 @@ const hrService = {
       throw err.response?.data || new Error("Logout failed");
     }
   },
-  
+
   // Create HR
   createHr: async (hrData) => {
     const response = await axiosInstance.post(`/hr/createHr`, hrData);
@@ -49,6 +48,11 @@ const hrService = {
     const response = await axiosInstance.delete(`/hr/deleteHr/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    return response.data;
+  },
+
+  getAllPostsByHr: async (id) => {
+    const response = await axiosInstance.get(`/hr/getAllPostsByHr/${id}/posts`);
     return response.data;
   },
 };
