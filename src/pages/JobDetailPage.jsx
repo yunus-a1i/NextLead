@@ -30,7 +30,7 @@ export default function JobDetailPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
-
+  console.log(id);
   // Mock job data - in real app, this would come from API
   const job = {
     id: 1,

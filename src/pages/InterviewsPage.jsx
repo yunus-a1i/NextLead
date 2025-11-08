@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -103,6 +103,7 @@ export default function InterviewsPage() {
     "3-5 years",
     "5+ years",
   ];
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [hasMore, setHasMore] = useState(true);
   const limit = 4;
@@ -389,6 +390,7 @@ export default function InterviewsPage() {
             <motion.div
               key={interview._id}
               variants={itemVariants}
+              onClick={() => navigate(`/job-detail/${interview._id}`)}
               className="bg-white border border-gray-200 p-8 group hover:border-gray-300 transition-all duration-500"
               whileHover={{ y: -2 }}
             >
