@@ -48,7 +48,11 @@ useEffect(() => {
 // assuming `id` comes from route params or props
 const job = jobs.find((j) => j._id === id);
 
-console.log(job);
+const similarJobs = jobs.filter(
+  (j) =>
+    j.jobTitle.replace(/\s+/g, '').toLowerCase() ===
+    job.jobTitle.replace(/\s+/g, '').toLowerCase()
+);
 
 
   // Mock job data - in real app, this would come from API
