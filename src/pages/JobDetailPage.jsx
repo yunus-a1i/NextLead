@@ -33,105 +33,105 @@ export default function JobDetailPage() {
   const [isApplied, setIsApplied] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const dispatch = useDispatch();
-  // const [job, setJob] = useState([])
+  const [job, setJob] = useState([])
 
   // Mock job data - in real app, this would come from API
-  const job = {
-    id: 1,
-    title: "Senior Frontend Developer",
-    company: "TechCorp Solutions",
-    logo: "/api/placeholder/80/80",
-    type: "Full-time",
-    location: "San Francisco, CA",
-    salary: "$120,000 - $150,000",
-    experience: "5+ years",
-    postedDate: "2024-12-15",
-    applicationDeadline: "2024-12-30",
-    views: 1247,
-    applications: 89,
-    matchScore: 95,
-    isRemote: false,
-    isUrgent: true,
-    isFeatured: true,
+  // const job = {
+  //   id: 1,
+  //   title: "Senior Frontend Developer",
+  //   company: "TechCorp Solutions",
+  //   logo: "/api/placeholder/80/80",
+  //   type: "Full-time",
+  //   location: "San Francisco, CA",
+  //   salary: "$120,000 - $150,000",
+  //   experience: "5+ years",
+  //   postedDate: "2024-12-15",
+  //   applicationDeadline: "2024-12-30",
+  //   views: 1247,
+  //   applications: 89,
+  //   matchScore: 95,
+  //   isRemote: false,
+  //   isUrgent: true,
+  //   isFeatured: true,
 
-    description: `
-      We are looking for a talented Senior Frontend Developer to join our growing team at TechCorp Solutions. 
-      In this role, you will be responsible for developing and maintaining high-quality web applications using 
-      modern JavaScript frameworks and libraries.
+  //   description: `
+  //     We are looking for a talented Senior Frontend Developer to join our growing team at TechCorp Solutions. 
+  //     In this role, you will be responsible for developing and maintaining high-quality web applications using 
+  //     modern JavaScript frameworks and libraries.
       
-      You'll work closely with our design and backend teams to create seamless, responsive, and accessible 
-      user experiences. The ideal candidate is passionate about frontend technologies, stays up-to-date with 
-      the latest trends, and enjoys mentoring junior developers.
-    `,
+  //     You'll work closely with our design and backend teams to create seamless, responsive, and accessible 
+  //     user experiences. The ideal candidate is passionate about frontend technologies, stays up-to-date with 
+  //     the latest trends, and enjoys mentoring junior developers.
+  //   `,
 
-    responsibilities: [
-      "Develop and maintain responsive web applications using React and TypeScript",
-      "Collaborate with UX/UI designers to implement pixel-perfect designs",
-      "Write clean, maintainable, and well-documented code",
-      "Participate in code reviews and provide constructive feedback",
-      "Optimize applications for maximum speed and scalability",
-      "Mentor junior developers and promote best practices",
-      "Stay updated with emerging frontend technologies and trends",
-    ],
+  //   responsibilities: [
+  //     "Develop and maintain responsive web applications using React and TypeScript",
+  //     "Collaborate with UX/UI designers to implement pixel-perfect designs",
+  //     "Write clean, maintainable, and well-documented code",
+  //     "Participate in code reviews and provide constructive feedback",
+  //     "Optimize applications for maximum speed and scalability",
+  //     "Mentor junior developers and promote best practices",
+  //     "Stay updated with emerging frontend technologies and trends",
+  //   ],
 
-    requirements: [
-      "5+ years of professional frontend development experience",
-      "Expert knowledge of React, TypeScript, and modern JavaScript",
-      "Strong experience with state management (Redux, Zustand, or similar)",
-      "Proficiency in HTML5, CSS3, and CSS-in-JS solutions",
-      "Experience with testing frameworks (Jest, React Testing Library)",
-      "Familiarity with build tools (Webpack, Vite) and CI/CD pipelines",
-      "Excellent problem-solving and communication skills",
-      "Bachelor's degree in Computer Science or related field",
-    ],
+  //   requirements: [
+  //     "5+ years of professional frontend development experience",
+  //     "Expert knowledge of React, TypeScript, and modern JavaScript",
+  //     "Strong experience with state management (Redux, Zustand, or similar)",
+  //     "Proficiency in HTML5, CSS3, and CSS-in-JS solutions",
+  //     "Experience with testing frameworks (Jest, React Testing Library)",
+  //     "Familiarity with build tools (Webpack, Vite) and CI/CD pipelines",
+  //     "Excellent problem-solving and communication skills",
+  //     "Bachelor's degree in Computer Science or related field",
+  //   ],
 
-    niceToHave: [
-      "Experience with Next.js or similar SSR frameworks",
-      "Knowledge of backend technologies (Node.js, Python)",
-      "Familiarity with cloud platforms (AWS, Azure, GCP)",
-      "Contributions to open-source projects",
-      "Experience with micro-frontend architecture",
-    ],
+  //   niceToHave: [
+  //     "Experience with Next.js or similar SSR frameworks",
+  //     "Knowledge of backend technologies (Node.js, Python)",
+  //     "Familiarity with cloud platforms (AWS, Azure, GCP)",
+  //     "Contributions to open-source projects",
+  //     "Experience with micro-frontend architecture",
+  //   ],
 
-    benefits: [
-      "Competitive salary and equity package",
-      "Comprehensive health, dental, and vision insurance",
-      "Flexible work hours and remote work options",
-      "Professional development budget",
-      "401(k) with company matching",
-      "Unlimited paid time off",
-      "Stocked kitchen and catered lunches",
-      "Company retreats and team events",
-    ],
+  //   benefits: [
+  //     "Competitive salary and equity package",
+  //     "Comprehensive health, dental, and vision insurance",
+  //     "Flexible work hours and remote work options",
+  //     "Professional development budget",
+  //     "401(k) with company matching",
+  //     "Unlimited paid time off",
+  //     "Stocked kitchen and catered lunches",
+  //     "Company retreats and team events",
+  //   ],
 
-    companyInfo: {
-      name: "TechCorp Solutions",
-      description:
-        "TechCorp Solutions is a leading technology company specializing in enterprise software solutions. We help businesses transform their operations through innovative technology and exceptional user experiences.",
-      size: "501-1000 employees",
-      industry: "Software Development",
-      founded: "2015",
-      website: "https://techcorp.com",
-      culture: "Fast-paced, innovative, collaborative",
-      location: "San Francisco, California",
-    },
+  //   companyInfo: {
+  //     name: "TechCorp Solutions",
+  //     description:
+  //       "TechCorp Solutions is a leading technology company specializing in enterprise software solutions. We help businesses transform their operations through innovative technology and exceptional user experiences.",
+  //     size: "501-1000 employees",
+  //     industry: "Software Development",
+  //     founded: "2015",
+  //     website: "https://techcorp.com",
+  //     culture: "Fast-paced, innovative, collaborative",
+  //     location: "San Francisco, California",
+  //   },
 
-    recruiter: {
-      name: "Sarah Chen",
-      title: "Senior Technical Recruiter",
-      email: "sarah.chen@techcorp.com",
-      phone: "+1 (555) 123-4567",
-      bio: "Sarah has been with TechCorp for 3 years and specializes in technical recruitment for engineering roles.",
-    },
+  //   recruiter: {
+  //     name: "Sarah Chen",
+  //     title: "Senior Technical Recruiter",
+  //     email: "sarah.chen@techcorp.com",
+  //     phone: "+1 (555) 123-4567",
+  //     bio: "Sarah has been with TechCorp for 3 years and specializes in technical recruitment for engineering roles.",
+  //   },
 
-    interviewProcess: [
-      "Initial phone screen (30 minutes)",
-      "Technical assessment (take-home)",
-      "On-site interview (4 hours)",
-      "Team collaboration session",
-      "Final interview with leadership",
-    ],
-  };
+  //   interviewProcess: [
+  //     "Initial phone screen (30 minutes)",
+  //     "Technical assessment (take-home)",
+  //     "On-site interview (4 hours)",
+  //     "Team collaboration session",
+  //     "Final interview with leadership",
+  //   ],
+  // };
 
   const similarJobs = [
     {
@@ -392,7 +392,7 @@ export default function JobDetailPage() {
 
                 <div className="space-y-8">
                   {/* Responsibilities */}
-                  <div>
+                  {/* <div>
                     <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">
                       Key Responsibilities
                     </h3>
@@ -407,10 +407,10 @@ export default function JobDetailPage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </div> */}
 
                   {/* Requirements */}
-                  <div>
+                  {/* <div>
                     <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">
                       Requirements
                     </h3>
@@ -425,10 +425,10 @@ export default function JobDetailPage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </div> */}
 
                   {/* Nice to Have */}
-                  {job?.niceToHave.length > 0 && (
+                  {/* {job?.niceToHave.length > 0 && (
                     <div>
                       <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">
                         Nice to Have
@@ -445,10 +445,10 @@ export default function JobDetailPage() {
                         ))}
                       </ul>
                     </div>
-                  )}
+                  )} */}
 
                   {/* Benefits */}
-                  <div>
+                  {/* <div>
                     <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">
                       Benefits & Perks
                     </h3>
@@ -463,12 +463,12 @@ export default function JobDetailPage() {
                         </div>
                       ))}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </motion.section>
 
               {/* Interview Process */}
-              <motion.section
+              {/* <motion.section
                 variants={itemVariants}
                 className="bg-white border border-gray-200 p-8"
               >
@@ -491,10 +491,10 @@ export default function JobDetailPage() {
                     </div>
                   ))}
                 </div>
-              </motion.section>
+              </motion.section> */}
 
               {/* Company Information */}
-              <motion.section
+              {/* <motion.section
                 variants={itemVariants}
                 className="bg-white border border-gray-200 p-8"
               >
@@ -574,7 +574,7 @@ export default function JobDetailPage() {
                     </motion.a>
                   </div>
                 </div>
-              </motion.section>
+              </motion.section> */}
             </motion.div>
           </div>
 
@@ -600,7 +600,7 @@ export default function JobDetailPage() {
             </motion.div>
 
             {/* Recruiter Contact */}
-            <motion.div
+            {/* <motion.div
               variants={itemVariants}
               className="bg-white border border-gray-200 p-6"
             >
@@ -644,10 +644,10 @@ export default function JobDetailPage() {
                   </motion.a>
                 </div>
               </div>
-            </motion.div>
+            </motion.div> */}
 
             {/* Similar Jobs */}
-            <motion.div
+            {/* <motion.div
               variants={itemVariants}
               className="bg-white border border-gray-200 p-6"
             >
@@ -712,7 +712,7 @@ export default function JobDetailPage() {
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
+            </motion.div> */}
 
             {/* Report Issue */}
             <motion.div
@@ -790,7 +790,7 @@ function ApplicationModal({ job, onClose, onApply }) {
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-light text-gray-800 tracking-wide">
-              Apply for {job.title}
+              Apply for {job?.title}
             </h2>
             <button
               onClick={onClose}
@@ -800,7 +800,7 @@ function ApplicationModal({ job, onClose, onApply }) {
             </button>
           </div>
           <p className="text-gray-600 font-light tracking-wide mt-2">
-            at {job.company}
+            at {job?.company}
           </p>
         </div>
 
