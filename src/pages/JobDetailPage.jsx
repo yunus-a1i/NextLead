@@ -33,7 +33,23 @@ export default function JobDetailPage() {
   const [isApplied, setIsApplied] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const dispatch = useDispatch();
-  const [job, setJob] = useState([])
+  const [jobs, setJobs] = useState([]);
+
+useEffect(() => {
+  const fetchData = async () => {
+    const result = await dispatch(getAllPostsFullThunk());
+    console.log(result.payload.data); // logs array of posts
+    setJobs(result.payload.data);
+  };
+
+  fetchData();
+}, [dispatch]);
+
+// assuming `id` comes from route params or props
+const job = jobs.find((j) => j._id === id);
+
+console.log(job);
+
 
   // Mock job data - in real app, this would come from API
   // const job = {
@@ -55,12 +71,12 @@ export default function JobDetailPage() {
   //   isFeatured: true,
 
   //   description: `
-  //     We are looking for a talented Senior Frontend Developer to join our growing team at TechCorp Solutions. 
-  //     In this role, you will be responsible for developing and maintaining high-quality web applications using 
+  //     We are looking for a talented Senior Frontend Developer to join our growing team at TechCorp Solutions.
+  //     In this role, you will be responsible for developing and maintaining high-quality web applications using
   //     modern JavaScript frameworks and libraries.
-      
-  //     You'll work closely with our design and backend teams to create seamless, responsive, and accessible 
-  //     user experiences. The ideal candidate is passionate about frontend technologies, stays up-to-date with 
+
+  //     You'll work closely with our design and backend teams to create seamless, responsive, and accessible
+  //     user experiences. The ideal candidate is passionate about frontend technologies, stays up-to-date with
   //     the latest trends, and enjoys mentoring junior developers.
   //   `,
 
@@ -133,49 +149,38 @@ export default function JobDetailPage() {
   //   ],
   // };
 
-  const similarJobs = [
-    {
-      id: 2,
-      title: "Frontend Engineer",
-      company: "DesignStudio Inc",
-      location: "New York, NY",
-      salary: "$110,000 - $140,000",
-      type: "Full-time",
-      matchScore: 88,
-      isRemote: true,
-    },
-    {
-      id: 3,
-      title: "React Developer",
-      company: "StartupXYZ",
-      location: "Austin, TX",
-      salary: "$95,000 - $120,000",
-      type: "Full-time",
-      matchScore: 92,
-      isRemote: false,
-    },
-    {
-      id: 4,
-      title: "UI Engineer",
-      company: "CreativeLabs",
-      location: "Remote",
-      salary: "$100,000 - $130,000",
-      type: "Contract",
-      matchScore: 85,
-      isRemote: true,
-    },
-  ];
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await dispatch(getAllPostsFullThunk());
-      console.log(result); // logs fulfilled/rejected action
-      console.log(result.payload.data); // actual response data if fulfilled
-    };
-
-    fetchData();
-  }, [dispatch]);
-
+  // const similarJobs = [
+  //   {
+  //     id: 2,
+  //     title: "Frontend Engineer",
+  //     company: "DesignStudio Inc",
+  //     location: "New York, NY",
+  //     salary: "$110,000 - $140,000",
+  //     type: "Full-time",
+  //     matchScore: 88,
+  //     isRemote: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "React Developer",
+  //     company: "StartupXYZ",
+  //     location: "Austin, TX",
+  //     salary: "$95,000 - $120,000",
+  //     type: "Full-time",
+  //     matchScore: 92,
+  //     isRemote: false,
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "UI Engineer",
+  //     company: "CreativeLabs",
+  //     location: "Remote",
+  //     salary: "$100,000 - $130,000",
+  //     type: "Contract",
+  //     matchScore: 85,
+  //     isRemote: true,
+  //   },
+  // ];
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -314,7 +319,8 @@ export default function JobDetailPage() {
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          Posted {new Date(job?.postedDate).toLocaleDateString()}
+                          Posted{" "}
+                          {new Date(job?.postedDate).toLocaleDateString()}
                         </span>
                         <span className="flex items-center gap-1">
                           <Users className="w-4 h-4" />
@@ -726,8 +732,8 @@ export default function JobDetailPage() {
                 </h3>
               </div>
               <p className="text-gray-600 font-light tracking-wide text-sm mb-4">
-                Help us maintain quality by reporting any problems with this job?
-                posting.
+                Help us maintain quality by reporting any problems with this
+                job? posting.
               </p>
               <motion.button
                 whileHover={{ scale: 1.02 }}
