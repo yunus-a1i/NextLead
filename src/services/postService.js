@@ -18,8 +18,8 @@ const postService = {
   },
 
   // Get posts for the logged-in user
-  getPosts: async (token) => {
-    const response = await axiosInstance.get(`/post/getPosts`, {
+  getPosts: async (token, postId) => {
+    const response = await axiosInstance.get(`/post/getPosts/${postId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -27,7 +27,7 @@ const postService = {
 
   // Delete a post
   deletePost: async (postId, token) => {
-    const response = await axiosInstance.delete(`/post/deletePost`, {
+    const response = await axiosInstance.delete(`/post/deletePost/${postId}`, {
       headers: { Authorization: `Bearer ${token}` },
       data: { id: postId }, // DELETE with body
     });
@@ -39,6 +39,11 @@ const postService = {
     const response = await axiosInstance.get(`/post/getAllPosts`, {
       params: { page, limit },
     });
+    return response.data;
+  },
+
+  getAllPostsFull: async () => {
+    const response = await axiosInstance.get(`/post/getAllPosts/full`);
     return response.data;
   },
 };

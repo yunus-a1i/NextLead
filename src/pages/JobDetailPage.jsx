@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
+import {
   ArrowLeft,
   Building,
   MapPin,
@@ -22,15 +22,19 @@ import {
   ChevronRight,
   Heart,
   Flag,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { getAllPostsFullThunk } from "../redux/postSlice";
 
 export default function JobDetailPage() {
   const { id } = useParams();
   const [isSaved, setIsSaved] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
-  console.log(id);
+  const dispatch = useDispatch();
+  // const [job, setJob] = useState([])
+
   // Mock job data - in real app, this would come from API
   const job = {
     id: 1,
@@ -49,7 +53,7 @@ export default function JobDetailPage() {
     isRemote: false,
     isUrgent: true,
     isFeatured: true,
-    
+
     description: `
       We are looking for a talented Senior Frontend Developer to join our growing team at TechCorp Solutions. 
       In this role, you will be responsible for developing and maintaining high-quality web applications using 
@@ -59,7 +63,7 @@ export default function JobDetailPage() {
       user experiences. The ideal candidate is passionate about frontend technologies, stays up-to-date with 
       the latest trends, and enjoys mentoring junior developers.
     `,
-    
+
     responsibilities: [
       "Develop and maintain responsive web applications using React and TypeScript",
       "Collaborate with UX/UI designers to implement pixel-perfect designs",
@@ -67,9 +71,9 @@ export default function JobDetailPage() {
       "Participate in code reviews and provide constructive feedback",
       "Optimize applications for maximum speed and scalability",
       "Mentor junior developers and promote best practices",
-      "Stay updated with emerging frontend technologies and trends"
+      "Stay updated with emerging frontend technologies and trends",
     ],
-    
+
     requirements: [
       "5+ years of professional frontend development experience",
       "Expert knowledge of React, TypeScript, and modern JavaScript",
@@ -78,17 +82,17 @@ export default function JobDetailPage() {
       "Experience with testing frameworks (Jest, React Testing Library)",
       "Familiarity with build tools (Webpack, Vite) and CI/CD pipelines",
       "Excellent problem-solving and communication skills",
-      "Bachelor's degree in Computer Science or related field"
+      "Bachelor's degree in Computer Science or related field",
     ],
-    
+
     niceToHave: [
       "Experience with Next.js or similar SSR frameworks",
       "Knowledge of backend technologies (Node.js, Python)",
       "Familiarity with cloud platforms (AWS, Azure, GCP)",
       "Contributions to open-source projects",
-      "Experience with micro-frontend architecture"
+      "Experience with micro-frontend architecture",
     ],
-    
+
     benefits: [
       "Competitive salary and equity package",
       "Comprehensive health, dental, and vision insurance",
@@ -97,35 +101,36 @@ export default function JobDetailPage() {
       "401(k) with company matching",
       "Unlimited paid time off",
       "Stocked kitchen and catered lunches",
-      "Company retreats and team events"
+      "Company retreats and team events",
     ],
-    
+
     companyInfo: {
       name: "TechCorp Solutions",
-      description: "TechCorp Solutions is a leading technology company specializing in enterprise software solutions. We help businesses transform their operations through innovative technology and exceptional user experiences.",
+      description:
+        "TechCorp Solutions is a leading technology company specializing in enterprise software solutions. We help businesses transform their operations through innovative technology and exceptional user experiences.",
       size: "501-1000 employees",
       industry: "Software Development",
       founded: "2015",
       website: "https://techcorp.com",
       culture: "Fast-paced, innovative, collaborative",
-      location: "San Francisco, California"
+      location: "San Francisco, California",
     },
-    
+
     recruiter: {
       name: "Sarah Chen",
       title: "Senior Technical Recruiter",
       email: "sarah.chen@techcorp.com",
       phone: "+1 (555) 123-4567",
-      bio: "Sarah has been with TechCorp for 3 years and specializes in technical recruitment for engineering roles."
+      bio: "Sarah has been with TechCorp for 3 years and specializes in technical recruitment for engineering roles.",
     },
-    
+
     interviewProcess: [
       "Initial phone screen (30 minutes)",
       "Technical assessment (take-home)",
       "On-site interview (4 hours)",
       "Team collaboration session",
-      "Final interview with leadership"
-    ]
+      "Final interview with leadership",
+    ],
   };
 
   const similarJobs = [
@@ -137,7 +142,7 @@ export default function JobDetailPage() {
       salary: "$110,000 - $140,000",
       type: "Full-time",
       matchScore: 88,
-      isRemote: true
+      isRemote: true,
     },
     {
       id: 3,
@@ -147,7 +152,7 @@ export default function JobDetailPage() {
       salary: "$95,000 - $120,000",
       type: "Full-time",
       matchScore: 92,
-      isRemote: false
+      isRemote: false,
     },
     {
       id: 4,
@@ -157,9 +162,19 @@ export default function JobDetailPage() {
       salary: "$100,000 - $130,000",
       type: "Contract",
       matchScore: 85,
-      isRemote: true
-    }
+      isRemote: true,
+    },
   ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await dispatch(getAllPostsFullThunk());
+      console.log(result); // logs fulfilled/rejected action
+      console.log(result.payload.data); // actual response data if fulfilled
+    };
+
+    fetchData();
+  }, [dispatch]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -167,9 +182,9 @@ export default function JobDetailPage() {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        duration: 0.8
-      }
-    }
+        duration: 0.8,
+      },
+    },
   };
 
   const itemVariants = {
@@ -179,9 +194,9 @@ export default function JobDetailPage() {
       opacity: 1,
       transition: {
         duration: 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }
-    }
+        ease: [0.25, 0.46, 0.45, 0.94],
+      },
+    },
   };
 
   const handleApply = () => {
@@ -203,14 +218,16 @@ export default function JobDetailPage() {
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
               <span>Back to Opportunities</span>
             </Link>
-            
+
             <div className="flex items-center gap-3">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsSaved(!isSaved)}
                 className={`p-2 border ${
-                  isSaved ? 'border-gray-800 bg-gray-800 text-white' : 'border-gray-300 text-gray-600 hover:border-gray-800'
+                  isSaved
+                    ? "border-gray-800 bg-gray-800 text-white"
+                    : "border-gray-300 text-gray-600 hover:border-gray-800"
                 } transition-all duration-500`}
               >
                 <Bookmark className="w-4 h-4" />
@@ -252,30 +269,32 @@ export default function JobDetailPage() {
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <h1 className="text-3xl font-light text-gray-800 tracking-wide">
-                          {job.title}
+                          {job?.title}
                         </h1>
-                        {job.isFeatured && (
+                        {job?.isFeatured && (
                           <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs font-light tracking-wide border border-amber-200">
                             Featured
                           </span>
                         )}
-                        {job.isUrgent && (
+                        {job?.isUrgent && (
                           <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-light tracking-wide border border-red-200">
                             Urgent
                           </span>
                         )}
                       </div>
-                      
+
                       <div className="flex items-center gap-4 text-lg text-gray-600 mb-4">
                         <span className="flex items-center gap-2">
                           <Building className="w-4 h-4" />
-                          {job.company}
+                          {job?.company}
                         </span>
                         <span className="flex items-center gap-2">
                           <MapPin className="w-4 h-4" />
-                          {job.location}
-                          {job.isRemote && (
-                            <span className="text-green-600 text-sm">• Remote</span>
+                          {job?.location}
+                          {job?.isRemote && (
+                            <span className="text-green-600 text-sm">
+                              • Remote
+                            </span>
                           )}
                         </span>
                       </div>
@@ -283,27 +302,27 @@ export default function JobDetailPage() {
                       <div className="flex flex-wrap gap-4 text-sm text-gray-600">
                         <span className="flex items-center gap-1">
                           <DollarSign className="w-4 h-4" />
-                          {job.salary}
+                          {job?.salary}
                         </span>
                         <span className="flex items-center gap-1">
                           <Briefcase className="w-4 h-4" />
-                          {job.type}
+                          {job?.type}
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
-                          {job.experience}
+                          {job?.experience}
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          Posted {new Date(job.postedDate).toLocaleDateString()}
+                          Posted {new Date(job?.postedDate).toLocaleDateString()}
                         </span>
                         <span className="flex items-center gap-1">
                           <Users className="w-4 h-4" />
-                          {job.applications} applications
+                          {job?.applications} applications
                         </span>
                         <span className="flex items-center gap-1">
                           <Eye className="w-4 h-4" />
-                          {job.views} views
+                          {job?.views} views
                         </span>
                       </div>
                     </div>
@@ -313,7 +332,9 @@ export default function JobDetailPage() {
                   <div className="text-right">
                     <div className="flex items-center gap-2 text-green-600 mb-1">
                       <CheckCircle className="w-4 h-4" />
-                      <span className="font-light tracking-wide">{job.matchScore}% Match</span>
+                      <span className="font-light tracking-wide">
+                        {job?.matchScore}% Match
+                      </span>
                     </div>
                     <div className="text-gray-500 font-light tracking-wide text-sm">
                       Great fit for your profile
@@ -330,8 +351,8 @@ export default function JobDetailPage() {
                     disabled={isApplied}
                     className={`flex-1 px-6 py-3 border font-light tracking-wide transition-all duration-500 flex items-center justify-center gap-2 ${
                       isApplied
-                        ? 'border-green-600 bg-green-600 text-white'
-                        : 'border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white'
+                        ? "border-green-600 bg-green-600 text-white"
+                        : "border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white"
                     }`}
                   >
                     {isApplied ? (
@@ -358,19 +379,29 @@ export default function JobDetailPage() {
               </motion.div>
 
               {/* Job Description */}
-              <motion.section variants={itemVariants} className="bg-white border border-gray-200 p-8">
-                <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-6">Job Description</h2>
+              <motion.section
+                variants={itemVariants}
+                className="bg-white border border-gray-200 p-8"
+              >
+                <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-6">
+                  Job Description
+                </h2>
                 <p className="text-gray-600 font-light tracking-wide leading-relaxed mb-8">
-                  {job.description}
+                  {job?.description}
                 </p>
 
                 <div className="space-y-8">
                   {/* Responsibilities */}
                   <div>
-                    <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">Key Responsibilities</h3>
+                    <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">
+                      Key Responsibilities
+                    </h3>
                     <ul className="space-y-3">
-                      {job.responsibilities.map((responsibility, index) => (
-                        <li key={index} className="flex items-start gap-3 text-gray-600 font-light tracking-wide">
+                      {job?.responsibilities.map((responsibility, index) => (
+                        <li
+                          key={index}
+                          className="flex items-start gap-3 text-gray-600 font-light tracking-wide"
+                        >
                           <CheckCircle className="w-4 h-4 text-green-600 mt-1 flex-shrink-0" />
                           <span>{responsibility}</span>
                         </li>
@@ -380,10 +411,15 @@ export default function JobDetailPage() {
 
                   {/* Requirements */}
                   <div>
-                    <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">Requirements</h3>
+                    <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">
+                      Requirements
+                    </h3>
                     <ul className="space-y-3">
-                      {job.requirements.map((requirement, index) => (
-                        <li key={index} className="flex items-start gap-3 text-gray-600 font-light tracking-wide">
+                      {job?.requirements.map((requirement, index) => (
+                        <li
+                          key={index}
+                          className="flex items-start gap-3 text-gray-600 font-light tracking-wide"
+                        >
                           <Star className="w-4 h-4 text-amber-600 mt-1 flex-shrink-0" />
                           <span>{requirement}</span>
                         </li>
@@ -392,12 +428,17 @@ export default function JobDetailPage() {
                   </div>
 
                   {/* Nice to Have */}
-                  {job.niceToHave.length > 0 && (
+                  {job?.niceToHave.length > 0 && (
                     <div>
-                      <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">Nice to Have</h3>
+                      <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">
+                        Nice to Have
+                      </h3>
                       <ul className="space-y-3">
-                        {job.niceToHave.map((item, index) => (
-                          <li key={index} className="flex items-start gap-3 text-gray-600 font-light tracking-wide">
+                        {job?.niceToHave.map((item, index) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-3 text-gray-600 font-light tracking-wide"
+                          >
                             <Heart className="w-4 h-4 text-blue-600 mt-1 flex-shrink-0" />
                             <span>{item}</span>
                           </li>
@@ -408,10 +449,15 @@ export default function JobDetailPage() {
 
                   {/* Benefits */}
                   <div>
-                    <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">Benefits & Perks</h3>
+                    <h3 className="text-xl font-light text-gray-800 tracking-wide mb-4">
+                      Benefits & Perks
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {job.benefits.map((benefit, index) => (
-                        <div key={index} className="flex items-center gap-3 text-gray-600 font-light tracking-wide">
+                      {job?.benefits.map((benefit, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-3 text-gray-600 font-light tracking-wide"
+                        >
                           <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
                           <span>{benefit}</span>
                         </div>
@@ -422,16 +468,25 @@ export default function JobDetailPage() {
               </motion.section>
 
               {/* Interview Process */}
-              <motion.section variants={itemVariants} className="bg-white border border-gray-200 p-8">
-                <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-6">Interview Process</h2>
+              <motion.section
+                variants={itemVariants}
+                className="bg-white border border-gray-200 p-8"
+              >
+                <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-6">
+                  Interview Process
+                </h2>
                 <div className="space-y-4">
-                  {job.interviewProcess.map((step, index) => (
+                  {job?.interviewProcess.map((step, index) => (
                     <div key={index} className="flex items-start gap-4">
                       <div className="w-8 h-8 border border-gray-300 flex items-center justify-center flex-shrink-0">
-                        <span className="text-gray-600 font-light text-sm">{index + 1}</span>
+                        <span className="text-gray-600 font-light text-sm">
+                          {index + 1}
+                        </span>
                       </div>
                       <div className="flex-1">
-                        <p className="text-gray-800 font-light tracking-wide">{step}</p>
+                        <p className="text-gray-800 font-light tracking-wide">
+                          {step}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -439,43 +494,68 @@ export default function JobDetailPage() {
               </motion.section>
 
               {/* Company Information */}
-              <motion.section variants={itemVariants} className="bg-white border border-gray-200 p-8">
-                <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-6">About {job.companyInfo.name}</h2>
-                
+              <motion.section
+                variants={itemVariants}
+                className="bg-white border border-gray-200 p-8"
+              >
+                <h2 className="text-2xl font-light text-gray-800 tracking-wide mb-6">
+                  About {job?.companyInfo.name}
+                </h2>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <p className="text-gray-600 font-light tracking-wide leading-relaxed mb-6">
-                      {job.companyInfo.description}
+                      {job?.companyInfo.description}
                     </p>
-                    
+
                     <div className="space-y-3">
                       <div className="flex justify-between border-b border-gray-100 pb-2">
-                        <span className="text-gray-600 font-light tracking-wide">Company Size</span>
-                        <span className="text-gray-800 font-light tracking-wide">{job.companyInfo.size}</span>
+                        <span className="text-gray-600 font-light tracking-wide">
+                          Company Size
+                        </span>
+                        <span className="text-gray-800 font-light tracking-wide">
+                          {job?.companyInfo.size}
+                        </span>
                       </div>
                       <div className="flex justify-between border-b border-gray-100 pb-2">
-                        <span className="text-gray-600 font-light tracking-wide">Industry</span>
-                        <span className="text-gray-800 font-light tracking-wide">{job.companyInfo.industry}</span>
+                        <span className="text-gray-600 font-light tracking-wide">
+                          Industry
+                        </span>
+                        <span className="text-gray-800 font-light tracking-wide">
+                          {job?.companyInfo.industry}
+                        </span>
                       </div>
                       <div className="flex justify-between border-b border-gray-100 pb-2">
-                        <span className="text-gray-600 font-light tracking-wide">Founded</span>
-                        <span className="text-gray-800 font-light tracking-wide">{job.companyInfo.founded}</span>
+                        <span className="text-gray-600 font-light tracking-wide">
+                          Founded
+                        </span>
+                        <span className="text-gray-800 font-light tracking-wide">
+                          {job?.companyInfo.founded}
+                        </span>
                       </div>
                       <div className="flex justify-between border-b border-gray-100 pb-2">
-                        <span className="text-gray-600 font-light tracking-wide">Culture</span>
-                        <span className="text-gray-800 font-light tracking-wide">{job.companyInfo.culture}</span>
+                        <span className="text-gray-600 font-light tracking-wide">
+                          Culture
+                        </span>
+                        <span className="text-gray-800 font-light tracking-wide">
+                          {job?.companyInfo.culture}
+                        </span>
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div className="p-4 border border-gray-200">
-                      <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">Company Location</h4>
-                      <p className="text-gray-600 font-light tracking-wide">{job.companyInfo.location}</p>
+                      <h4 className="text-lg font-light text-gray-800 tracking-wide mb-3">
+                        Company Location
+                      </h4>
+                      <p className="text-gray-600 font-light tracking-wide">
+                        {job?.companyInfo.location}
+                      </p>
                     </div>
-                    
+
                     <motion.a
-                      href={job.companyInfo.website}
+                      href={job?.companyInfo.website}
                       target="_blank"
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.02 }}
@@ -483,8 +563,12 @@ export default function JobDetailPage() {
                       className="flex items-center justify-between p-4 border border-gray-200 hover:border-gray-800 transition-all duration-500 group"
                     >
                       <div>
-                        <h4 className="text-lg font-light text-gray-800 tracking-wide mb-1">Visit Website</h4>
-                        <p className="text-gray-600 font-light tracking-wide text-sm">{job.companyInfo.website}</p>
+                        <h4 className="text-lg font-light text-gray-800 tracking-wide mb-1">
+                          Visit Website
+                        </h4>
+                        <p className="text-gray-600 font-light tracking-wide text-sm">
+                          {job?.companyInfo.website}
+                        </p>
                       </div>
                       <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-gray-800 transition-colors duration-300" />
                     </motion.a>
@@ -503,10 +587,12 @@ export default function JobDetailPage() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <Calendar className="w-5 h-5 text-gray-600" />
-                <h3 className="text-lg font-light text-gray-800 tracking-wide">Application Deadline</h3>
+                <h3 className="text-lg font-light text-gray-800 tracking-wide">
+                  Application Deadline
+                </h3>
               </div>
               <p className="text-gray-600 font-light tracking-wide mb-2">
-                {new Date(job.applicationDeadline).toLocaleDateString()}
+                {new Date(job?.applicationDeadline).toLocaleDateString()}
               </p>
               <p className="text-gray-500 font-light tracking-wide text-sm">
                 Apply before the deadline to be considered
@@ -520,33 +606,41 @@ export default function JobDetailPage() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <User className="w-5 h-5 text-gray-600" />
-                <h3 className="text-lg font-light text-gray-800 tracking-wide">Recruiter Contact</h3>
+                <h3 className="text-lg font-light text-gray-800 tracking-wide">
+                  Recruiter Contact
+                </h3>
               </div>
-              
+
               <div className="space-y-4">
                 <div>
-                  <h4 className="text-gray-800 font-light tracking-wide mb-1">{job.recruiter.name}</h4>
-                  <p className="text-gray-600 font-light tracking-wide text-sm">{job.recruiter.title}</p>
-                  <p className="text-gray-500 font-light tracking-wide text-sm mt-2">{job.recruiter.bio}</p>
+                  <h4 className="text-gray-800 font-light tracking-wide mb-1">
+                    {job?.recruiter.name}
+                  </h4>
+                  <p className="text-gray-600 font-light tracking-wide text-sm">
+                    {job?.recruiter.title}
+                  </p>
+                  <p className="text-gray-500 font-light tracking-wide text-sm mt-2">
+                    {job?.recruiter.bio}
+                  </p>
                 </div>
-                
+
                 <div className="space-y-2">
                   <motion.a
-                    href={`mailto:${job.recruiter.email}`}
+                    href={`mailto:${job?.recruiter.email}`}
                     whileHover={{ x: 4 }}
                     className="flex items-center gap-2 text-gray-600 hover:text-gray-800 font-light tracking-wide text-sm transition-colors duration-300"
                   >
                     <Mail className="w-4 h-4" />
-                    <span>{job.recruiter.email}</span>
+                    <span>{job?.recruiter.email}</span>
                   </motion.a>
-                  
+
                   <motion.a
-                    href={`tel:${job.recruiter.phone}`}
+                    href={`tel:${job?.recruiter.phone}`}
                     whileHover={{ x: 4 }}
                     className="flex items-center gap-2 text-gray-600 hover:text-gray-800 font-light tracking-wide text-sm transition-colors duration-300"
                   >
                     <Phone className="w-4 h-4" />
-                    <span>{job.recruiter.phone}</span>
+                    <span>{job?.recruiter.phone}</span>
                   </motion.a>
                 </div>
               </div>
@@ -558,7 +652,9 @@ export default function JobDetailPage() {
               className="bg-white border border-gray-200 p-6"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-light text-gray-800 tracking-wide">Similar Jobs</h3>
+                <h3 className="text-lg font-light text-gray-800 tracking-wide">
+                  Similar Jobs
+                </h3>
                 <Link
                   to="/interviews"
                   className="text-gray-500 hover:text-gray-700 font-light tracking-wide text-sm transition-colors duration-300"
@@ -566,7 +662,7 @@ export default function JobDetailPage() {
                   View All
                 </Link>
               </div>
-              
+
               <div className="space-y-4">
                 {similarJobs.map((similarJob, index) => (
                   <motion.div
@@ -583,7 +679,7 @@ export default function JobDetailPage() {
                         </h4>
                         <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors duration-300" />
                       </div>
-                      
+
                       <div className="space-y-2 text-sm text-gray-600">
                         <div className="flex items-center gap-2">
                           <Building className="w-3 h-3" />
@@ -593,7 +689,9 @@ export default function JobDetailPage() {
                           <MapPin className="w-3 h-3" />
                           <span>{similarJob.location}</span>
                           {similarJob.isRemote && (
-                            <span className="text-green-600 text-xs">Remote</span>
+                            <span className="text-green-600 text-xs">
+                              Remote
+                            </span>
                           )}
                         </div>
                         <div className="flex items-center gap-2">
@@ -601,7 +699,7 @@ export default function JobDetailPage() {
                           <span>{similarJob.salary}</span>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center justify-between mt-3">
                         <span className="text-green-600 font-light tracking-wide text-sm">
                           {similarJob.matchScore}% Match
@@ -623,10 +721,13 @@ export default function JobDetailPage() {
             >
               <div className="flex items-center gap-3 mb-4">
                 <AlertCircle className="w-5 h-5 text-gray-600" />
-                <h3 className="text-lg font-light text-gray-800 tracking-wide">See an Issue?</h3>
+                <h3 className="text-lg font-light text-gray-800 tracking-wide">
+                  See an Issue?
+                </h3>
               </div>
               <p className="text-gray-600 font-light tracking-wide text-sm mb-4">
-                Help us maintain quality by reporting any problems with this job posting.
+                Help us maintain quality by reporting any problems with this job?
+                posting.
               </p>
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -665,7 +766,7 @@ function ApplicationModal({ job, onClose, onApply }) {
     coverLetter: "",
     availability: "",
     salaryExpectation: "",
-    noticePeriod: ""
+    noticePeriod: "",
   });
 
   const handleSubmit = (e) => {
@@ -688,7 +789,9 @@ function ApplicationModal({ job, onClose, onApply }) {
       >
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-light text-gray-800 tracking-wide">Apply for {job.title}</h2>
+            <h2 className="text-2xl font-light text-gray-800 tracking-wide">
+              Apply for {job.title}
+            </h2>
             <button
               onClick={onClose}
               className="p-2 border border-gray-300 text-gray-600 hover:border-gray-800 hover:text-gray-800 transition-all duration-500"
@@ -703,8 +806,10 @@ function ApplicationModal({ job, onClose, onApply }) {
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
-            <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">Application Details</h3>
-            
+            <h3 className="text-lg font-light text-gray-800 tracking-wide mb-4">
+              Application Details
+            </h3>
+
             <div className="space-y-4">
               <div>
                 <label className="text-xs font-light text-gray-600 tracking-wide uppercase mb-2 block">
@@ -712,7 +817,12 @@ function ApplicationModal({ job, onClose, onApply }) {
                 </label>
                 <textarea
                   value={formData.coverLetter}
-                  onChange={(e) => setFormData(prev => ({ ...prev, coverLetter: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      coverLetter: e.target.value,
+                    }))
+                  }
                   rows="4"
                   className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500 resize-none"
                   placeholder="Why are you interested in this position?"
@@ -726,7 +836,12 @@ function ApplicationModal({ job, onClose, onApply }) {
                   </label>
                   <select
                     value={formData.availability}
-                    onChange={(e) => setFormData(prev => ({ ...prev, availability: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        availability: e.target.value,
+                      }))
+                    }
                     className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                   >
                     <option value="">Select availability</option>
@@ -745,7 +860,12 @@ function ApplicationModal({ job, onClose, onApply }) {
                   <input
                     type="text"
                     value={formData.noticePeriod}
-                    onChange={(e) => setFormData(prev => ({ ...prev, noticePeriod: e.target.value }))}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        noticePeriod: e.target.value,
+                      }))
+                    }
                     className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                     placeholder="e.g., 2 weeks"
                   />
@@ -759,7 +879,12 @@ function ApplicationModal({ job, onClose, onApply }) {
                 <input
                   type="text"
                   value={formData.salaryExpectation}
-                  onChange={(e) => setFormData(prev => ({ ...prev, salaryExpectation: e.target.value }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      salaryExpectation: e.target.value,
+                    }))
+                  }
                   className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                   placeholder="e.g., $130,000"
                 />

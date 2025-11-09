@@ -75,6 +75,19 @@ export const getAllPostsThunk = createAsyncThunk(
   }
 );
 
+export const getAllPostsFullThunk = createAsyncThunk(
+  "posts/getAllFull",
+  async (thunkAPI) => {
+    try {
+      return await postService.getAllPostsFull();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: "posts",
   initialState,
@@ -157,6 +170,21 @@ const postSlice = createSlice({
         state.posts = action.payload;
       })
       .addCase(getAllPostsThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+        state.message = action.payload;
+      })
+
+      // Get all posts
+      .addCase(getAllPostsFullThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllPostsFullThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.posts = action.payload;
+      })
+      .addCase(getAllPostsFullThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
         state.message = action.payload;
