@@ -35,24 +35,28 @@ export default function JobDetailPage() {
   const dispatch = useDispatch();
   const [jobs, setJobs] = useState([]);
 
-useEffect(() => {
-  const fetchData = async () => {
-    const result = await dispatch(getAllPostsFullThunk());
-    console.log(result.payload.data); // logs array of posts
-    setJobs(result.payload.data);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await dispatch(getAllPostsFullThunk());
+      console.log(result.payload.data); // logs array of posts
+      setJobs(result.payload.data);
+    };
 
-  fetchData();
-}, [dispatch]);
+    fetchData();
+  }, [dispatch]);
 
-// assuming `id` comes from route params or props
-const job = jobs.find((j) => j._id === id);
+  // assuming `id` comes from route params or props
+  const job = jobs.find((j) => j._id === id);
 
-const similarJobs = jobs.filter(
-  (j) =>
-    j.jobTitle.replace(/\s+/g, '').toLowerCase() ===
-    job.jobTitle.replace(/\s+/g, '').toLowerCase() && j._id != id
-);
+  const similarJobs = jobs.filter(
+    (j) =>
+      j._id !== id &&
+      j.jobTitle
+        .replace(/\s+/g, "")
+        .toLowerCase()
+        .includes(job.jobTitle.replace(/\s+/g, "").toLowerCase())
+  );
+  console.log("similar jobs",similarJobs)
 
   // Mock job data - in real app, this would come from API
   // const job = {
@@ -322,8 +326,7 @@ const similarJobs = jobs.filter(
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          Posted{" "}
-                          {new Date(job?.createdAt).toLocaleDateString()}
+                          Posted {new Date(job?.createdAt).toLocaleDateString()}
                         </span>
                         <span className="flex items-center gap-1">
                           <Users className="w-4 h-4" />
@@ -601,8 +604,7 @@ const similarJobs = jobs.filter(
                 </h3>
               </div>
               <p className="text-gray-600 font-light tracking-wide mb-2">
-                {new Date(job?.hiringDriveStart).toLocaleDateString()}
-                -
+                {new Date(job?.hiringDriveStart).toLocaleDateString()}-
                 {new Date(job?.hiringDriveEnd).toLocaleDateString()}
               </p>
               <p className="text-gray-500 font-light tracking-wide text-sm">
