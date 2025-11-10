@@ -660,7 +660,7 @@ export default function JobDetailPage() {
             </motion.div> */}
 
             {/* Similar Jobs */}
-            {/* <motion.div
+            <motion.div
               variants={itemVariants}
               className="bg-white border border-gray-200 p-6"
             >
@@ -688,7 +688,7 @@ export default function JobDetailPage() {
                     <Link to={`/jobs/${similarJob.id}`} className="block">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="text-gray-800 font-light tracking-wide group-hover:text-gray-600 transition-colors duration-300">
-                          {similarJob.title}
+                          {similarJob?.jobTitle}
                         </h4>
                         <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors duration-300" />
                       </div>
@@ -696,12 +696,12 @@ export default function JobDetailPage() {
                       <div className="space-y-2 text-sm text-gray-600">
                         <div className="flex items-center gap-2">
                           <Building className="w-3 h-3" />
-                          <span>{similarJob.company}</span>
+                          <span>{similarJob?.company}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <MapPin className="w-3 h-3" />
-                          <span>{similarJob.location}</span>
-                          {similarJob.isRemote && (
+                          <span>{similarJob?.location}</span>
+                          {similarJob?.isRemote && (
                             <span className="text-green-600 text-xs">
                               Remote
                             </span>
@@ -709,23 +709,23 @@ export default function JobDetailPage() {
                         </div>
                         <div className="flex items-center gap-2">
                           <DollarSign className="w-3 h-3" />
-                          <span>{similarJob.salary}</span>
+                          <span>{similarJob?.salary}</span>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between mt-3">
                         <span className="text-green-600 font-light tracking-wide text-sm">
-                          {similarJob.matchScore}% Match
+                          {similarJob?.matchScore}% Match
                         </span>
                         <span className="text-gray-500 font-light tracking-wide text-xs">
-                          {similarJob.type}
+                          {similarJob?.type}
                         </span>
                       </div>
                     </Link>
                   </motion.div>
                 ))}
               </div>
-            </motion.div> */}
+            </motion.div>
 
             {/* Report Issue */}
             <motion.div
