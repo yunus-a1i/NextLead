@@ -51,9 +51,8 @@ const job = jobs.find((j) => j._id === id);
 const similarJobs = jobs.filter(
   (j) =>
     j.jobTitle.replace(/\s+/g, '').toLowerCase() ===
-    job.jobTitle.replace(/\s+/g, '').toLowerCase()
+    job.jobTitle.replace(/\s+/g, '').toLowerCase() && j._id != id
 );
-
 
   // Mock job data - in real app, this would come from API
   // const job = {
@@ -278,7 +277,7 @@ const similarJobs = jobs.filter(
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <h1 className="text-3xl font-light text-gray-800 tracking-wide">
-                          {job?.title}
+                          {job?.jobTitle}
                         </h1>
                         {job?.isFeatured && (
                           <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs font-light tracking-wide border border-amber-200">
@@ -319,16 +318,16 @@ const similarJobs = jobs.filter(
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
-                          {job?.experience}
+                          {job?.experienceRequired}
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
                           Posted{" "}
-                          {new Date(job?.postedDate).toLocaleDateString()}
+                          {new Date(job?.createdAt).toLocaleDateString()}
                         </span>
                         <span className="flex items-center gap-1">
                           <Users className="w-4 h-4" />
-                          {job?.applications} applications
+                          {job?.openVacancies} Vaccancies
                         </span>
                         <span className="flex items-center gap-1">
                           <Eye className="w-4 h-4" />
@@ -339,7 +338,7 @@ const similarJobs = jobs.filter(
                   </div>
 
                   {/* Match Score */}
-                  <div className="text-right">
+                  {/* <div className="text-right">
                     <div className="flex items-center gap-2 text-green-600 mb-1">
                       <CheckCircle className="w-4 h-4" />
                       <span className="font-light tracking-wide">
@@ -349,7 +348,7 @@ const similarJobs = jobs.filter(
                     <div className="text-gray-500 font-light tracking-wide text-sm">
                       Great fit for your profile
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Quick Actions */}
@@ -602,7 +601,9 @@ const similarJobs = jobs.filter(
                 </h3>
               </div>
               <p className="text-gray-600 font-light tracking-wide mb-2">
-                {new Date(job?.applicationDeadline).toLocaleDateString()}
+                {new Date(job?.hiringDriveStart).toLocaleDateString()}
+                -
+                {new Date(job?.hiringDriveEnd).toLocaleDateString()}
               </p>
               <p className="text-gray-500 font-light tracking-wide text-sm">
                 Apply before the deadline to be considered
