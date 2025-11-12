@@ -3,6 +3,16 @@ import hrService from "../services/hrService";
 
 const initialState = {
   hr: null,
+  posts: [],
+
+  // attendees list for the HR
+  attendees: [],
+  attendeesMeta: null, // { page, limit, total }
+  attendeesLoading: false,
+  attendeesError: false,
+  attendeesMessage: "",
+
+  // generic flags
   loading: false,
   error: false,
   success: false,
@@ -106,6 +116,21 @@ export const getAllPostsByHr = createAsyncThunk(
   }
 );
 
+// NEW: fetch attendees (candidates) who applied to this HR's posts
+// payload should be { id, token, page?, limit? }
+export const getAllAttendeesByHr = createAsyncThunk(
+  "hr/getAllAttendeesByHr",
+  async ({ id, token, page = 1, limit = 20 }, thunkAPI) => {
+    try {
+      return await hrService.getAllAttendeesByHr(id, token, page, limit);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || error
+      );
+    }
+  }
+);
+
 const hrSlice = createSlice({
   name: "hr",
   initialState,
@@ -121,12 +146,12 @@ const hrSlice = createSlice({
       .addCase(createHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.hr = action.payload;
+        state.hr = action.payload?.data ?? action.payload;
       })
       .addCase(createHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
-        state.message = action.payload;
+        state.message = action.payload || action.error?.message;
       })
 
       // Get HR
@@ -136,12 +161,12 @@ const hrSlice = createSlice({
       .addCase(fetchHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.hr = action.payload;
+        state.hr = action.payload?.data ?? action.payload;
       })
       .addCase(fetchHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
-        state.message = action.payload;
+        state.message = action.payload || action.error?.message;
       })
 
       // Update HR
@@ -151,19 +176,19 @@ const hrSlice = createSlice({
       .addCase(updateHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.hr = action.payload;
+        state.hr = action.payload?.data ?? action.payload;
       })
       .addCase(updateHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
-        state.message = action.payload;
+        state.message = action.payload || action.error?.message;
       })
 
       // Delete HR
       .addCase(deleteHr.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deleteHr.fulfilled, (state) => {
+      .addCase(deleteHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.hr = null;
@@ -171,22 +196,48 @@ const hrSlice = createSlice({
       .addCase(deleteHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
-        state.message = action.payload;
+        state.message = action.payload || action.error?.message;
       })
 
-      // Get All Post by HR
+      // Get All Posts by HR
       .addCase(getAllPostsByHr.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getAllPostsByHr.fulfilled, (state) => {
+      .addCase(getAllPostsByHr.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.hr = null;
+        // set posts from payload.data or payload (fallback)
+        state.posts = action.payload?.data ?? action.payload ?? [];
       })
       .addCase(getAllPostsByHr.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
-        state.message = action.payload;
+        state.message = action.payload || action.error?.message;
+      })
+
+      // Get All Attendees by HR (new)
+      .addCase(getAllAttendeesByHr.pending, (state) => {
+        state.attendeesLoading = true;
+        state.attendeesError = false;
+        state.attendeesMessage = "";
+      })
+      .addCase(getAllAttendeesByHr.fulfilled, (state, action) => {
+        state.attendeesLoading = false;
+        state.attendeesError = false;
+        // API returns { success, message, data, meta } or maybe { data }
+        const payload = action.payload ?? {};
+        state.attendees = payload?.data ?? payload?.attendees ?? [];
+        state.attendeesMeta = payload?.meta ?? null;
+        state.attendeesMessage = payload?.message ?? "";
+      })
+      .addCase(getAllAttendeesByHr.rejected, (state, action) => {
+        state.attendeesLoading = false;
+        state.attendeesError = true;
+        state.attendeesMessage =
+          action.payload?.message ||
+          action.payload ||
+          action.error?.message ||
+          "Failed to fetch attendees";
       });
   },
 });

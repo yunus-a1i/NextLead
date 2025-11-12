@@ -55,6 +55,22 @@ const hrService = {
     const response = await axiosInstance.get(`/hr/getAllPostsByHr/${id}/posts`);
     return response.data;
   },
+  // 👥 NEW: Get all attendees who applied to this HR’s jobs
+  getAllAttendeesByHr: async (id, token, page = 1, limit = 20) => {
+    try {
+      const response = await axiosInstance.get(`/hr/${id}/attendees`, {
+        params: { page, limit },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data;
+    } catch (err) {
+      console.error(
+        "Fetching HR attendees failed:",
+        err.response?.data || err.message
+      );
+      throw err.response?.data || new Error("Unable to fetch attendees.");
+    }
+  },
 };
 
 export default hrService;
