@@ -15,8 +15,15 @@ import {
   Briefcase,
   X,
 } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllPostsThunk } from "../redux/postSlice";
+import {
+  attendDrive,
+  selectAttendError,
+  selectAttendLoading,
+  selectAttendSuccess,
+} from "../redux/attendSlice";
+import { useToasts } from "../components/Toast";
 
 export default function InterviewsPage() {
   const [selectedFilters, setSelectedFilters] = useState({
@@ -27,6 +34,10 @@ export default function InterviewsPage() {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [interviews, setInterviews] = useState([]);
+  const isLoading = useSelector(selectAttendLoading);
+  const isError = useSelector(selectAttendError);
+  const isSuccess = useSelector(selectAttendSuccess);
+  const { success, error } = useToasts();
 
   // const interviews = [
   //   {
@@ -110,6 +121,8 @@ export default function InterviewsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const pageFormUrl = parseInt(searchParams.get("page") || "1");
   const [page, setPage] = useState(pageFormUrl);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const token = localStorage.getItem("token");
 
   // ✅ Fetch one page (append or replace)
   const loadPosts = async (pageNum = 1, append = false) => {
@@ -151,6 +164,40 @@ export default function InterviewsPage() {
     setSearchParams({ page: nextPage.toString() });
     await loadPosts(nextPage, true);
   };
+
+  async function handleApply(interveiwPostId) {
+    if (!user || !user._id) {
+      error("You must be logged in to apply.");
+      return;
+    }
+
+    try {
+      const payload = {
+        userId: user._id,
+        interveiwPostId,
+        resumeLink: user.resumeLink || null,
+        token, // optional; if your thunk/service expects token separately, pass it accordingly
+      };
+
+      // dispatch thunk and unwrap so we can use try/catch
+      // make sure attendDrive is imported
+      const result = await dispatch(attendDrive(payload)).unwrap();
+
+      // result contains the server response (success, message, data, interveiwPostData)
+      if (result?.success) {
+        success(result.message || "Applied successfully");
+      } else {
+        error(result?.message || "Failed to apply");
+      }
+    } catch (err) {
+      // err can be the rejected value or an Error
+      const msg =
+        err?.message ||
+        err?.data?.message ||
+        "An error occurred while applying";
+      error(msg);
+    }
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -483,6 +530,10 @@ export default function InterviewsPage() {
                   </p>
                 </div>
                 <motion.button
+                  onClick={async (e) => {
+                    e.stopPropagation(); // prevent navigation to job detail
+                    await handleApply(interview._id);
+                  }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className="inline-flex items-center gap-2 px-6 py-3 border border-gray-800 text-gray-800 font-light tracking-wide text-sm hover:bg-gray-800 hover:text-white transition-all duration-500 group"
