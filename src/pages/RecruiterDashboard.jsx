@@ -21,10 +21,11 @@ import {
   Building,
   FileText,
   User,
+  ArrowLeft,
 } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createPostThunk } from "../redux/postSlice";
-import { getAllPostsByHr } from "../redux/hrSlice";
+import { getAllAttendeesByHr, getAllPostsByHr } from "../redux/hrSlice";
 
 export default function RecruiterDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -941,20 +942,182 @@ function PostJobModal({ onClose, onSave, hrId }) {
 
 // Placeholder Components for other tabs
 function CandidatesTab() {
+  const dispatch = useDispatch();
+  // read from localStorage (login should have saved these)
+  const storedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+  const user = storedUser ? JSON.parse(storedUser) : null;
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const hrId = user?._id;
+
+  const attendees = useSelector((state) => state.hr?.attendees ?? []);
+  const meta = useSelector((state) => state.hr?.attendeesMeta ?? null);
+  const loading = useSelector((state) => state.hr?.attendeesLoading);
+  const error = useSelector((state) => state.hr?.attendeesError);
+  const message = useSelector((state) => state.hr?.attendeesMessage);
+
+  // local pagination state (keeps UI responsive)
+  const [page, setPage] = useState(meta?.page ?? 1);
+  const limit = meta?.limit ?? 10;
+
+  useEffect(() => {
+    if (!hrId) return;
+    dispatch(getAllAttendeesByHr({ id: hrId, token, page, limit }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, hrId, token, page]);
+
+  useEffect(() => {
+    // sync page from meta when API returns (useful when limit or page changed server-side)
+    if (meta?.page) setPage(meta.page);
+  }, [meta]);
+
+  const handlePrev = () => {
+    if ((meta?.page ?? page) > 1) setPage((p) => Math.max(1, p - 1));
+  };
+  const handleNext = () => {
+    const total = meta?.total ?? 0;
+    const current = meta?.page ?? page;
+    const maxPage = Math.ceil(total / (meta?.limit ?? limit)) || 1;
+    if (current < maxPage) setPage((p) => p + 1);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="text-center py-16"
+      className="max-w-4xl mx-auto py-8"
     >
-      <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <h3 className="text-xl font-light text-gray-800 tracking-wide mb-2">
-        Candidates Management
-      </h3>
-      <p className="text-gray-600 font-light tracking-wide">
-        View and manage candidate applications
-      </p>
+      <div className="text-center mb-8">
+        <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+        <h3 className="text-2xl font-semibold text-gray-800 tracking-wide mb-2">
+          Candidates Management
+        </h3>
+        <p className="text-gray-600">View and manage candidate applications</p>
+      </div>
+
+      <div className="bg-white shadow-sm rounded-lg overflow-hidden">
+        {/* header */}
+        <div className="px-6 py-4 border-b flex items-center justify-between">
+          <div className="text-sm text-gray-700">
+            {loading ? "Loading candidates..." : `Showing ${attendees.length} candidate(s)`}
+          </div>
+
+          <div className="text-sm text-gray-600">
+            {error ? message || "Failed to load" : meta ? `Page ${meta.page} • ${meta.total} total` : ""}
+          </div>
+        </div>
+
+        {/* body */}
+        <div className="p-4">
+          {loading && (
+            <div className="text-center py-8 text-gray-500">Loading...</div>
+          )}
+
+          {!loading && attendees.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              No candidates have applied yet.
+            </div>
+          )}
+
+          <ul className="space-y-3">
+            {attendees.map((att) => {
+              const applicant = att.userId || att.user || {};
+              const post = att.interveiwPostId || att.post || {};
+              const appliedAt = att.createdAt ? new Date(att.createdAt) : null;
+
+              return (
+                <li
+                  key={att._id || `${applicant._id}-${post._id}-${Math.random()}`}
+                  className="border rounded-lg p-4 flex items-start justify-between hover:shadow"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-sm text-gray-600">
+                      {applicant?.name ? applicant.name.charAt(0).toUpperCase() : "U"}
+                    </div>
+
+                    <div>
+                      <div className="text-sm font-medium text-gray-800">
+                        {applicant?.name ?? applicant?.fullName ?? applicant?.email ?? "Unknown"}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        {applicant?.email ?? "No email"}
+                      </div>
+
+                      <div className="text-xs text-gray-600 mt-2">
+                        Applied for{" "}
+                        <span className="font-medium text-gray-800">
+                          {post?.jobTitle ?? post?.title ?? "—"}
+                        </span>{" "}
+                        • {post?.company ?? ""}
+                      </div>
+
+                      {appliedAt && (
+                        <div className="text-xs text-gray-500 mt-1">
+                          Applied on {appliedAt.toLocaleDateString()}{" "}
+                          <span className="mx-1">•</span>{" "}
+                          {appliedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    {att.resumeLink ? (
+                      <a
+                        href={att.resumeLink}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 px-3 py-2 border rounded text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <Paperclip className="w-4 h-4" />
+                        Resume
+                      </a>
+                    ) : (
+                      <div className="text-xs text-gray-400">No resume</div>
+                    )}
+
+                    {/* optional: interviewer actions (accept/reject) could go here */}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        {/* footer / pagination */}
+        <div className="px-6 py-4 border-t flex items-center justify-between">
+          <div className="text-sm text-gray-600">
+            {meta ? `Total ${meta.total} • ${meta.limit} per page` : ""}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrev}
+              disabled={(meta?.page ?? page) <= 1 || loading}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded border text-sm disabled:opacity-50"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Prev
+            </button>
+
+            <div className="text-sm text-gray-700 px-2">
+              {meta ? `Page ${meta.page} / ${Math.max(1, Math.ceil((meta.total || 0) / (meta.limit || limit)) )}` : `Page ${page}`}
+            </div>
+
+            <button
+              onClick={handleNext}
+              disabled={
+                loading ||
+                ((meta?.page ?? page) >= (Math.ceil((meta?.total ?? 0) / (meta?.limit ?? limit)) || 1))
+              }
+              className="inline-flex items-center gap-2 px-3 py-2 rounded border text-sm disabled:opacity-50"
+            >
+              Next
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 }
