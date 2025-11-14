@@ -51,10 +51,10 @@ export default function JobDetailPage() {
   const similarJobs = jobs.filter(
     (j) =>
       j._id !== id &&
-      j.jobTitle
+      j.title
         .replace(/\s+/g, "")
         .toLowerCase()
-        .includes(job.jobTitle.replace(/\s+/g, "").toLowerCase())
+        .includes(job.title.replace(/\s+/g, "").toLowerCase())
   );
   console.log("similar jobs",similarJobs)
 
@@ -281,7 +281,7 @@ export default function JobDetailPage() {
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <h1 className="text-3xl font-light text-gray-800 tracking-wide">
-                          {job?.jobTitle}
+                          {job?.title}
                         </h1>
                         {job?.isFeatured && (
                           <span className="px-2 py-1 bg-amber-100 text-amber-800 text-xs font-light tracking-wide border border-amber-200">
@@ -322,7 +322,7 @@ export default function JobDetailPage() {
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
-                          {job?.experienceRequired}
+                          {job?.experience}
                         </span>
                         <span className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
@@ -330,7 +330,7 @@ export default function JobDetailPage() {
                         </span>
                         <span className="flex items-center gap-1">
                           <Users className="w-4 h-4" />
-                          {job?.openVacancies} Vaccancies
+                          {job?.vacancies} Vaccancies
                         </span>
                         <span className="flex items-center gap-1">
                           <Eye className="w-4 h-4" />
@@ -688,7 +688,7 @@ export default function JobDetailPage() {
                     <Link to={`/jobs/${similarJob.id}`} className="block">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="text-gray-800 font-light tracking-wide group-hover:text-gray-600 transition-colors duration-300">
-                          {similarJob?.jobTitle}
+                          {similarJob?.title}
                         </h4>
                         <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors duration-300" />
                       </div>

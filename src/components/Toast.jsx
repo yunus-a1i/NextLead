@@ -238,20 +238,20 @@ export function ToastTemplates() {
       addToast({ type: "info", title, message, ...options }),
 
     // Application Specific
-    applicationSubmitted: (jobTitle) =>
+    applicationSubmitted: (title) =>
       addToast({
         type: "success",
         title: "Application Submitted",
-        message: `Your application for ${jobTitle} has been submitted successfully.`,
+        message: `Your application for ${title} has been submitted successfully.`,
         icon: CheckCircle,
         duration: 6000
       }),
 
-    jobSaved: (jobTitle) =>
+    jobSaved: (title) =>
       addToast({
         type: "success",
         title: "Job Saved",
-        message: `${jobTitle} has been added to your saved jobs.`,
+        message: `${title} has been added to your saved jobs.`,
         icon: Bookmark,
         duration: 4000
       }),
@@ -342,11 +342,11 @@ export function ToastTemplates() {
         }
       }),
 
-    deadlineApproaching: (jobTitle, deadline) =>
+    deadlineApproaching: (title, deadline) =>
       addToast({
         type: "warning",
         title: "Application Deadline Approaching",
-        message: `Apply for ${jobTitle} before ${new Date(deadline).toLocaleDateString()}.`,
+        message: `Apply for ${title} before ${new Date(deadline).toLocaleDateString()}.`,
         icon: Clock,
         duration: 8000,
         action: {
@@ -369,11 +369,11 @@ export function ToastTemplates() {
         }
       }),
 
-    jobMatch: (jobTitle, score) =>
+    jobMatch: (title, score) =>
       addToast({
         type: "info",
         title: "New Job Match",
-        message: `${jobTitle} is a ${score}% match with your profile.`,
+        message: `${title} is a ${score}% match with your profile.`,
         icon: Briefcase,
         duration: 7000,
         action: {

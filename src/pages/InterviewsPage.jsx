@@ -30,7 +30,7 @@ export default function InterviewsPage() {
     location: "",
     date: "",
     company: "",
-    experienceRequired: "",
+    experience: "",
   });
   const [showFilters, setShowFilters] = useState(false);
   const [interviews, setInterviews] = useState([]);
@@ -43,54 +43,54 @@ export default function InterviewsPage() {
   //   {
   //     id: 1,
   //     company: "TechCorp Solutions",
-  //     jobTitle: "Frontend Developer",
+  //     title: "Frontend Developer",
   //     location: "San Francisco, CA",
   //     date: "2024-01-15",
   //     time: "10:00 AM - 12:00 PM",
-  //     experienceRequired: "2-4 years", // experience
+  //     experience: "2-4 years", // experience
   //     salary: "$90,000 - $120,000",
-  //     description: "Looking for skilled frontend developers with React experienceRequired.",
+  //     description: "Looking for skilled frontend developers with React experience.",
   //     featured: true,
-  //     openVacancies: 24 //applicants
+  //     vacancies: 24 //applicants
   //   },
   //   {
   //     id: 2,
   //     company: "DataSystems Inc",
-  //     jobTitle: "Data Analyst",
+  //     title: "Data Analyst",
   //     location: "New York, NY",
   //     date: "2024-01-16",
   //     time: "2:00 PM - 4:00 PM",
-  //     experienceRequired: "1-3 years",
+  //     experience: "1-3 years",
   //     salary: "$75,000 - $95,000",
   //     description: "Join our data team to work on exciting analytics projects.",
   //     featured: false,
-  //     openVacancies: 18
+  //     vacancies: 18
   //   },
   //   {
   //     id: 3,
   //     company: "CloudTech Ltd",
-  //     jobTitle: "DevOps Engineer",
+  //     title: "DevOps Engineer",
   //     location: "Austin, TX",
   //     date: "2024-01-17",
   //     time: "9:00 AM - 11:00 AM",
-  //     experienceRequired: "3-5 years",
+  //     experience: "3-5 years",
   //     salary: "$110,000 - $140,000",
-  //     description: "DevOps engineer with AWS and Kubernetes experienceRequired.",
+  //     description: "DevOps engineer with AWS and Kubernetes experience.",
   //     featured: true,
-  //     openVacancies: 12
+  //     vacancies: 12
   //   },
   //   {
   //     id: 4,
   //     company: "FinServe Partners",
-  //     jobTitle: "Backend Developer",
+  //     title: "Backend Developer",
   //     location: "Chicago, IL",
   //     date: "2024-01-18",
   //     time: "1:00 PM - 3:00 PM",
-  //     experienceRequired: "2-4 years",
+  //     experience: "2-4 years",
   //     salary: "$85,000 - $115,000",
   //     description: "Node.js and Python backend development role.",
   //     featured: false,
-  //     openVacancies: 21
+  //     vacancies: 21
   //   }
   // ];
 
@@ -234,7 +234,7 @@ export default function InterviewsPage() {
       location: "",
       date: "",
       company: "",
-      experienceRequired: "",
+      experience: "",
     });
   };
 
@@ -386,9 +386,9 @@ export default function InterviewsPage() {
                   <div className="relative">
                     <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <select
-                      value={selectedFilters.experienceRequired}
+                      value={selectedFilters.experience}
                       onChange={(e) =>
-                        handleFilterChange("experienceRequired", e.target.value)
+                        handleFilterChange("experience", e.target.value)
                       }
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none appearance-none bg-white transition-colors duration-500"
                     >
@@ -449,7 +449,7 @@ export default function InterviewsPage() {
                   </div>
                   <div>
                     <h3 className="text-xl font-light text-gray-800 tracking-wide mb-1">
-                      {interview?.jobTitle}
+                      {interview?.title}
                     </h3>
                     <p className="text-gray-600 font-light tracking-wide">
                       {interview?.company}
@@ -505,13 +505,13 @@ export default function InterviewsPage() {
                   <div className="flex items-center gap-2">
                     <Briefcase className="w-4 h-4" />
                     <span className="font-light">
-                      {interview?.experienceRequired}
+                      {interview?.experience}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4" />
                     <span className="font-light">
-                      {interview?.openVacancies} vacancies
+                      {interview?.vacancies} vacancies
                     </span>
                   </div>
                 </div>

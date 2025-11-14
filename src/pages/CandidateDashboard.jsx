@@ -34,7 +34,7 @@ export default function CandidateDashboard() {
   const [applications, setApplications] = useState([
     {
       id: 1,
-      jobTitle: "Senior Frontend Developer",
+      title: "Senior Frontend Developer",
       company: "TechCorp Solutions",
       location: "San Francisco, CA",
       salary: "$120,000 - $150,000",
@@ -46,7 +46,7 @@ export default function CandidateDashboard() {
     },
     {
       id: 2,
-      jobTitle: "Product Manager",
+      title: "Product Manager",
       company: "InnovateLabs",
       location: "Remote",
       salary: "$100,000 - $130,000",
@@ -58,7 +58,7 @@ export default function CandidateDashboard() {
     },
     {
       id: 3,
-      jobTitle: "UX Designer",
+      title: "UX Designer",
       company: "DesignStudio Inc",
       location: "New York, NY",
       salary: "$90,000 - $110,000",
@@ -70,7 +70,7 @@ export default function CandidateDashboard() {
     },
     {
       id: 4,
-      jobTitle: "Full Stack Developer",
+      title: "Full Stack Developer",
       company: "StartupXYZ",
       location: "Austin, TX",
       salary: "$95,000 - $120,000",
@@ -85,7 +85,7 @@ export default function CandidateDashboard() {
   const [savedJobs, setSavedJobs] = useState([
     {
       id: 1,
-      jobTitle: "Backend Engineer",
+      title: "Backend Engineer",
       company: "CloudTech Ltd",
       location: "Remote",
       salary: "$110,000 - $140,000",
@@ -94,7 +94,7 @@ export default function CandidateDashboard() {
     },
     {
       id: 2,
-      jobTitle: "DevOps Specialist",
+      title: "DevOps Specialist",
       company: "DataSystems Inc",
       location: "Chicago, IL",
       salary: "$105,000 - $135,000",
@@ -429,7 +429,7 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
               >
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="text-gray-800 font-light tracking-wide">
-                    {interview.jobTitle}
+                    {interview.title}
                   </h4>
                   <span className="text-amber-600 font-light tracking-wide text-sm">
                     {new Date(interview.interviewDate).toLocaleDateString()}
@@ -473,7 +473,7 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <h4 className="text-gray-800 font-light tracking-wide">
-                    {application.jobTitle}
+                    {application.title}
                   </h4>
                   <StatusBadge status={application.status} />
                 </div>
@@ -513,7 +513,7 @@ function ApplicationsTab({ applications, onUpdateApplication }) {
 
   const filteredApplications = applications.filter((app) => {
     const matchesSearch =
-      app.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       app.company.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || app.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -592,7 +592,7 @@ function ApplicationsTab({ applications, onUpdateApplication }) {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-xl font-light text-gray-800 tracking-wide">
-                      {application.jobTitle}
+                      {application.title}
                     </h3>
                     <StatusBadge status={application.status} />
                   </div>
@@ -691,7 +691,7 @@ function SavedJobsTab({ savedJobs, onRemoveSavedJob }) {
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <h3 className="text-xl font-light text-gray-800 tracking-wide mb-2">
-                  {job.jobTitle}
+                  {job.title}
                 </h3>
                 <div className="flex items-center gap-3 text-sm text-gray-600 mb-3">
                   <span className="flex items-center gap-1">

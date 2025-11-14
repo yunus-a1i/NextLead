@@ -203,8 +203,8 @@ export default function RecruiterDashboard() {
                   { id: "jobs", label: "Job Posts", icon: Briefcase },
                   { id: "candidates", label: "Candidates", icon: Users },
                   { id: "interviews", label: "Interviews", icon: Calendar },
-                  { id: "messages", label: "Messages", icon: MessageCircle },
-                  { id: "analytics", label: "Analytics", icon: FileText },
+                  // { id: "messages", label: "Messages", icon: MessageCircle },
+                  // { id: "analytics", label: "Analytics", icon: FileText },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -253,7 +253,7 @@ export default function RecruiterDashboard() {
 
               {activeTab === "candidates" && <CandidatesTab />}
 
-              {activeTab === "interviews" && <InterviewsTab />}
+              {/* {activeTab === "interviews" && <InterviewsTab />} */}
             </AnimatePresence>
           </div>
         </div>
@@ -393,7 +393,7 @@ function DashboardTab({ stats, recentActivity, jobs, onPostJob }) {
               { label: "Post New Job", icon: Plus, action: onPostJob },
               { label: "Review Applications", icon: Users, action: () => {} },
               { label: "Schedule Interview", icon: Calendar, action: () => {} },
-              { label: "View Analytics", icon: BarChart3, action: () => {} },
+              // { label: "View Analytics", icon: BarChart3, action: () => {} },
             ].map((action, index) => {
               const Icon = action.icon;
               return (
@@ -476,7 +476,7 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
 
   const filteredJobs = jobs.filter((job) => {
     const matchesSearch =
-      job?.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       job?.company.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
       statusFilter === "all" || job?.driveStatus === statusFilter;
@@ -550,7 +550,7 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
                 <div className="flex items-center gap-3 mb-2">
                   <h3 className="text-xl font-light text-gray-800 tracking-wide">
                     {/* {job?.title} */}
-                     {job?.jobTitle}
+                     {job?.title}
                   </h3>
                   <span
                     className={`px-2 py-1 text-xs font-light tracking-wide ${
@@ -578,7 +578,7 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
-                    {job?.experienceRequired}
+                    {job?.experience}
                   </span>
                 </div>
 
@@ -605,7 +605,7 @@ function JobsTab({ jobs, onEditJob, onDeleteJob, onPostJob }) {
                 <div className="flex items-center gap-6 text-sm text-gray-600">
                   <span className="flex items-center gap-1">
                     <Users className="w-4 h-4" />
-                    {job?.openVacancies} applications
+                    {job?.vacancies} applications
                   </span>
                   <span className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
@@ -649,11 +649,11 @@ function PostJobModal({ onClose, onSave, hrId }) {
   const [formData, setFormData] = useState({
     hrId: hrId || "", // ObjectId of HR
     // domainId: domainId || "", // ObjectId of domain
-    jobTitle: "",
+    title: "",
     company: "",
     description: "",
     qualification: "",
-    experienceRequired: "",
+    experience: "",
     hiringDriveStart: "",
     hiringDriveEnd: "",
     location: "",
@@ -661,7 +661,7 @@ function PostJobModal({ onClose, onSave, hrId }) {
     email: "",
     phone: "",
     salary: "",
-    openVacancies: 1,
+    vacancies: 1,
     driveStatus: true,
   });
 
@@ -704,9 +704,9 @@ function PostJobModal({ onClose, onSave, hrId }) {
               <input
                 type="text"
                 required
-                value={formData.jobTitle}
+                value={formData.title}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, jobTitle: e.target.value }))
+                  setFormData((prev) => ({ ...prev, title: e.target.value }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
                 placeholder="e.g. Senior Frontend Developer"
@@ -739,11 +739,11 @@ function PostJobModal({ onClose, onSave, hrId }) {
               <input
                 type="text"
                 required
-                value={formData.experienceRequired}
+                value={formData.experience}
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    experienceRequired: e.target.value,
+                    experience: e.target.value,
                   }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
@@ -887,11 +887,11 @@ function PostJobModal({ onClose, onSave, hrId }) {
                 type="number"
                 min={1}
                 required
-                value={formData.openVacancies}
+                value={formData.vacancies}
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    openVacancies: +e.target.value,
+                    vacancies: +e.target.value,
                   }))
                 }
                 className="w-full px-4 py-3 border border-gray-300 text-gray-800 font-light tracking-wide focus:border-gray-500 focus:outline-none transition-colors duration-500"
@@ -1046,7 +1046,7 @@ function CandidatesTab() {
                       <div className="text-xs text-gray-600 mt-2">
                         Applied for{" "}
                         <span className="font-medium text-gray-800">
-                          {post?.jobTitle ?? post?.title ?? "—"}
+                          {post?.title ?? post?.title ?? "—"}
                         </span>{" "}
                         • {post?.company ?? ""}
                       </div>
@@ -1122,21 +1122,21 @@ function CandidatesTab() {
   );
 }
 
-function InterviewsTab() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="text-center py-16"
-    >
-      <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <h3 className="text-xl font-light text-gray-800 tracking-wide mb-2">
-        Interview Scheduling
-      </h3>
-      <p className="text-gray-600 font-light tracking-wide">
-        Schedule and manage candidate interviews
-      </p>
-    </motion.div>
-  );
-}
+// function InterviewsTab() {
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, y: 20 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       exit={{ opacity: 0, y: -20 }}
+//       className="text-center py-16"
+//     >
+//       <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+//       <h3 className="text-xl font-light text-gray-800 tracking-wide mb-2">
+//         Interview Scheduling
+//       </h3>
+//       <p className="text-gray-600 font-light tracking-wide">
+//         Schedule and manage candidate interviews
+//       </p>
+//     </motion.div>
+//   );
+// }

@@ -6,10 +6,10 @@ export default function PostInterviewForm({ onPosted }) {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [form, setForm] = useState({
-    jobTitle: "",
+    title: "",
     description: "",
     qualifications: "",
-    experienceRequired: "",
+    experience: "",
     interviewDate: "",
     startTime: "",
     endTime: "",
@@ -39,10 +39,10 @@ export default function PostInterviewForm({ onPosted }) {
       const data = await createInterview(form, token);
       alert("Interview posted successfully!");
       setForm({
-        jobTitle: "",
+        title: "",
         description: "",
         qualifications: "",
-        experienceRequired: "",
+        experience: "",
         interviewDate: "",
         startTime: "",
         endTime: "",
@@ -67,9 +67,9 @@ export default function PostInterviewForm({ onPosted }) {
       <h2 className="text-2xl font-bold mb-4">Post an Interview</h2>
 
       <input
-        name="jobTitle"
+        name="title"
         placeholder="Job Title"
-        value={form.jobTitle}
+        value={form.title}
         onChange={handleChange}
         className="w-full p-2 border rounded mb-3"
         required
@@ -93,9 +93,9 @@ export default function PostInterviewForm({ onPosted }) {
       />
 
       <input
-        name="experienceRequired"
+        name="experience"
         placeholder="Experience Required"
-        value={form.experienceRequired}
+        value={form.experience}
         onChange={handleChange}
         className="w-full p-2 border rounded mb-3"
       />

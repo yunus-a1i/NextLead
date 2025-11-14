@@ -8,7 +8,7 @@ export default function InterviewCard({ interview }) {
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1 min-w-0">
           <h3 className="text-xl font-bold text-gray-900 truncate">
-            {interview.jobTitle}
+            {interview.title}
           </h3>
           <p className="text-gray-700 font-medium mt-1 truncate">
             {interview.qualifications}
