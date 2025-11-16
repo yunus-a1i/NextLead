@@ -95,7 +95,7 @@ export default function Navbar() {
         className={`sticky top-0 z-50 transition-all duration-500 ${
           isScrolled
             ? "bg-white/90 backdrop-blur-lg shadow-sm border-b border-gray-100/50"
-            : "bg-white/70 backdrop-blur-md"
+            : "bg-white/70 backdrop-blur-md border-transparent"
         }`}
         initial={{ y: -80 }}
         animate={{ y: 0 }}

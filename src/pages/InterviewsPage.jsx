@@ -427,124 +427,306 @@ export default function InterviewsPage() {
 
       {/* Interviews Grid */}
       <section className="max-w-7xl mx-auto px-6 py-12">
-        <motion.div
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {interviews?.map((interview) => (
-            <motion.div
-              key={interview._id}
-              variants={itemVariants}
-              onClick={() => navigate(`/job-detail/${interview._id}`)}
-              className="bg-white border border-gray-200 p-8 group hover:border-gray-300 transition-all duration-500"
-              whileHover={{ y: -2 }}
-            >
-              {/* Header */}
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 border border-gray-300 flex items-center justify-center group-hover:border-gray-400 transition-colors duration-500">
-                    <Building className="w-6 h-6 text-gray-600" />
+        {interviews.length > 0 ? (
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {interviews?.map((interview) => (
+              <motion.div
+                key={interview._id}
+                variants={itemVariants}
+                onClick={() => navigate(`/job-detail/${interview._id}`)}
+                className="bg-white border border-gray-200 p-8 group hover:border-gray-300 transition-all duration-500"
+                whileHover={{ y: -2 }}
+              >
+                {/* Header */}
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 border border-gray-300 flex items-center justify-center group-hover:border-gray-400 transition-colors duration-500">
+                      <Building className="w-6 h-6 text-gray-600" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-light text-gray-800 tracking-wide mb-1">
+                        {interview?.title}
+                      </h3>
+                      <p className="text-gray-600 font-light tracking-wide">
+                        {interview?.company}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-light text-gray-800 tracking-wide mb-1">
-                      {interview?.title}
-                    </h3>
-                    <p className="text-gray-600 font-light tracking-wide">
-                      {interview?.company}
-                    </p>
-                  </div>
+                  {interview?.featured && (
+                    <div className="flex items-center gap-1 text-amber-600">
+                      <Star className="w-4 h-4 fill-current" />
+                      <span className="text-xs font-light tracking-wide">
+                        Featured
+                      </span>
+                    </div>
+                  )}
                 </div>
-                {interview?.featured && (
-                  <div className="flex items-center gap-1 text-amber-600">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="text-xs font-light tracking-wide">
-                      Featured
-                    </span>
-                  </div>
-                )}
-              </div>
 
-              {/* Details */}
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    <span className="font-light">{interview?.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span className="font-light">
-                      {new Date(interview?.hiringDriveStart).toLocaleDateString(
-                        "en-US",
-                        {
+                {/* Details */}
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      <span className="font-light">{interview?.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      <span className="font-light">
+                        {new Date(
+                          interview?.hiringDriveStart
+                        ).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
                           year: "numeric",
-                        }
-                      )}{" "}
-                      -{" "}
-                      {new Date(interview?.hiringDriveEnd).toLocaleDateString(
-                        "en-US",
-                        {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        }
-                      )}
-                    </span>
-                  </div>
-                  {/* <div className="flex items-center gap-2">
+                        })}{" "}
+                        -{" "}
+                        {new Date(interview?.hiringDriveEnd).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )}
+                      </span>
+                    </div>
+                    {/* <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4" />
                     <span className="font-light">{interview?.time}</span>
                   </div> */}
+                  </div>
+
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <Briefcase className="w-4 h-4" />
+                      <span className="font-light">
+                        {interview?.experience}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      <span className="font-light">
+                        {interview?.vacancies} vacancies
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <Briefcase className="w-4 h-4" />
-                    <span className="font-light">
-                      {interview?.experience}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    <span className="font-light">
-                      {interview?.vacancies} vacancies
-                    </span>
-                  </div>
-                </div>
-              </div>
+                {/* Description */}
+                <p className="text-gray-600 font-light leading-relaxed mb-6 tracking-wide">
+                  {interview?.description}
+                </p>
 
-              {/* Description */}
-              <p className="text-gray-600 font-light leading-relaxed mb-6 tracking-wide">
-                {interview?.description}
+                {/* Salary and CTA */}
+                <div className="flex items-center justify-between pt-6 border-t border-gray-100">
+                  <div>
+                    <p className="text-gray-800 font-light tracking-wide">
+                      {interview?.salary}
+                    </p>
+                  </div>
+                  <motion.button
+                    onClick={async (e) => {
+                      e.stopPropagation(); // prevent navigation to job detail
+                      await handleApply(interview._id);
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="inline-flex items-center gap-2 px-6 py-3 border border-gray-800 text-gray-800 font-light tracking-wide text-sm hover:bg-gray-800 hover:text-white transition-all duration-500 group"
+                  >
+                    <span>Apply Now</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                  </motion.button>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-12 w-full">
+            <motion.svg
+              width="160"
+              height="160"
+              viewBox="0 0 160 160"
+              initial="hidden"
+              animate="visible"
+              className="mb-6"
+            >
+              {/* Calendar Base */}
+              <motion.rect
+                x="30"
+                y="20"
+                width="100"
+                height="120"
+                rx="6"
+                fill="none"
+                stroke="#D1D5DB"
+                strokeWidth="2"
+                variants={{
+                  hidden: { pathLength: 0, opacity: 0 },
+                  visible: {
+                    pathLength: 1,
+                    opacity: 1,
+                    transition: { duration: 0.8, ease: "easeInOut" },
+                  },
+                }}
+              />
+
+              {/* Calendar Header */}
+              <motion.rect
+                x="30"
+                y="20"
+                width="100"
+                height="20"
+                fill="#F3F4F6"
+                variants={{
+                  hidden: { scaleY: 0 },
+                  visible: {
+                    scaleY: 1,
+                    transition: { duration: 0.4, delay: 0.3 },
+                  },
+                }}
+              />
+
+              {/* Empty Calendar Grid */}
+              <motion.g
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.05, delayChildren: 0.6 },
+                  },
+                }}
+              >
+                {/* Rows */}
+                {[45, 65, 85, 105, 125].map((y, index) => (
+                  <motion.line
+                    key={`row-${index}`}
+                    x1="35"
+                    y1={y}
+                    x2="125"
+                    y2={y}
+                    stroke="#E5E7EB"
+                    strokeWidth="1"
+                    variants={{
+                      hidden: { scaleX: 0 },
+                      visible: { scaleX: 1 },
+                    }}
+                  />
+                ))}
+
+                {/* Columns */}
+                {[60, 85, 110].map((x, index) => (
+                  <motion.line
+                    key={`col-${index}`}
+                    x1={x}
+                    y1="45"
+                    x2={x}
+                    y2="135"
+                    stroke="#E5E7EB"
+                    strokeWidth="1"
+                    variants={{
+                      hidden: { scaleY: 0 },
+                      visible: { scaleY: 1 },
+                    }}
+                  />
+                ))}
+              </motion.g>
+
+              {/* Magnifying Glass */}
+              <motion.g
+                variants={{
+                  hidden: { scale: 0, opacity: 0 },
+                  visible: {
+                    scale: 1,
+                    opacity: 1,
+                    transition: {
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 15,
+                      delay: 1,
+                    },
+                  },
+                }}
+                animate={{
+                  x: [0, -5, 5, 0],
+                  y: [0, -3, 3, 0],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="15"
+                  fill="none"
+                  stroke="#9CA3AF"
+                  strokeWidth="2"
+                />
+                <motion.path
+                  d="M95 95 L105 105"
+                  stroke="#9CA3AF"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.5, delay: 1.2 }}
+                />
+              </motion.g>
+
+              {/* Floating Dots */}
+              <motion.g>
+                {[
+                  { cx: 50, cy: 50, r: 2 },
+                  { cx: 130, cy: 40, r: 1.5 },
+                  { cx: 45, cy: 130, r: 1 },
+                  { cx: 135, cy: 135, r: 2.5 },
+                ].map((dot, index) => (
+                  <motion.circle
+                    key={index}
+                    cx={dot.cx}
+                    cy={dot.cy}
+                    r={dot.r}
+                    fill="#9CA3AF"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{
+                      scale: 1,
+                      opacity: [0.3, 0.7, 0.3],
+                      y: [0, -8, 0],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: index * 0.5 + 1,
+                    }}
+                  />
+                ))}
+              </motion.g>
+            </motion.svg>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="text-center space-y-3"
+            >
+              <h3 className="text-lg font-light text-gray-800 tracking-wide">
+                No Interviews Available
+              </h3>
+              <p className="text-gray-600 font-light tracking-wide text-sm max-w-xs leading-relaxed">
+                Check back later for new opportunities or browse available
+                positions.
               </p>
-
-              {/* Salary and CTA */}
-              <div className="flex items-center justify-between pt-6 border-t border-gray-100">
-                <div>
-                  <p className="text-gray-800 font-light tracking-wide">
-                    {interview?.salary}
-                  </p>
-                </div>
-                <motion.button
-                  onClick={async (e) => {
-                    e.stopPropagation(); // prevent navigation to job detail
-                    await handleApply(interview._id);
-                  }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-gray-800 text-gray-800 font-light tracking-wide text-sm hover:bg-gray-800 hover:text-white transition-all duration-500 group"
-                >
-                  <span>Apply Now</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                </motion.button>
-              </div>
             </motion.div>
-          ))}
-        </motion.div>
+          </div>
+        )}
 
         {/* Load More */}
         {hasMore && (
