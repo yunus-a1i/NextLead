@@ -82,23 +82,23 @@ export default function ContactPage() {
       icon: Mail,
       title: "Email Us",
       description: "We'll respond within 24 hours",
-      details: "hello@nextlead.com",
-      link: "mailto:hello@nextlead.com"
+      details: "yunusalisiddiqui90@gmail.com",
+      link: "mailto:yunusalisiddiqui90@gmail.com"
     },
     {
       icon: Phone,
       title: "Call Us",
       description: "Mon-Fri from 9am to 6pm",
-      details: "+1 (555) 123-4567",
-      link: "tel:+15551234567"
+      details: "+91 73099 40974",
+      link: "tel:+917309940974"
     },
-    {
-      icon: MapPin,
-      title: "Visit Us",
-      description: "Come say hello at our office",
-      details: "123 Tech Street, San Francisco, CA 94105",
-      link: "https://maps.google.com"
-    }
+    // {
+    //   icon: MapPin,
+    //   title: "Visit Us",
+    //   description: "Come say hello at our office",
+    //   details: "123 Tech Street, San Francisco, CA 94105",
+    //   link: "https://maps.google.com"
+    // }
   ];
 
   const officeHours = [
@@ -194,7 +194,7 @@ export default function ContactPage() {
               </div>
 
               {/* Office Hours */}
-              <div className="border border-gray-200 p-6">
+              {/* <div className="border border-gray-200 p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <Clock className="w-5 h-5 text-gray-600" />
                   <h3 className="text-lg font-light text-gray-800 tracking-wide">
@@ -213,7 +213,7 @@ export default function ContactPage() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </motion.div>
 
             {/* Contact Form */}
