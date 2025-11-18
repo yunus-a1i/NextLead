@@ -320,10 +320,10 @@ export default function BeginJourney() {
       </section>
 
       {/* Luxury Accent Elements */}
-      <div className="fixed top-12 left-12 w-px h-24 bg-gradient-to-b from-gray-300 to-transparent"></div>
+      {/* <div className="fixed top-12 left-12 w-px h-24 bg-gradient-to-b from-gray-300 to-transparent"></div>
       <div className="fixed top-12 right-12 w-px h-24 bg-gradient-to-b from-gray-300 to-transparent"></div>
       <div className="fixed bottom-12 left-12 w-px h-24 bg-gradient-to-t from-gray-300 to-transparent"></div>
-      <div className="fixed bottom-12 right-12 w-px h-24 bg-gradient-to-t from-gray-300 to-transparent"></div>
+      <div className="fixed bottom-12 right-12 w-px h-24 bg-gradient-to-t from-gray-300 to-transparent"></div> */}
     </div>
   );
 }
