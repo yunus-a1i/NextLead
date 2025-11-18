@@ -119,7 +119,7 @@ export default function RecruiterDashboard() {
       alert("Job posted successfully!");
       setShowPostJobModal(false);
     } catch (error) {
-      alert(error || "Failed to post job");
+      alert("Failed to post job");
     }
   };
 
