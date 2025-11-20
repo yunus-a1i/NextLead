@@ -98,16 +98,21 @@ export default function JobDetailPage() {
           REMOVE
     -------------------- */
 
-      const payload = bookmarkDoc ? { docId: bookmarkDoc._id } : { postId: id }; // NEVER { id }
+      // SAFE PAYLOAD: never send temp IDs to backend
+      const payload =
+        bookmarkDoc && bookmarkDoc._id && !bookmarkDoc._id.startsWith("temp-")
+          ? { docId: bookmarkDoc._id }
+          : { postId: id };
 
-      // Optimistic update
-      dispatch(optimisticRemove(payload));
+      // optimistic remove
+      dispatch(optimisticRemove({ postId: id }));
       setIsSaved(false);
 
       try {
         await dispatch(removeBookmark(payload)).unwrap();
       } catch (err) {
         console.error("Failed to remove", err);
+        // rollback
         setIsSaved(true);
       }
     } else {
@@ -115,25 +120,22 @@ export default function JobDetailPage() {
           ADD
     -------------------- */
 
-      // Create placeholder correctly
       const placeholder = {
         _id: `temp-${Date.now()}`,
-        interveiwPostId: id, // correct field name
+        interveiwPostId: id,
       };
 
-      // Optimistic add
+      // optimistic add
       dispatch(optimisticAdd(placeholder));
       setIsSaved(true);
 
       try {
         const result = await dispatch(addBookmark(id)).unwrap();
         const created = result?.data || result;
-
-        // Usually slice handles replacing dups,
-        // so no manual update needed.
+        // slice dedupe handles the mismatch automatically
       } catch (err) {
         console.error("Failed to add bookmark", err);
-        dispatch(optimisticRemove({ postId: id })); // rollback correctly
+        dispatch(optimisticRemove({ postId: id })); // rollback
         setIsSaved(false);
       }
     }
