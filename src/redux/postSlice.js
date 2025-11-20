@@ -77,7 +77,7 @@ export const getAllPostsThunk = createAsyncThunk(
 
 export const getAllPostsFullThunk = createAsyncThunk(
   "posts/getAllFull",
-  async (thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
       return await postService.getAllPostsFull();
     } catch (error) {
@@ -87,6 +87,7 @@ export const getAllPostsFullThunk = createAsyncThunk(
     }
   }
 );
+
 
 const postSlice = createSlice({
   name: "posts",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Briefcase,
@@ -27,6 +27,14 @@ import {
   Building,
   DollarSign,
 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  optimisticAdd,
+  optimisticRemove,
+  removeBookmark,
+  selectBookmarkLoading,
+  selectBookmarks,
+} from "../redux/bookmarkSlice";
 
 export default function CandidateDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -140,8 +148,6 @@ export default function CandidateDashboard() {
       setUser(JSON.parse(savedUser));
     }
   }, []);
-
-  console.log(user);
 
   const upcomingInterviews = applications.filter(
     (app) => app.status === "interview" && app.interviewDate
@@ -261,14 +267,7 @@ export default function CandidateDashboard() {
                 />
               )}
 
-              {activeTab === "saved" && (
-                <SavedJobsTab
-                  savedJobs={savedJobs}
-                  onRemoveSavedJob={(id) => {
-                    setSavedJobs((prev) => prev.filter((job) => job.id !== id));
-                  }}
-                />
-              )}
+              {activeTab === "saved" && <SavedJobsTab />}
 
               {activeTab === "messages" && (
                 <MessagesTab
@@ -507,7 +506,7 @@ function DashboardTab({ stats, applications, upcomingInterviews, messages }) {
 }
 
 // Applications Tab Component
-function ApplicationsTab({ applications, onUpdateApplication }) {
+function ApplicationsTab({ applications }) {
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -660,7 +659,54 @@ function ApplicationsTab({ applications, onUpdateApplication }) {
 }
 
 // Saved Jobs Tab Component
-function SavedJobsTab({ savedJobs, onRemoveSavedJob }) {
+function SavedJobsTab() {
+  const dispatch = useDispatch();
+
+  const bookmarks = useSelector(selectBookmarks); // bookmark docs
+  const jobs = useSelector((state) => state.posts.posts); // posts from your store
+  const loading = useSelector(selectBookmarkLoading);
+  console.log(jobs);
+
+  // JOIN bookmarks → job info
+  const savedJobs = useMemo(() => {
+    if (!jobs.length || !bookmarks.length) return [];
+
+    return bookmarks
+      .map((b) => {
+        const job = jobs.find(
+          (j) => j._id === b.interveiwPostId || j._id === b.interviewPostId
+        );
+        if (!job) return null;
+        return {
+          ...job,
+          bookmarkId: b._id, // needed for delete
+        };
+      })
+      .filter(Boolean); // remove nulls
+  }, [jobs, bookmarks]);
+
+  console.log(savedJobs)
+
+  const handleRemoveSavedJob = async (job) => {
+    const payload = job.bookmarkId
+      ? { docId: job.bookmarkId }
+      : { postId: job._id };
+
+    // Optimistic UI
+    dispatch(optimisticRemove({ postId: job._id }));
+
+    try {
+      await dispatch(removeBookmark(payload)).unwrap();
+    } catch (err) {
+      console.error("Failed to remove saved job:", err);
+      // rollback
+      dispatch(
+        optimisticAdd({ _id: job.bookmarkId, interveiwPostId: job._id })
+      );
+    }
+  };
+
+  if (loading) return <p>Loading saved jobs...</p>;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -707,7 +753,7 @@ function SavedJobsTab({ savedJobs, onRemoveSavedJob }) {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onRemoveSavedJob(job.id)}
+                onClick={() => handleRemoveSavedJob(job)}
                 className="p-2 border border-gray-300 text-gray-600 hover:border-red-600 hover:text-red-600 transition-all duration-500"
               >
                 <Trash2 className="w-4 h-4" />
