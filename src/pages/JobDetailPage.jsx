@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -24,170 +24,148 @@ import {
   Flag,
   AlertCircle,
 } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllPostsFullThunk } from "../redux/postSlice";
+import {
+  addBookmark,
+  removeBookmark,
+  optimisticAdd,
+  optimisticRemove,
+  selectBookmarks,
+  selectBookmarkLoading,
+} from "../redux/bookmarkSlice";
 
 export default function JobDetailPage() {
   const { id } = useParams();
   const [isSaved, setIsSaved] = useState(false);
   const [isApplied, setIsApplied] = useState(false);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
+
   const dispatch = useDispatch();
+
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await dispatch(getAllPostsFullThunk());
-      console.log(result.payload.data); // logs array of posts
-      setJobs(result.payload.data);
+      setJobs(result.payload?.data || []);
     };
-
     fetchData();
   }, [dispatch]);
 
-  // assuming `id` comes from route params or props
   const job = jobs.find((j) => j._id === id);
 
-  const similarJobs = jobs.filter(
-    (j) =>
-      j._id !== id &&
-      j.title
-        .replace(/\s+/g, "")
-        .toLowerCase()
-        .includes(job.title.replace(/\s+/g, "").toLowerCase())
-  );
-  console.log("similar jobs",similarJobs)
+  // Prevent crash before job loads
+  const similarJobs = job
+    ? jobs.filter(
+        (j) =>
+          j._id !== id &&
+          j.title
+            .replace(/\s+/g, "")
+            .toLowerCase()
+            .includes(job.title.replace(/\s+/g, "").toLowerCase())
+      )
+    : [];
 
-  // Mock job data - in real app, this would come from API
-  // const job = {
-  //   id: 1,
-  //   title: "Senior Frontend Developer",
-  //   company: "TechCorp Solutions",
-  //   logo: "/api/placeholder/80/80",
-  //   type: "Full-time",
-  //   location: "San Francisco, CA",
-  //   salary: "$120,000 - $150,000",
-  //   experience: "5+ years",
-  //   postedDate: "2024-12-15",
-  //   applicationDeadline: "2024-12-30",
-  //   views: 1247,
-  //   applications: 89,
-  //   matchScore: 95,
-  //   isRemote: false,
-  //   isUrgent: true,
-  //   isFeatured: true,
+  const bookmarks = useSelector(selectBookmarks) || [];
+  const loading = useSelector(selectBookmarkLoading);
 
-  //   description: `
-  //     We are looking for a talented Senior Frontend Developer to join our growing team at TechCorp Solutions.
-  //     In this role, you will be responsible for developing and maintaining high-quality web applications using
-  //     modern JavaScript frameworks and libraries.
+  // find stored bookmark for this post
+  const bookmarkDoc = useMemo(() => {
+    if (!bookmarks.length) return null;
 
-  //     You'll work closely with our design and backend teams to create seamless, responsive, and accessible
-  //     user experiences. The ideal candidate is passionate about frontend technologies, stays up-to-date with
-  //     the latest trends, and enjoys mentoring junior developers.
-  //   `,
+    return (
+      bookmarks.find(
+        (b) =>
+          b.interveiwPostId === id || // API typo
+          b.interviewPostId === id // fallback correct spelling
+      ) || null
+    );
+  }, [bookmarks, id]);
 
-  //   responsibilities: [
-  //     "Develop and maintain responsive web applications using React and TypeScript",
-  //     "Collaborate with UX/UI designers to implement pixel-perfect designs",
-  //     "Write clean, maintainable, and well-documented code",
-  //     "Participate in code reviews and provide constructive feedback",
-  //     "Optimize applications for maximum speed and scalability",
-  //     "Mentor junior developers and promote best practices",
-  //     "Stay updated with emerging frontend technologies and trends",
-  //   ],
+  // Sync local isSaved with redux store
+  useEffect(() => {
+    setIsSaved(Boolean(bookmarkDoc));
+  }, [bookmarkDoc]);
 
-  //   requirements: [
-  //     "5+ years of professional frontend development experience",
-  //     "Expert knowledge of React, TypeScript, and modern JavaScript",
-  //     "Strong experience with state management (Redux, Zustand, or similar)",
-  //     "Proficiency in HTML5, CSS3, and CSS-in-JS solutions",
-  //     "Experience with testing frameworks (Jest, React Testing Library)",
-  //     "Familiarity with build tools (Webpack, Vite) and CI/CD pipelines",
-  //     "Excellent problem-solving and communication skills",
-  //     "Bachelor's degree in Computer Science or related field",
-  //   ],
+  /* -----------------------------------
+      Save / Unsave (with fixes)
+----------------------------------- */
 
-  //   niceToHave: [
-  //     "Experience with Next.js or similar SSR frameworks",
-  //     "Knowledge of backend technologies (Node.js, Python)",
-  //     "Familiarity with cloud platforms (AWS, Azure, GCP)",
-  //     "Contributions to open-source projects",
-  //     "Experience with micro-frontend architecture",
-  //   ],
+  const handleToggleSave = async () => {
+    if (isSaved) {
+      /* --------------------
+          REMOVE
+    -------------------- */
 
-  //   benefits: [
-  //     "Competitive salary and equity package",
-  //     "Comprehensive health, dental, and vision insurance",
-  //     "Flexible work hours and remote work options",
-  //     "Professional development budget",
-  //     "401(k) with company matching",
-  //     "Unlimited paid time off",
-  //     "Stocked kitchen and catered lunches",
-  //     "Company retreats and team events",
-  //   ],
+      const payload = bookmarkDoc ? { docId: bookmarkDoc._id } : { postId: id }; // NEVER { id }
 
-  //   companyInfo: {
-  //     name: "TechCorp Solutions",
-  //     description:
-  //       "TechCorp Solutions is a leading technology company specializing in enterprise software solutions. We help businesses transform their operations through innovative technology and exceptional user experiences.",
-  //     size: "501-1000 employees",
-  //     industry: "Software Development",
-  //     founded: "2015",
-  //     website: "https://techcorp.com",
-  //     culture: "Fast-paced, innovative, collaborative",
-  //     location: "San Francisco, California",
-  //   },
+      // Optimistic update
+      dispatch(optimisticRemove(payload));
+      setIsSaved(false);
 
-  //   recruiter: {
-  //     name: "Sarah Chen",
-  //     title: "Senior Technical Recruiter",
-  //     email: "sarah.chen@techcorp.com",
-  //     phone: "+1 (555) 123-4567",
-  //     bio: "Sarah has been with TechCorp for 3 years and specializes in technical recruitment for engineering roles.",
-  //   },
+      try {
+        await dispatch(removeBookmark(payload)).unwrap();
+      } catch (err) {
+        console.error("Failed to remove", err);
+        setIsSaved(true);
+      }
+    } else {
+      /* --------------------
+          ADD
+    -------------------- */
 
-  //   interviewProcess: [
-  //     "Initial phone screen (30 minutes)",
-  //     "Technical assessment (take-home)",
-  //     "On-site interview (4 hours)",
-  //     "Team collaboration session",
-  //     "Final interview with leadership",
-  //   ],
-  // };
+      // Create placeholder correctly
+      const placeholder = {
+        _id: `temp-${Date.now()}`,
+        interveiwPostId: id, // correct field name
+      };
 
-  // const similarJobs = [
-  //   {
-  //     id: 2,
-  //     title: "Frontend Engineer",
-  //     company: "DesignStudio Inc",
-  //     location: "New York, NY",
-  //     salary: "$110,000 - $140,000",
-  //     type: "Full-time",
-  //     matchScore: 88,
-  //     isRemote: true,
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "React Developer",
-  //     company: "StartupXYZ",
-  //     location: "Austin, TX",
-  //     salary: "$95,000 - $120,000",
-  //     type: "Full-time",
-  //     matchScore: 92,
-  //     isRemote: false,
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "UI Engineer",
-  //     company: "CreativeLabs",
-  //     location: "Remote",
-  //     salary: "$100,000 - $130,000",
-  //     type: "Contract",
-  //     matchScore: 85,
-  //     isRemote: true,
-  //   },
-  // ];
+      // Optimistic add
+      dispatch(optimisticAdd(placeholder));
+      setIsSaved(true);
+
+      try {
+        const result = await dispatch(addBookmark(id)).unwrap();
+        const created = result?.data || result;
+
+        // Usually slice handles replacing dups,
+        // so no manual update needed.
+      } catch (err) {
+        console.error("Failed to add bookmark", err);
+        dispatch(optimisticRemove({ postId: id })); // rollback correctly
+        setIsSaved(false);
+      }
+    }
+  };
+
+  /* -----------------------------------
+            SHARE
+----------------------------------- */
+
+  const handleShare = async () => {
+    const shareData = {
+      title: "Check out this post",
+      text: "Thought you might like this post.",
+      url: `${window.location.origin}/posts/${id}`,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error("Share cancelled", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        console.log("Link copied to clipboard");
+      } catch (err) {
+        console.error("Failed to copy", err);
+      }
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -211,12 +189,6 @@ export default function JobDetailPage() {
     },
   };
 
-  const handleApply = () => {
-    setIsApplied(true);
-    setShowApplicationModal(false);
-    // In real app, this would trigger application submission
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Navigation */}
@@ -235,12 +207,14 @@ export default function JobDetailPage() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setIsSaved(!isSaved)}
-                className={`p-2 border ${
+                onClick={handleToggleSave}
+                disabled={loading}
+                aria-pressed={isSaved}
+                className={`p-2 border rounded ${
                   isSaved
                     ? "border-gray-800 bg-gray-800 text-white"
                     : "border-gray-300 text-gray-600 hover:border-gray-800"
-                } transition-all duration-500`}
+                } transition-all duration-300`}
               >
                 <Bookmark className="w-4 h-4" />
               </motion.button>
@@ -248,7 +222,9 @@ export default function JobDetailPage() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="p-2 border border-gray-300 text-gray-600 hover:border-gray-800 transition-all duration-500"
+                onClick={handleShare}
+                className="p-2 border border-gray-300 text-gray-600 hover:border-gray-800 transition-all duration-300 rounded"
+                aria-label="Share"
               >
                 <Share2 className="w-4 h-4" />
               </motion.button>
