@@ -1,3 +1,4 @@
+// LoginForm.jsx
 import { useState } from "react";
 import { loginUser } from "../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,9 +8,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { loginHr } from "../redux/hrSlice";
 import { useToasts } from "./Toast";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000"; 
+// ⬆️ backend base URL (set VITE_API_BASE_URL in .env)
+
 export default function LoginForm() {
   const [searchParams] = useSearchParams();
-  const role = searchParams.get("role"); // "candidate"
+  const role = searchParams.get("role"); // "candidate" | "hr"
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { user, hr } = useSelector((state) => state);
@@ -21,7 +25,7 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { email, password };
+    const data = { email, password, role };
 
     try {
       if (role === "candidate") {
@@ -36,6 +40,14 @@ export default function LoginForm() {
     } catch (err) {
       error(err?.message || err);
     }
+  };
+
+  // ⭐ NEW: Google login handler
+  const handleGoogleLogin = () => {
+    const loginRole = role === "candidate" ? "candidate" : "hr";
+    // Backend routes from earlier:
+    // /api/auth/google/candidate  or /api/auth/google/hr
+    window.location.href = `${API_BASE_URL}/api/auth/google/${loginRole}`;
   };
 
   const containerVariants = {
@@ -213,6 +225,7 @@ export default function LoginForm() {
             <div className="grid grid-cols-1 gap-3">
               <motion.button
                 type="button"
+                onClick={handleGoogleLogin}
                 className="flex items-center justify-center space-x-2 py-2.5 border border-gray-300 text-gray-600 font-light tracking-wide text-sm hover:border-gray-400 transition-all duration-500"
                 whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.98 }}
@@ -237,22 +250,6 @@ export default function LoginForm() {
                 </svg>
                 <span className="text-xs">Google</span>
               </motion.button>
-
-              {/* <motion.button
-                type="button"
-                className="flex items-center justify-center space-x-2 py-2.5 border border-gray-300 text-gray-600 font-light tracking-wide text-sm hover:border-gray-400 transition-all duration-500"
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-                </svg>
-                <span className="text-xs">Twitter</span>
-              </motion.button> */}
             </div>
           </motion.div>
 
