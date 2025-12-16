@@ -16,12 +16,14 @@ import RecruiterDashboard from "./pages/RecruiterDashboard";
 import CandidateDashboard from "./pages/CandidateDashboard";
 import LoginPortal from "./pages/LoginPortal";
 import JobDetailPage from "./pages/JobDetailPage";
+import OAuthCallback from "./pages/OAuthCallback";
 
 function App() {
   return (
     <Routes>
       {/* Layout Wrapper */}
       <Route path="/login-portal" element={<LoginPortal />} />
+      <Route path="/oauth-callback" element={<OAuthCallback />} />
       <Route path="/register" element={<RegisterForm />} />
       <Route path="/login" element={<LoginForm />} />
       <Route element={<Layout />}>
